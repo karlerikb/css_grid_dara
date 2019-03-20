@@ -4,11 +4,10 @@
 
 .gameContainer {
   grid-template-columns: 2fr 5fr 2fr;
-  grid-template-rows: repeat(4, min-content);
+  grid-template-rows: repeat(3, min-content);
   grid-template-areas:
     "playerOneTitle   gameTitle               playerTwoTitle "
     "playerOnePieces  gameboard               playerTwoPieces"
-    "playerOnePieces  removedPiecesContainer  playerTwoPieces"
     "playerOnePieces  removedPiecesContainer  playerTwoPieces"
   ;
 }
@@ -22,6 +21,72 @@
   ;
 }
 
+.piecesContainer {
+  grid-template-columns: repeat(2, min-content);
+  grid-template-rows: repeat(6, min-content);
+  grid-auto-flow: column;
+}
+
+.piecesContainer.playerOne {
+  grid-template-areas:
+    "p1_7   p1_1"
+    "p1_8   p1_2"
+    "p1_9   p1_3"
+    "p1_10  p1_4"
+    "p1_11  p1_5"
+    "p1_12  p1_6"
+  ;
+}
+
+.piecesContainer.playerTwo {
+  grid-template-areas:
+    "p2_1  p2_7 "
+    "p2_2  p2_8 "
+    "p2_3  p2_9 "
+    "p2_4  p2_10"
+    "p2_5  p2_11"
+    "p2_6  p2_12"
+  ;
+}
+
+.gameboard {
+  grid-template-columns: repeat(6, 6vw);
+  grid-template-rows: repeat(5, 6vw);
+  grid-template-areas:
+    "a11 a12 a13 a14 a15 a16"
+    "a21 a22 a23 a24 a25 a26"
+    "a31 a32 a33 a34 a35 a36"
+    "a41 a42 a43 a44 a45 a46"
+    "a51 a52 a53 a54 a55 a56"
+  ;
+}
+
+#p1_1 { grid-area: p1_1; }
+#p1_2 { grid-area: p1_2; }
+#p1_3 { grid-area: p1_3; }
+#p1_4 { grid-area: p1_4; }
+#p1_5 { grid-area: p1_5; }
+#p1_6 { grid-area: p1_6; }
+#p1_7 { grid-area: p1_7; }
+#p1_8 { grid-area: p1_8; }
+#p1_9 { grid-area: p1_9; }
+#p1_10 { grid-area: p1_10; }
+#p1_11 { grid-area: p1_11; }
+#p1_12 { grid-area: p1_12; }
+
+#p2_1 { grid-area: p2_1; }
+#p2_2 { grid-area: p2_2; }
+#p2_3 { grid-area: p2_3; }
+#p2_4 { grid-area: p2_4; }
+#p2_5 { grid-area: p2_5; }
+#p2_6 { grid-area: p2_6; }
+#p2_7 { grid-area: p2_7; }
+#p2_8 { grid-area: p2_8; }
+#p2_9 { grid-area: p2_9; }
+#p2_10 { grid-area: p2_10; }
+#p2_11 { grid-area: p2_11; }
+#p2_12 { grid-area: p2_12; }
+
 .playerOneTitle { grid-area: playerOneTitle; }
 .playerTwoTitle { grid-area: playerTwoTitle; }
 .gameboardTitle { grid-area: gameTitle; }
@@ -29,11 +94,55 @@
 .playerTwo.piecesContainer { grid-area: playerTwoPieces; }
 .gameboard { grid-area: gameboard; }
 .removedPiecesContainer { grid-area: removedPiecesContainer; }
+
 .removedPieces { grid-area: removedPieces; }
 .removedPiecesTitle { grid-area: removedPiecesTitle; }
 
 
+.gameContainer {
+  justify-items: center;
+  align-items: center;
+}
+
+.piecesContainer {
+  padding: .5vw;
+  grid-gap: .5vw;
+}
+
+.gameboard {
+  margin: 1vw;
+  padding: 1vw;
+  grid-gap: .5vw;
+  background: yellow;
+}
+.piecesContainer .piece {
+  height: 5vw;
+  width: 5vw;
+  text-align: center;
+  color: white;
+}
+
+.playerOne > .piece {
+  background: royalblue;
+}
+
+.playerTwo > .piece {
+  background: brown;
+}
+
+.playerOneTitle, .playerTwoTitle, .gameboardTitle, .removedPiecesTitle {
+  text-align: center;
+}
+
+.piece:hover {
+  cursor: pointer;
+}
+
+
+
+
+
 .gameContainer, .playerOneTitle, .playerTwoTitle, .gameboardTitle,
-.piecesContainer, .gameboard, .removedPiecesContainer, .removedPiecesTitle, .removedPieces {
+.piecesContainer, .gameboard, .removedPiecesContainer, .removedPiecesTitle, .removedPieces, .piece {
   border: 1px solid black;
 }
