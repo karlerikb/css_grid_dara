@@ -1,0 +1,39 @@
+.gameContainer, .piecesContainer, .gameboard, .removedPiecesContainer {
+  display: grid;
+}
+
+.gameContainer {
+  grid-template-columns: 2fr 5fr 2fr;
+  grid-template-rows: repeat(4, min-content);
+  grid-template-areas:
+    "playerOneTitle   gameTitle               playerTwoTitle "
+    "playerOnePieces  gameboard               playerTwoPieces"
+    "playerOnePieces  removedPiecesContainer  playerTwoPieces"
+    "playerOnePieces  removedPiecesContainer  playerTwoPieces"
+  ;
+}
+
+.removedPiecesContainer {
+  grid-template-columns: 1fr;
+  grid-template-rows: repeat(2, min-content);
+  grid-template-areas:
+    "removedPiecesTitle"
+    "removedPieces"
+  ;
+}
+
+.playerOneTitle { grid-area: playerOneTitle; }
+.playerTwoTitle { grid-area: playerTwoTitle; }
+.gameboardTitle { grid-area: gameTitle; }
+.playerOne.piecesContainer { grid-area: playerOnePieces; }
+.playerTwo.piecesContainer { grid-area: playerTwoPieces; }
+.gameboard { grid-area: gameboard; }
+.removedPiecesContainer { grid-area: removedPiecesContainer; }
+.removedPieces { grid-area: removedPieces; }
+.removedPiecesTitle { grid-area: removedPiecesTitle; }
+
+
+.gameContainer, .playerOneTitle, .playerTwoTitle, .gameboardTitle,
+.piecesContainer, .gameboard, .removedPiecesContainer, .removedPiecesTitle, .removedPieces {
+  border: 1px solid black;
+}
