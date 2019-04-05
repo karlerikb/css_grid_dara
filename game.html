@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
   <link rel="stylesheet" href="style.css">
   <title>Dara</title>
 </head>
@@ -41,9 +42,9 @@
     </div>
     
     <div class="gameboard">
-      <div class="piece"></div>
-      <div class="piece"></div>
-      <div class="piece"></div>
+      <div class="piece" style="grid-area: a23">a23</div>
+      <div class="piece" style="grid-area: a24">a24</div>
+      <div class="piece" style="grid-area: a25">a25</div>
       <div class="piece"></div>
       <div class="piece"></div>
       <div class="piece"></div>
@@ -72,16 +73,23 @@
       <div class="piece"></div>
       <div class="piece"></div>
     </div>
-    
-    <div class="playerOneTitle">Mängija 1</div>
-    <div class="gameboardTitle">Dara</div>
-    <div class="playerTwoTitle">Mängija 2</div>
     
     <div class="hintsContainer">
       Kirjeldus Lorem ipsum dolor sit amet consectetur adipisicing elit. Dolores repudiandae incidunt reiciendis atque eius sapiente laborum possimus soluta nostrum autem labore ut in doloremque quo deserunt reprehenderit vel sunt maiores totam, ipsam repellat? Voluptatibus mollitia optio aliquid qui asperiores aperiam eligendi nisi, voluptatum quia rerum dolores iste autem odit magnam!
     </div>
 
-    <div class="sidemenu"><span class="icon">+</span></div>
+    <div class="openMenuButton"><i class="fas fa-bars"></i></div>
+    <div class="closeMenuButton"><i class="fas fa-times"></i></div>
+
+    <div class="menu removed">
+      <div class="playerOneTitle removed">Mängija 1</div>
+      <div class="playerTwoTitle removed">Mängija 2</div>
+      <ul class="gameMenuList removed">
+        <li>Valik 1</li>
+        <li>Valik 2</li>
+      </ul>
+    </div>
   </div>
+  <script src="ui.js"></script>
 </body>
 </html>

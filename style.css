@@ -1,33 +1,38 @@
-.gameContainer, .piecesContainer, .gameboard {
+
+/* Defining Grid Elements */
+
+.gameContainer, .piecesContainer, .gameboard, .menu {
   display: grid;
 }
 
+
+/* Game Container Element */
+
 .gameContainer {
-  margin-top: 1vw;
-  /* border: 1px solid black; */
-  grid-template-columns: 2fr 5fr 2fr;
-  grid-template-rows: repeat(3, min-content);
+  grid-template-columns: [menu-start] 2fr 5fr 2fr [menu-end];
+  grid-template-rows: auto [menu-start] auto auto [menu-end];
   grid-template-areas:
-    "playerOneTitle    gameTitle        playerTwoTitle "
+    "...............   menuButton       ..............."
     "playerOnePieces   gameboard        playerTwoPieces"
     "playerOnePieces   hintsContainer   playerTwoPieces"
   ;
   justify-items: center;
-  align-items: center;
+  align-items: start;
 }
+
+/* Pieces Container Element */
 
 .piecesContainer {
   margin: 1vw 0;
-  /* border: 1px solid black; */
   border-radius: 2px;
   padding: .5vw;
-  grid-template-columns: repeat(2, min-content);
-  grid-template-rows: repeat(6, min-content);
-  grid-gap: .5vw;
-  align-self: start;
+  grid-template-columns: repeat(2, auto);
+  grid-template-rows: repeat(6, auto);
+  gap: .5vw;
 }
 
 .piecesContainer.playerOne {
+  border: 1px solid black;
   grid-area: playerOnePieces;
   grid-template-areas:
     "p1_7   p1_1"
@@ -37,9 +42,11 @@
     "p1_11  p1_5"
     "p1_12  p1_6"
   ;
+  background: #afc1f1;
 }
 
 .piecesContainer.playerTwo {
+  border: 1px solid black;
   grid-area: playerTwoPieces;
   grid-template-areas:
     "p2_1  p2_7 "
@@ -49,22 +56,10 @@
     "p2_5  p2_11"
     "p2_6  p2_12"
   ;
+  background: #eeb1b1;
 }
 
-.piecesContainer.playerOne > .piece { background: royalblue; }
-.piecesContainer.playerTwo > .piece { background: brown; }
-
-.piecesContainer .piece {
-  height: 6vw;
-  width: 6vw;
-  text-align: center;
-  color: white;
-}
-
-.piece {
-  border: 1px solid black;
-  border-radius: 2px;
-}
+/* Gameboard Element */
 
 .gameboard {
   margin: 1vw 0;
@@ -72,7 +67,7 @@
   border-radius: 2px;
   padding: 1vw;
   grid-area: gameboard;
-  grid-gap: .5vw;
+  gap: .5vw;
   grid-template-columns: repeat(6, 7vw);
   grid-template-rows: repeat(5, 7vw);
   grid-template-areas:
@@ -83,14 +78,38 @@
     "a51 a52 a53 a54 a55 a56"
   ;
   background: yellow;
+  justify-items: center;
+  align-items: center;
 }
 
+/* Hints Container Element */
+
 .hintsContainer {
-  /* border: 1px solid black; */
   border-radius: 2px;
   padding: 1vw;
   text-align: center;
+  grid-area: hintsContainer
 }
+
+
+/* Game Piece Elements */
+
+.piecesContainer.playerOne > .piece { background: royalblue; }
+.piecesContainer.playerTwo > .piece { background: brown; }
+
+.piecesContainer .piece {
+  text-align: center;
+  color: white;
+}
+
+.piece {
+  border: 1px solid black;
+  border-radius: 2px;
+  width: 6vw;
+  height: 6vw;
+}
+
+.piece:hover { cursor: pointer; }
 
 #p1_1 { grid-area: p1_1; }
 #p1_2 { grid-area: p1_2; }
@@ -118,44 +137,101 @@
 #p2_11 { grid-area: p2_11; }
 #p2_12 { grid-area: p2_12; }
 
-.playerOneTitle { grid-area: playerOneTitle; }
-.playerTwoTitle { grid-area: playerTwoTitle; }
-.gameboardTitle { grid-area: gameTitle; }
-.hintsContainer { grid-area: hintsContainer }
 
+/* Game Menu Element */
 
-.playerOneTitle, .playerTwoTitle, .gameboardTitle, .removedPiecesTitle {
+.menu {
+  border-radius: 5px;
+  width: 100%;
+  height: 100%;
+  background: #3f4142;
+  opacity: .95;
+  grid-area: menu;
+  /* grid-column: playerOnePieces / playerTwoPieces; */
+  /* grid-row: playerOnePieces / playerTwoPieces; */
+  grid-template-columns: 2fr 5fr 2fr;
+  grid-template-rows: 1fr 4fr;
+  grid-template-areas:
+    "playerOneTitle  ............  playerTwoTitle"
+    "..............  gameMenuList  .............."
+  ;
+  justify-items: center;
+  align-items: center;
+}
+
+/* Menu Button Element */
+
+.openMenuButton, .closeMenuButton {
+  margin: 1vw 0;
+  grid-area: menuButton;
+  cursor: pointer;
+  font-size: 2rem;
+}
+
+/* Player Titles, Menu List */
+
+.playerOneTitle, .playerTwoTitle, .gameMenuList {
+  border: 2px solid whitesmoke;
+  border-radius: 5px;
+  padding: 1vw;
+  color: whitesmoke;
+  background: #202020;
+  opacity: 1;
   text-align: center;
 }
 
-.piece:hover {
+/* Player Title */
+
+.playerOneTitle { grid-area: playerOneTitle; }
+.playerTwoTitle { grid-area: playerTwoTitle; }
+
+/* Menu List */
+
+.gameMenuList {
+  grid-area: gameMenuList;
+  align-self: start;
+}
+
+.gameMenuList > li {
+  margin: 0;
+  padding: 1.5vw 10vw;;
+  list-style: none;
+}
+
+.gameMenuList > li:hover {
+  color: #202020;
+  background: whitesmoke;
   cursor: pointer;
 }
 
-.sidemenu { display: none; }
+/* Remove Element Class */
+
+.removed { display: none !important; }
+
 
 
 @media screen and (orientation: portrait) {
+
+  /* Game Container Element */
+
   .gameContainer {
-    grid-template-columns: minmax(min-content, max-content) 1fr;
-    grid-template-rows: repeat(7, min-content);
-    grid-template-areas: 
-      "sidemenu playerTwoTitle"
-      "sidemenu playerTwoPieces"
-      "sidemenu gameTitle"
-      "sidemenu gameboard"
-      "sidemenu playerOneTitle"
-      "sidemenu playerOnePieces"
-      "sidemenu hintsContainer"
+    grid-template-columns: 4rem [menu-start] 1fr [menu-end];
+    grid-template-rows: [menu-start] 2fr 5fr 2fr [menu-end];
+    grid-template-areas:
+      "..........  playerTwoPieces"
+      "menuButton  gameboard"
+      "..........  playerOnePieces"
     ;
-    /* justify-items: left; */
+    align-items: center;
   }
+
+  /* Pieces Container Element */
 
   .piecesContainer {
     padding: 1vw;
-    grid-template-columns: repeat(6, min-content);
-    grid-template-rows: repeat(2, min-content);
-    grid-gap: 1vw;
+    grid-template-columns: repeat(6, auto);
+    grid-template-rows: repeat(2, auto);
+    gap: 1vw;
   }
 
   .piecesContainer.playerTwo {
@@ -172,11 +248,8 @@
     ;
   }
 
-  .piecesContainer .piece {
-    width: 10.5vw;
-    height: 10.5vw;
-  }
-  
+  /* Gameboard Element */
+
   .gameboard {
     margin: 0;
     padding: 2vw;
@@ -190,30 +263,56 @@
       "a12 a22 a32 a42 a52"
       "a11 a21 a31 a41 a51"
     ;
-    grid-gap: 1vw;
+    gap: 1vw;
   }
 
-  .playerOneTitle, .playerTwoTitle, .gameboardTitle, .hintsContainer {
+  /* Hints Container Element */
+
+  .hintsContainer {
     display: none;
   }
 
-  .sidemenu {
-    margin: 3vw;
-    border: 1px solid black;
-    border-radius: 50%;
-    width: 7vw;
-    height: 7vw;
-    grid-area: sidemenu;
-    background: gray;
-    align-self: start;
-    justify-self: center;
-    display: grid;
-    cursor: pointer;
+  /* Game Piece Elements */
+
+  .piecesContainer .piece {
+    width: 10.5vw;
+    height: 10.5vw;
   }
 
-  .sidemenu > .icon {
-    color: white;
-    align-self: center;
+  .piece {
+    width: 11.2vw;
+    height: 11.2vw;
+  }
+
+  /* Game Menu Element */
+
+  .menu {
+    grid-template-columns: 1fr;
+    grid-template-rows: 2fr 5fr 2fr;
+    grid-template-areas:
+      "playerOneTitle"
+      "gameMenuList"
+      "playerTwoTitle"
+    ;
+    justify-items: center;
+    align-items: center;
+  }
+
+  /* Menu Button Elements */
+
+  .openMenuButton, .closeMenuButton {
+    margin: 0;
     justify-self: center;
+    align-self: center;
+  }
+
+  /* Menu List */
+
+  .gameMenuList {
+    align-self: center;
+  }
+
+  .gameMenuList > li {
+    padding: 2vw 15vw;;
   }
 }
