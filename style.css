@@ -32,7 +32,6 @@
 }
 
 .piecesContainer.playerOne {
-  border: 1px solid black;
   grid-area: playerOnePieces;
   grid-template-areas:
     "p1_7   p1_1"
@@ -42,11 +41,9 @@
     "p1_11  p1_5"
     "p1_12  p1_6"
   ;
-  background: #afc1f1;
 }
 
 .piecesContainer.playerTwo {
-  border: 1px solid black;
   grid-area: playerTwoPieces;
   grid-template-areas:
     "p2_1  p2_7 "
@@ -56,6 +53,14 @@
     "p2_5  p2_11"
     "p2_6  p2_12"
   ;
+}
+
+.piecesContainer.playerOne.active {
+  border: 1px solid black;
+  background: #afc1f1;
+}
+.piecesContainer.playerTwo.active {
+  border: 1px solid black;
   background: #eeb1b1;
 }
 
@@ -100,6 +105,14 @@
 .piecesContainer .piece {
   text-align: center;
   color: white;
+}
+
+.piecesContainer .piece.active {
+  box-shadow: 0 0 4px 1px #303030;
+}
+
+.piecesContainer .piece.inactive {
+  opacity: .5;
 }
 
 .piece {
