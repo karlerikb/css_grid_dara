@@ -27,12 +27,12 @@ const menuButtonFunctions = [openMenu_2, closeMenu_2];
 
 
 
-// Initializing Application
-function init() {
+// Initializing UI
+function initUI() {
   createMenuButton("open");
 }
 
-init();
+initUI();
 
 
 
