@@ -1,41 +1,125 @@
+// Elements
+const gameContainerElement = document.querySelector(".gameContainer");
 
 
-const menu = document.querySelector(".menu");
-const openMenuButton = document.querySelector(".openMenuButton");
-const closeMenuButton = document.querySelector(".closeMenuButton");
-const playerOneTitle = document.querySelector(".playerOneTitle");
-const playerTwoTitle = document.querySelector(".playerTwoTitle");
-const gameMenuList = document.querySelector(".gameMenuList");
-
-setDefaultGameMenuSettings();
-
-openMenuButton.addEventListener("click", openMenu);
-closeMenuButton.addEventListener("click", closeMenu);
-
-function openMenu() {
-  openMenuButton.classList.add("removed");
-  closeMenuButton.classList.remove("removed");
-  menu.classList.remove("removed");
-  playerOneTitle.classList.remove("removed");
-  playerTwoTitle.classList.remove("removed");
-  gameMenuList.classList.remove("removed");
+// Menu Functions
+const openMenu_2 = function() {
+  createMenuButton("close");
+  createMenuElement();
 }
 
-function closeMenu() {
-  openMenuButton.classList.remove("removed");
-  closeMenuButton.classList.add("removed");
-  menu.classList.add("removed");
-  playerOneTitle.classList.add("removed");
-  playerTwoTitle.classList.add("removed");
-  gameMenuList.classList.add("removed");
+const closeMenu_2 = function() {
+  createMenuButton("open");
+  const menuElement = document.querySelector(".menu");
+  if (menuElement) removeMenuElement(menuElement);
 }
 
-function setDefaultGameMenuSettings() {
-  if (openMenuButton.classList.contains("removed")) openMenuButton.classList.remove("removed");
-  if (!closeMenuButton.classList.contains("removed")) closeMenuButton.classList.add("removed");
-  if (!menu.classList.contains("removed")) menu.classList.add("removed");
-  if (!playerOneTitle.classList.contains("removed")) playerOneTitle.classList.add("removed");
-  if (!playerTwoTitle.classList.contains("removed")) playerTwoTitle.classList.add("removed");
-  if (!gameMenuList.classList.contains("removed")) gameMenuList.classList.add("removed");
+// Variables
+const players = ["one", "two"];
+const playersEstLang = ["Mängija 1", "Mängija 2"];
+
+const menuOptions = ["resume", "exit"];
+const menuOptionsEstLang = ["Jätka mängu", "Välju mängust"];
+
+const menuButtons = ["open", "close"];
+const menuButtonIcons = ["fas fa-bars", "fas fa-times"];
+const menuButtonFunctions = [openMenu_2, closeMenu_2];
+
+
+
+// Initializing Application
+function init() {
+  createMenuButton("open");
 }
 
+init();
+
+
+
+// Game Menu Button Functionality
+
+function createMenuButton(type) {
+  const index = menuButtons.findIndex(button => button === type);
+  createMenuButtonElement(type, index);
+  toggleMenuButton(type);
+}
+
+function createMenuButtonElement(type, index) {
+  const menuButtonElement = document.createElement("div");
+  menuButtonElement.className = `${type}MenuButton`;
+  menuButtonElement.addEventListener("click", menuButtonFunctions[index]);
+  gameContainerElement.appendChild(menuButtonElement);
+  createMenuButtonIconElement(menuButtonElement, index);
+}
+
+function createMenuButtonIconElement(menuButtonElement, index) {
+  const menuButtonIconElement = document.createElement("i");
+  menuButtonIconElement.className = menuButtonIcons[index];
+  menuButtonElement.appendChild(menuButtonIconElement);
+}
+
+function toggleMenuButton(type) {
+  const buttonToBeRemoved = menuButtons.filter(button => button !== type);
+  const buttonElementToBeRemoved = document.querySelector(`.${buttonToBeRemoved}MenuButton`);
+  if (buttonElementToBeRemoved) buttonElementToBeRemoved.remove();
+}
+
+
+
+// Game Menu Functionality
+
+function createMenuElement() {
+  const menuElement = document.createElement("div");
+  menuElement.className = "menu";
+  gameContainerElement.appendChild(menuElement);
+  createPlayerTitleElements(menuElement);
+  createGameMenuListElement(menuElement);
+}
+
+function createPlayerTitleElements(menuElement) {
+  players.forEach((player, number) => {
+    const playerNumberString = upperCaseFirstLetter(player);
+    const playerTitleElement = document.createElement("div");
+    playerTitleElement.className = `player${playerNumberString}Title`;
+    playerTitleElement.textContent = playersEstLang[number];
+    menuElement.appendChild(playerTitleElement);
+  });
+}
+
+function createGameMenuListElement(menuElement) {
+  const gameMenuListElement = document.createElement("ul");
+  gameMenuListElement.className = "gameMenuList";
+  menuElement.appendChild(gameMenuListElement);
+  createGameMenuListItemElements(gameMenuListElement);
+}
+
+function createGameMenuListItemElements(gameMenuListElement) {
+  menuOptions.forEach((option, index) => {
+    const gameMenuListItemElement = document.createElement("li");
+    gameMenuListItemElement.className = option;
+    gameMenuListItemElement.textContent = menuOptionsEstLang[index];
+    gameMenuListElement.appendChild(gameMenuListItemElement);
+  }); 
+}
+
+function removeMenuElement(menuElement) {
+  menuElement.remove();
+}
+
+
+
+// Helper Functions
+
+function upperCaseFirstLetter(string) {
+  const firstLetter = string.charAt(0).toUpperCase();
+  if (string.length === 1) {
+    return firstLetter;
+
+  } else if (string.length > 1) {
+    const restOfTheString = string.slice(1);
+    return firstLetter + restOfTheString;
+    
+  } else {
+    return "";
+  }
+}
