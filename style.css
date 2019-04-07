@@ -103,9 +103,14 @@
   color: white;
 }
 
-.piecesContainer.active > .piece { cursor: pointer; }
-.piecesContainer .piece.active { box-shadow: 0 0 4px 1px #303030; }
-.piecesContainer .piece.inactive { opacity: .5; }
+.piecesContainer.active > .piece,
+.piece.active,
+.piece.inactive { cursor: pointer; }
+
+.piece.active { box-shadow: 0 0 4px 1px #303030 !important; }
+.piece.inactive { opacity: .5 !important; }
+
+
 
 .gameboard .playerOne.piece { background: royalblue; }
 .gameboard .playerTwo.piece { background: brown; }
@@ -340,6 +345,8 @@
 :root {
   --targetPositionTop: 0px;
   --targetPositionLeft: 0px;
+  /* temporary variable for development */
+  --animationTime: 2s;
 }
 
 @keyframes animateMovementBetweenGrids {
@@ -355,5 +362,5 @@
 
 .moveBetweenGrids {
   position: relative;
-  animation: animateMovementBetweenGrids 2s;
+  animation: animateMovementBetweenGrids var(--animationTime);
 }
