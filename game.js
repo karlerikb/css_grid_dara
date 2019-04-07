@@ -1,11 +1,13 @@
 // Elements
 
+const root = document.querySelector(":root");
 const gameboardElement = document.querySelector(".gameboard");
 
 
 // Variables
 
 let activePlayer;
+let animationInProgress = false;
 const gameboardPieces = [];
 const prohibitedPositions = [];
 
@@ -89,7 +91,9 @@ function activatePlayerPiece(e) {
   const playerNumberString = upperCaseFirstLetter(activePlayer);
   const activatedPlayerPiecesElements = document.querySelector(`.player${playerNumberString}.piecesContainer`).children;
   const activatedPlayerPieces = Array.from(activatedPlayerPiecesElements);
-  if (activatedPlayerPieces.includes(e.target)) highlightActivatedPiece(e.target, activatedPlayerPieces);
+  if (activatedPlayerPieces.includes(e.target) && !animationInProgress) {
+    highlightActivatedPiece(e.target, activatedPlayerPieces);
+  }
 }
 
 function highlightActivatedPiece(activePiece, activatedPlayerPieces) {
@@ -125,7 +129,6 @@ function setOtherPiecesToInactive(activePiece, activatedPlayerPieces) {
     if (piece.classList.contains("active") && piece != activePiece) piece.classList.remove("active");
   });
 }
-
 
 function createGameboardPositions(activePiece, activatedPlayerPieces) {
   removeGameboardPositions();
@@ -167,18 +170,17 @@ function createTemporaryPositionElement(position, activePiece, activatedPlayerPi
 // Moving Piece from PiecesContainer to Gameboard
 
 function moveActivePieceToGameboard(e) {
-  const opponentPlayer = (players.filter(player => player !== activePlayer))[0];
+  // const opponentPlayer = (players.filter(player => player !== activePlayer))[0];
   const playerPieceElement = e.target.activePiece;
   const gameboardPositionElement = e.target;
-  const gameboardPositionArea = window.getComputedStyle(gameboardPositionElement).gridArea.split("/")[0].trim();
-  addPlayerPieceToGameboard(playerPieceElement.id, gameboardPositionArea);
-  removePlayerActivePiece(playerPieceElement);
-  removePlayerPieceActivation(e.target.activatedPlayerPieces);
-  removeGameboardPositions();
-  switchTurnToPlayer(opponentPlayer);
+  const activatedPlayerPieces = e.target.activatedPlayerPieces;
+  if (!animationInProgress) {
+    animateMovementBetweenGrids(playerPieceElement, gameboardPositionElement, activatedPlayerPieces);
+  }
 }
 
-function addPlayerPieceToGameboard(playerPieceId, gameboardPositionArea) {
+function addPlayerPieceToGameboard(playerPieceId, gameboardPositionElement) {
+  const gameboardPositionArea = window.getComputedStyle(gameboardPositionElement).gridArea.split("/")[0].trim();
   gameboardPieces.push(playerPieceId);
   prohibitedPositions.push(gameboardPositionArea);
   createPlayerPieceElement(playerPieceId, gameboardPositionArea);
@@ -186,4 +188,62 @@ function addPlayerPieceToGameboard(playerPieceId, gameboardPositionArea) {
 
 function removePlayerActivePiece(piece) {
   piece.remove();
+}
+
+
+// Animating Movement Between Grids
+
+function animateMovementBetweenGrids(activePiece, targetPosition, activatedPlayerPieces) {
+  const activePieceTop = activePiece.getBoundingClientRect().top;
+  const activePieceLeft = activePiece.getBoundingClientRect().left;
+  const targetPositionTop = targetPosition.getBoundingClientRect().top;
+  const targetPositionLeft = targetPosition.getBoundingClientRect().left;
+
+  root.style.setProperty("--targetPositionTop", (targetPositionTop - activePieceTop) + "px");
+  root.style.setProperty("--targetPositionLeft", (targetPositionLeft - activePieceLeft) + "px");
+
+  activePiece.classList.add("moveBetweenGrids");
+  activePiece.addEventListener("animationend", animationBetweenGridsEnds);
+  activePiece.addEventListener("animationstart", animationStarted);
+
+  activePiece.positionElement = targetPosition;
+  activePiece.activatedPlayerPieces = activatedPlayerPieces;
+}
+
+function animationBetweenGridsEnds(e) {
+  const opponentPlayer = (players.filter(player => player !== activePlayer))[0];
+  const playerPieceElement = e.target;
+  const targetPositionElement = e.target.positionElement;
+  const activatedPlayerPieces = e.target.activatedPlayerPieces;
+
+  addPlayerPieceToGameboard(playerPieceElement.id, targetPositionElement);
+  removePlayerActivePiece(playerPieceElement);
+  removePlayerPieceActivation(activatedPlayerPieces);
+  removeGameboardPositions();
+  switchTurnToPlayer(opponentPlayer);
+  animationEnded(e);
+}
+
+function animationStarted(e) {
+  const temporaryPositions = Array.from(document.querySelectorAll(".gameboard > .temporaryPosition"));
+  const activatedPieces = e.target.activatedPlayerPieces;
+  activatedPieces.forEach(piece => {
+    if (!piece.classList.contains("notAllowed")) piece.classList.add("notAllowed");
+  });
+  temporaryPositions.forEach(temporaryPosition => {
+    if (!temporaryPosition.classList.contains("notAllowed")) temporaryPosition.classList.add("notAllowed");
+  });
+  animationInProgress = true;
+}
+
+function animationEnded(e) {
+  const temporaryPositions = Array.from(document.querySelectorAll(".gameboard > .temporaryPosition"));
+  const activatedPieces = e.target.activatedPlayerPieces;
+  activatedPieces.forEach(piece => {
+    if (piece.classList.contains("notAllowed")) piece.classList.remove("notAllowed");
+  });
+  temporaryPositions.forEach(temporaryPosition => {
+    if (temporaryPosition.classList.contains("notAllowed")) temporaryPosition.classList.remove("notAllowed");
+  });
+  animationInProgress = false;
 }

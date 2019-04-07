@@ -55,14 +55,10 @@
   ;
 }
 
-.piecesContainer.playerOne.active {
-  border: 1px solid black;
-  background: #afc1f1;
-}
-.piecesContainer.playerTwo.active {
-  border: 1px solid black;
-  background: #eeb1b1;
-}
+.piecesContainer.playerOne.active { background: #afc1f1; }
+.piecesContainer.playerTwo.active { background: #eeb1b1; }
+
+.piecesContainer.active { border: 1px solid black; }
 
 /* Gameboard Element */
 
@@ -103,11 +99,11 @@
 .piecesContainer.playerTwo > .piece { background: brown; }
 
 .piecesContainer .piece {
-  cursor: pointer;
   text-align: center;
   color: white;
 }
 
+.piecesContainer.active > .piece { cursor: pointer; }
 .piecesContainer .piece.active { box-shadow: 0 0 4px 1px #303030; }
 .piecesContainer .piece.inactive { opacity: .5; }
 
@@ -119,12 +115,12 @@
   border-radius: 2px;
   width: 6vw;
   height: 6vw;
+  /* position: relative; */
 }
 
 .gameboard .temporaryPosition {
   border: 1px dashed #303030;
 }
-
 
 .gameboard .temporaryPosition:hover {
   cursor: pointer;
@@ -227,7 +223,7 @@
 /* Remove Element Class */
 
 .removed { display: none !important; }
-
+.notAllowed { cursor: not-allowed !important; }
 
 
 @media screen and (orientation: portrait) {
@@ -335,4 +331,29 @@
   .gameMenuList > li {
     padding: 2vw 15vw;;
   }
+}
+
+
+
+/* Animation */
+
+:root {
+  --targetPositionTop: 0px;
+  --targetPositionLeft: 0px;
+}
+
+@keyframes animateMovementBetweenGrids {
+  0% {
+    top: 0px;
+    left: 0px;
+  }
+  100% {
+    top: var(--targetPositionTop);
+    left: var(--targetPositionLeft);
+  }
+}
+
+.moveBetweenGrids {
+  position: relative;
+  animation: animateMovementBetweenGrids 2s;
 }
