@@ -132,32 +132,6 @@
   background: lightgreen;
 }
 
-#p1_1 { grid-area: p1_1; }
-#p1_2 { grid-area: p1_2; }
-#p1_3 { grid-area: p1_3; }
-#p1_4 { grid-area: p1_4; }
-#p1_5 { grid-area: p1_5; }
-#p1_6 { grid-area: p1_6; }
-#p1_7 { grid-area: p1_7; }
-#p1_8 { grid-area: p1_8; }
-#p1_9 { grid-area: p1_9; }
-#p1_10 { grid-area: p1_10; }
-#p1_11 { grid-area: p1_11; }
-#p1_12 { grid-area: p1_12; }
-
-#p2_1 { grid-area: p2_1; }
-#p2_2 { grid-area: p2_2; }
-#p2_3 { grid-area: p2_3; }
-#p2_4 { grid-area: p2_4; }
-#p2_5 { grid-area: p2_5; }
-#p2_6 { grid-area: p2_6; }
-#p2_7 { grid-area: p2_7; }
-#p2_8 { grid-area: p2_8; }
-#p2_9 { grid-area: p2_9; }
-#p2_10 { grid-area: p2_10; }
-#p2_11 { grid-area: p2_11; }
-#p2_12 { grid-area: p2_12; }
-
 
 /* Game Menu Element */
 
@@ -168,8 +142,6 @@
   background: #3f4142;
   opacity: .95;
   grid-area: menu;
-  /* grid-column: playerOnePieces / playerTwoPieces; */
-  /* grid-row: playerOnePieces / playerTwoPieces; */
   grid-template-columns: 2fr 5fr 2fr;
   grid-template-rows: 1fr 4fr;
   grid-template-areas:
@@ -229,6 +201,7 @@
 
 .removed { display: none !important; }
 .notAllowed { cursor: not-allowed !important; }
+.selectable { cursor: pointer !important; }
 
 
 @media screen and (orientation: portrait) {
