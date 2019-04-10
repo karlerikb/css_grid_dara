@@ -365,10 +365,6 @@ function addPlayerPieceToGameboard(playerPieceId, gameboardPositionElement) {
 function configureGameboardPiecesLogic(playerPieceId, gameboardPositionArea) {
   // This is for phase one
   if (!gameboardPieces.includes(playerPieceId)) {
-    // const moveIsAllowed = moveIsAllowed(playerPieceId, gameboardPositionArea);
-    // if (moveIsAllowed) {
-
-    // }
     addPositionToArrays(playerPieceId, gameboardPositionArea);
   // This is for phase two
   } else {
@@ -378,117 +374,6 @@ function configureGameboardPiecesLogic(playerPieceId, gameboardPositionArea) {
     addPositionToArrays(playerPieceId, gameboardPositionArea);
   }
 }
-
-// function moveIsAllowed(playerPieceId, gameboardPosition) {
-//   const areas = generateSurroundingAreas(gameboardPosition);
-
-//   const verticalRow = checkThreeInRows("vertical", playerPieceId, areas[0], areas[2]);
-//   const horizontalRow = checkThreeInRows("horizontal", playerPieceId, areas[1], areas[3]);
-
-//   if (verticalRow || horizontalRow) {
-//     console.log(gameboardPosition + " is prohibited for player " + playerPieceId[1]);
-//     return false;
-//   }
-//   return true;
-// }
-
-// function checkThreeInRows(dimension, playerPieceId, area, oppositeArea) {
-
-//   // // If area is null
-//   // if (area === null) {
-//   //   areaIsInRowEdge(dimension, playerPieceId, oppositeArea);
-//   //   console.log(area, "area is null");
-//   // // If area is empty
-//   // } else if (!gamePiecePositions.includes(area)) {
-//   //   areaIsInRowEdge(dimension, playerPieceId, oppositeArea);
-//   //   console.log(area, "area is empty");
-//   // // If area is occupied by player piece
-//   // } else if (pieceIsPlayerPiece(playerPieceId, area)) {
-//   //   console.log(area, "area is occupied by player piece");
-//   //   areaIsInRowCenter(dimension, playerPieceId, oppositeArea);
-//   // // If area is occupied by opponent piece
-//   // } else {
-//   //   areaIsInRowEdge(dimension, playerPieceId, oppositeArea);
-//   //   console.log(area, "area is occupied by opponent piece");
-//   // }
-
-//   const areaIsPlayerPiece = pieceIsPlayerPiece(playerPieceId, area);
-//   const oppositeAreaIsPlayerPiece = pieceIsPlayerPiece(playerPieceId, oppositeArea);
-
-//   // area and opposite area are player pieces
-//   if (areaIsPlayerPiece && oppositeAreaIsPlayerPiece) return true;
-
-//   // area is player piece
-//   if (areaIsPlayerPiece && !oppositeAreaIsPlayerPiece) {
-//     if (dimension === "vertical") {
-//       const oppositeAreaTwo = `a${--oppositeArea[1]}${oppositeArea[2]}`;
-//       const oppositeAreaTwoIsPlayerPiece = pieceIsPlayerPiece(playerPieceId, oppositeAreaTwo);
-//       if (oppositeAreaTwoIsPlayerPiece) return true;
-//       return false;
-//     }
-//     if (dimension === "horizontal") {
-//       const oppositeAreaTwo = `a${oppositeArea[1]}${--oppositeArea[2]}`;
-//       const oppositeAreaTwoIsPlayerPiece = pieceIsPlayerPiece(playerPieceId, oppositeAreaTwo);
-//       if (oppositeAreaTwoIsPlayerPiece) return true;
-//       return false;
-//     }
-//   }
-//   // opposite area is player piece
-//   if (!areaIsPlayerPiece && oppositeAreaIsPlayerPiece) {
-//     if (dimension === "vertical") {
-//       const oppositeAreaTwo = `a${++oppositeArea[1]}${oppositeArea[2]}`;
-//       const oppositeAreaTwoIsPlayerPiece = pieceIsPlayerPiece(playerPieceId, oppositeAreaTwo);
-//       if (oppositeAreaTwoIsPlayerPiece) return true;
-//       return false;
-//     }
-//     if (dimension === "horizontal") {
-//       const oppositeAreaTwo = `a${oppositeArea[1]}${++oppositeArea[2]}`;
-//       const oppositeAreaTwoIsPlayerPiece = pieceIsPlayerPiece(playerPieceId, oppositeAreaTwo);
-//       if (oppositeAreaTwoIsPlayerPiece) return true;
-//       return false;
-//     }
-//   }
-//   // neither area nor opposite area are player pieces
-//   if (!areaIsPlayerPiece && !oppositeAreaIsPlayerPiece) return false;
-// }
-
-
-
-// function areaIsInRowEdge(dimension, oppositeAreaOne, playerPieceId) {
-//   if (!pieceIsPlayerPiece(playerPieceId, oppositeAreaOne)) {
-//     console.log("opposite piece is not player piece");
-//     return false;
-//   }
-//   let oppositeAreaTwo;
-//   if (dimension === "vertical") {
-//     oppositeAreaTwo = `a${++oppositeAreaOne[1]}${oppositeAreaOne[2]}`;
-//   } else {
-//     oppositeAreaTwo = `a${oppositeAreaOne[1]}${--oppositeAreaOne[2]}`;
-//   }
-
-//   if (!pieceIsPlayerPiece(playerPieceId, oppositeAreaTwo)) return false
-//   console.log(oppositeAreaOne, oppositeAreaTwo);
-  
-//   return true;
-// }
-
-// function areaIsInRowCenter(dimension, oppositeArea, playerPieceId) {
-
-// }
-
-// function pieceIsPlayerPiece(playerPieceId, area) {
-//   if (area === null) return false; // position is invalid
-
-//   const index = gamePiecePositions.findIndex(position => position === area);
-//   if (index === -1) return false; // position is empty
-
-//   const pieceInArea = gameboardPieces[index];
-//   if (playerPieceId[1] !== pieceInArea[1]) return false; // position is occupied and it is an opponent piece
-
-//   return true; // position is occupied and it is a player piece
-// }
-
-
 
 
 
@@ -525,61 +410,48 @@ function createProhibitedPositionsInArrays(playerPieceId, row, column) {
 
 function horizontalRow(player, row, column) {
   if (player === 1) {
-    // a three-in-a-row can only be made within those five positions in one dimension
-    const analyzePositionsArray = getFiveHorizontalPositions(playerOneGameboard, row, column);
-    // arrays for those positions and their area names
-    const analyzePositionAreas = getFiveHorizontalPositionAreas(row, column);
-    // boolean array is used for counting
-    const analyzePositionBooleansArray = analyzePositionsArray.map(position => Boolean(position));
-    // counting boolean values which indicate whether or not a three-in-a-row can be made
-    const countTrueValues = (areas, available) => areas + available;
-    const valueCounts = analyzePositionBooleansArray.reduce(countTrueValues);
-
-    // three-in-a-row needs at least three position values that are true
-    if (valueCounts > 2) {
-      prohibitThreeInARow(playerOneGameboard, analyzePositionsArray, analyzePositionAreas);
-    }
+    checkPlayerHorizontalRows(playerOneGameboard, row, column);
   }
   if (player === 2) {
-    // a three-in-a-row can only be made within those five positions in one dimension
-    const analyzePositionsArray = getFiveHorizontalPositions(playerTwoGameboard, row, column);
-    // arrays for those positions and their area names
-    const analyzePositionAreas = getFiveHorizontalPositionAreas(row, column);
-    // boolean array is used for counting
-    const analyzePositionBooleansArray = analyzePositionsArray.map(position => Boolean(position));
-    // counting boolean values which indicate whether or not a three-in-a-row can be made
-    const countTrueValues = (areas, available) => areas + available;
-    const valueCounts = analyzePositionBooleansArray.reduce(countTrueValues);
+    checkPlayerHorizontalRows(playerTwoGameboard, row, column);
+  }
+}
 
-    // three-in-a-row needs at least three position values that are true
-    if (valueCounts > 2) {
-      prohibitThreeInARow(playerTwoGameboard, analyzePositionsArray, analyzePositionAreas);
-    }
+function checkPlayerHorizontalRows(playerGameboard, row, column) {
+  // a three-in-a-row can only be made within those five positions in one dimension
+  const analyzePositionsArray = getFiveHorizontalPositions(playerGameboard, row, column);
+  // arrays for those positions and their area names
+  const analyzePositionAreas = getFiveHorizontalPositionAreas(row, column);
+  // boolean array is used for counting
+  const analyzePositionBooleansArray = analyzePositionsArray.map(position => Boolean(position));
+  // counting boolean values which indicate whether or not a three-in-a-row can be made
+  const countTrueValues = (areas, available) => areas + available;
+  const valueCounts = analyzePositionBooleansArray.reduce(countTrueValues);
+
+  // three-in-a-row needs at least three position values that are true
+  if (valueCounts > 2) {
+    prohibitThreeInARow(playerGameboard, analyzePositionsArray, analyzePositionAreas);
   }
 }
 
 function verticalRow(player, row, column) {
   if (player === 1) {
-    const analyzePositionsArray = getFiveVerticalPositions(playerOneGameboard, row, column);
-    const analyzePositionAreas = getFiveVerticalPositionAreas(row, column);
-    const analyzePositionBooleansArray = analyzePositionsArray.map(position => Boolean(position));
-    const countTrueValues = (areas, available) => areas + available;
-    const valueCounts = analyzePositionBooleansArray.reduce(countTrueValues);
-
-    if (valueCounts > 2) {
-      prohibitThreeInARow(playerOneGameboard, analyzePositionsArray, analyzePositionAreas);
-    }
+    checkPlayerVerticalRows(playerOneGameboard, row, column);
   }
   if (player === 2) {
-    const analyzePositionsArray = getFiveVerticalPositions(playerTwoGameboard, row, column);
-    const analyzePositionAreas = getFiveVerticalPositionAreas(row, column);
-    const analyzePositionBooleansArray = analyzePositionsArray.map(position => Boolean(position));
-    const countTrueValues = (areas, available) => areas + available;
-    const valueCounts = analyzePositionBooleansArray.reduce(countTrueValues);
+    checkPlayerVerticalRows(playerTwoGameboard, row, column);
+  }
+}
 
-    if (valueCounts > 2) {
-      prohibitThreeInARow(playerTwoGameboard, analyzePositionsArray, analyzePositionAreas);
-    }
+function checkPlayerVerticalRows(playerGameboard, row, column) {
+  const analyzePositionsArray = getFiveVerticalPositions(playerGameboard, row, column);
+  const analyzePositionAreas = getFiveVerticalPositionAreas(row, column);
+  const analyzePositionBooleansArray = analyzePositionsArray.map(position => Boolean(position));
+  const countTrueValues = (areas, available) => areas + available;
+  const valueCounts = analyzePositionBooleansArray.reduce(countTrueValues);
+
+  if (valueCounts > 2) {
+    prohibitThreeInARow(playerGameboard, analyzePositionsArray, analyzePositionAreas);
   }
 }
 
@@ -592,14 +464,18 @@ function prohibitThreeInARow(playerGameboard, analyzePositionsArray, analyzePosi
 
     // In a three area sequence, there are two player pieces
     if (playerOccupiedAreas === 2) {
-      const potentialThreeInRow = analyzePositionAreas.slice(i, i + 3);
-      potentialThreeInRow.forEach(area => {
-        const row = area[1];
-        const column = area[2];
-        if (playerGameboard[row][column]) playerGameboard[row][column] = false;
-      });
+      findAreaAndMakeItProhibited(playerGameboard, analyzePositionAreas);
     }
   }
+}
+
+function findAreaAndMakeItProhibited(playerGameboard, analyzePositionAreas) {
+  const potentialThreeInRow = analyzePositionAreas.slice(i, i + 3);
+  potentialThreeInRow.forEach(area => {
+    const row = area[1];
+    const column = area[2];
+    if (playerGameboard[row][column]) playerGameboard[row][column] = false;
+  });
 }
 
 function getFiveHorizontalPositions(playerGameboard, row, column) {
@@ -636,15 +512,6 @@ function getFiveVerticalPositionAreas(row, column) {
   ];
 }
 
-
-
-function positionIsOccupiedByPlayerPiece(player, area) {
-  if (area === null) return false;
-  if (area === "empty") return false;
-  if (area[1] !== player) return false;
-  if (area[1] === player) return true;
-  return false;
-}
 
 function removePlayerActivePiece(piece) {
   piece.remove();
