@@ -1,4 +1,15 @@
-// import { UI } from "./ui.js";
+import { Menu } from "./Menu.js";
+import { Game } from "./Game.js";
 
-// const c = new UI(1);
+class App {
+  static init() {
+    const game = new Game();
+    const menu = new Menu(game);
+
+    game.init();
+    menu.init();
+  }
+}
+
+App.init();
 
