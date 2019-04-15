@@ -69,11 +69,13 @@ export class PhaseOne extends Game {
       for (let row = 1; row <= 5; row++) {
         for (let column = 1; column <= 6; column++) {
           const area = `a${row}${column}`;
-          const temporaryPosition = Helper.create({
-            type: "div", class: "temporaryPosition", area,
-            event: { type: "click", function: _movePiece.get(this) },
-            parent: this.app.selectors.gameboard
-          });
+          if (!this.app.activePlayer.allProhibitedPositions.includes(area)) {
+            const temporaryPosition = Helper.create({
+              type: "div", class: "temporaryPosition", area,
+              event: { type: "click", function: _movePiece.get(this) },
+              parent: this.app.selectors.gameboard
+            });
+          }
         }
       }
     });

@@ -8,6 +8,7 @@ const _targetPiece = new WeakMap();
 const _targetPosition = new WeakMap();
 const _playerPieces = new WeakMap();
 const _animationInProgress = new WeakMap();
+const _piecesPositions = new WeakMap();
 
 const _removeGameboardPositions = new WeakMap();
 const _removeActivation = new WeakMap();
@@ -23,6 +24,7 @@ const _activatePlayer = new WeakMap();
 const _deactivatePlayer = new WeakMap();
 const _switchPlayers = new WeakMap();
 const _scrollToActivePieceContainer = new WeakMap();
+const _configureGameboardPositions = new WeakMap();
 
 
 export class Game {
@@ -31,10 +33,13 @@ export class Game {
     _gamePiecesForEachPlayer.set(this, 12);
     _animationTime.set(this, ".5s");
 
+    // Properties
     _app.set(this, app);
     _animationInProgress.set(this, false);
+    _piecesPositions.set(this, {});
 
 
+    // Methods
     _removeGameboardPositions.set(this, () => {
       const temporaryPositions = this.temporaryPositions;
       if (temporaryPositions) temporaryPositions.forEach(position => position.remove());
@@ -53,7 +58,6 @@ export class Game {
     });
 
     _animateMovement.set(this, () => {
-      console.log("moving...");
       const root = this.app.selectors.root;
 
       const targetPieceTop = this.targetPiece.getBoundingClientRect().top;
@@ -102,6 +106,12 @@ export class Game {
         area: targetArea,
         parent: this.app.selectors.gameboard
       });
+      this.configureGameboardPositions(targetArea);
+    });
+
+    _configureGameboardPositions.set(this, (targetArea) => {
+      this.piecesPositions[targetArea] = this.targetPiece.id;
+      this.app.activePlayer.setPlayerPiecePosition(this.piecesPositions);
     });
 
     _switchTurn.set(this, () => {
@@ -143,6 +153,7 @@ export class Game {
   get targetPosition() { return _targetPosition.get(this); }
   get playerPieces() { return _playerPieces.get(this); }
   get animationInProgress() { return _animationInProgress.get(this); }
+  get piecesPositions() { return _piecesPositions.get(this); }
   get temporaryPositions() { return Array.from(document.querySelectorAll(".gameboard > .temporaryPosition")); }
 
   get gamePiecesForEachPlayer() { return _gamePiecesForEachPlayer.get(this); }
@@ -169,6 +180,7 @@ export class Game {
   get deactivatePlayer() { return _deactivatePlayer.get(this); }
   get switchPlayers() { return _switchPlayers.get(this); }
   get scrollToActivePieceContainer() { return _scrollToActivePieceContainer.get(this); }
+  get configureGameboardPositions() { return _configureGameboardPositions.get(this); }
 
 
   init() {
