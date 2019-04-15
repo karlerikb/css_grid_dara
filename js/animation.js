@@ -22,14 +22,14 @@ function animateMovementBetweenGrids(activePiece, targetPosition, activatedPlaye
 
 function animationBetweenGridsEnds(e) {
   const opponentPlayer = (players.filter(player => player !== activePlayer))[0];
-  const playerPieceElement = e.target;
-  const targetPositionElement = e.target.positionElement;
-  const activatedPlayerPieces = e.target.activatedPlayerPieces;
+  const playerPieceElement = e.target; // targetpiece
+  const targetPositionElement = e.target.positionElement; // targetposition
+  const activatedPlayerPieces = e.target.activatedPlayerPieces; // playerpieces
 
-  addPlayerPieceToGameboard(playerPieceElement.id, targetPositionElement);
-  removePlayerActivePiece(playerPieceElement);
-  removePlayerPieceActivation(activatedPlayerPieces);
-  removeGameboardPositions();
+  addPlayerPieceToGameboard(playerPieceElement.id, targetPositionElement); // adding new element to targetposition
+  removePlayerActivePiece(playerPieceElement); // removing old element (targetpiece)
+  removePlayerPieceActivation(activatedPlayerPieces); // resetting
+  removeGameboardPositions(); // resetting
   switchTurnToPlayer(opponentPlayer);
   animationEnded(e);
 }

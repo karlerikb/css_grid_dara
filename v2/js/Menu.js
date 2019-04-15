@@ -1,4 +1,3 @@
-import { App } from "./App.js";
 import { Helper } from "./Helper.js";
 
 const _activeButton = new WeakMap();
@@ -13,11 +12,11 @@ const _toggleMenu = new WeakMap();
 const _createPlayerTitles = new WeakMap();
 const _createMenuList = new WeakMap();
 const _initMenu = new WeakMap();
+const _app = new WeakMap();
 
-
-class Menu extends App {
-  constructor() {
-    super();
+export class Menu {
+  constructor(app) {
+    _app.set(this, app);
     _activeButton.set(this, "open");
     _buttonTypes.set(this, ["open", "close"]);
     _buttonIcons.set(this, ["fas fa-bars", "fas fa-times"]);
@@ -26,7 +25,7 @@ class Menu extends App {
 
     _createMenuButton.set(this, (type) => {
       const buttonIndex = _buttonTypes.get(this).findIndex(button => button === type);
-      const gameContainer = super.selectors.gameContainer;
+      const gameContainer = this.app.selectors.gameContainer;
       const menuButton = Helper.create({
         type: "div", class: `${type}MenuButton`, text: "",
         event: { type: "click", function: _toggleMenu.get(this) },
@@ -51,35 +50,35 @@ class Menu extends App {
         _createMenuList.get(this)();
       }
       if (this.activeButton === "open") {
-        if (super.selectors.menuContainer) { 
-          super.selectors.menuContainer.remove();
-          delete super.selectors.menuContainer;
+        if (this.app.selectors.menuContainer) { 
+          this.app.selectors.menuContainer.remove();
+          delete this.app.selectors.menuContainer;
         }
       }
     });
 
     _createMenu.set(this, () => {
-      const gameContainer = super.selectors.gameContainer;
+      const gameContainer = this.app.selectors.gameContainer;
       const menu = Helper.create({
         type: "div", class: "menu",
         parent: gameContainer
       });
-      if (!super.selectors.menuContainer) super.selectors.menuContainer = menu;
+      if (!this.app.selectors.menuContainer) this.app.selectors.menuContainer = menu;
     });
 
     _createPlayerTitles.set(this, () => {
-      const menuContainer = super.selectors.menuContainer;
-      super.players.forEach((player, index) => {
-        const number = Helper.upperCaseFirstLetter(player);
+      const menuContainer = this.app.selectors.menuContainer;
+      this.app.players.forEach(player => {
+        const number = Helper.upperCaseFirstLetter(player.numberString);
         const playerTitle = Helper.create({
-          type: "div", class: `player${number}Title`, text: super.playersEstLang[index],
+          type: "div", class: `player${number}Title`, text: player.name,
           parent: menuContainer
         });
       });
     });
 
     _createMenuList.set(this, () => {
-      const menuContainer = super.selectors.menuContainer;
+      const menuContainer = this.app.selectors.menuContainer;
       const menuList = Helper.create({
         type: "ul", class: "gameMenuList",
         parent: menuContainer
@@ -97,6 +96,7 @@ class Menu extends App {
     });
   }
 
+  get app() { return _app.get(this); }
   get newButtonType() {
     const buttonTypes = _buttonTypes.get(this);
     const active = buttonTypes.findIndex(button => button === this.activeButton);
@@ -112,6 +112,3 @@ class Menu extends App {
     _initMenu.get(this)();
   }
 }
-
-const menu = new Menu();
-menu.init();

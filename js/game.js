@@ -137,9 +137,9 @@ function createPlayerPieceElement(playerPieceId, position) {
 
 function switchTurnToPlayer(playerNumber) {
   activePlayer = playerNumber;
-  scrollToActivePlayerPiecesContainer(playerNumber);
-  activatingCurrentPlayer(playerNumber);
-  deactivatingOpponentPlayer(playerNumber);
+  scrollToActivePlayerPiecesContainer(playerNumber); // scroll
+  activatingCurrentPlayer(playerNumber); // activateplayer
+  deactivatingOpponentPlayer(playerNumber); // deactivate player
   setInitialDescriptions();
   testGamePhase();
 }
