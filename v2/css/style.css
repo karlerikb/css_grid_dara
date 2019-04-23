@@ -60,6 +60,8 @@
 
 .piecesContainer.active { border: 1px solid black; }
 
+.piecesContainer .piece { z-index: 3; }
+
 /* Gameboard Element */
 
 .gameboard {
@@ -82,6 +84,18 @@
   justify-items: center;
   align-items: center;
 }
+
+.gameboard .threeInRow {
+  border: 2px dashed black;
+  border-radius: 2px;
+  width: 100%;
+  height: 100%;
+  background: lightblue;
+  justify-self: center;
+  align-self: center;
+  z-index: 1;
+}
+
 
 /* Hints Container Element */
 
@@ -120,11 +134,13 @@
   border-radius: 2px;
   width: 6vw;
   height: 6vw;
+  z-index: 2;
   /* position: relative; */
 }
 
 .gameboard .temporaryPosition {
   border: 1px dashed #303030;
+  z-index: 1;
 }
 
 .gameboard .temporaryPosition:hover {
@@ -150,6 +166,7 @@
   ;
   justify-items: center;
   align-items: center;
+  z-index: 4;
 }
 
 /* Menu Button Element */
@@ -316,16 +333,16 @@
 /* Animation */
 
 :root {
-  --targetPositionTop: 0px;
-  --targetPositionLeft: 0px;
+  --targetPositionTop: 0;
+  --targetPositionLeft: 0;
   /* temporary variable for development */
   --animationTime: 2s;
 }
 
-@keyframes animateMovementBetweenGrids {
+@keyframes animateMovement {
   0% {
-    top: 0px;
-    left: 0px;
+    top: 0;
+    left: 0;
   }
   100% {
     top: var(--targetPositionTop);
@@ -333,7 +350,7 @@
   }
 }
 
-.moveBetweenGrids {
+.animateMovement {
   position: relative;
-  animation: animateMovementBetweenGrids var(--animationTime);
+  animation: animateMovement var(--animationTime);
 }

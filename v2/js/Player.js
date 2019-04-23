@@ -1,6 +1,9 @@
+import { Helper } from "./Helper.js";
+
 const _playerNumber = new WeakMap();
 const _playerNumberString = new WeakMap();
 const _playerName = new WeakMap();
+const _phase = new WeakMap();
 
 const _playerPiecePositions = new WeakMap();
 const _opponentPiecePositions = new WeakMap();
@@ -19,6 +22,8 @@ const _getReachAreasVertically = new WeakMap();
 const _getReachValidation = new WeakMap();
 const _determineProhibitedPosition = new WeakMap();
 const _combineProhibitedPositions = new WeakMap();
+const _searchForProhibitedPositionsPhaseTwo = new WeakMap();
+const _markThreeInRow = new WeakMap();
 
 
 export class Player {
@@ -33,21 +38,32 @@ export class Player {
     _allProhibitedPositions.set(this, []);
 
     // Methods
-    _setPlayerPiecePosition.set(this, (piecesPositions) => {
+    _setPlayerPiecePosition.set(this, (piecesPositions, phase) => {
+      _phase.set(this, phase);
       this.allPiecePositions = piecesPositions;
       this.getPlayerPieces();
-      this.searchForProhibitedPositions();
+      if (this.phase === "one") this.searchForProhibitedPositions();
+      if (this.phase === "two") _searchForProhibitedPositionsPhaseTwo.get(this)();
     });
+    
 
     _getPlayerPieces.set(this, () => {
       for (let position in this.allPiecePositions) {
         const piecePlayerId = +this.allPiecePositions[position][1];
+        const player = this.playerPiecePositions, opponent = this.opponentPiecePositions;
         if (piecePlayerId === this.number && !this.playerPiecePositions.includes(position)) {
-          this.playerPiecePositions.push(position);
+          if (!player.includes(position)) player.push(position);
         } else {
-          this.opponentPiecePositions.push(position);
+          if (!opponent.includes(position) && !player.includes(position)) opponent.push(position);
         }
       }
+    });
+
+    _searchForProhibitedPositionsPhaseTwo.set(this, () => {
+      // Find three in row pieces here
+      this.searchHorizontally();
+      this.searchVertically();
+      this.combineProhibitedPositions();
     });
     
     _searchForProhibitedPositions.set(this, () => {
@@ -122,7 +138,10 @@ export class Player {
           return (this.playerPiecePositions.includes(position) ? true : false);
         });
         const validCount = threePositions.reduce((areas, available) => areas + available);
-        if (validCount === 2) this.determineProhibitedPosition(threeReachPositions);
+        if (this.phase === "one" && validCount === 2) this.determineProhibitedPosition(threeReachPositions);
+        if (this.phase === "two" && validCount === 3) {
+          _markThreeInRow.get(this)(threeReachPositions);
+        }
       }
     });
 
@@ -136,6 +155,24 @@ export class Player {
         }
       });
     });
+
+    _markThreeInRow.set(this, (threeInRowPositions) => {
+      const firstPosition = threeInRowPositions[0], thirdPosition = threeInRowPositions[2];
+      console.log(threeInRowPositions, firstPosition, thirdPosition);
+      let area;
+      if (firstPosition[1] === thirdPosition[1]) { // rows are same - three in row is horizontal
+        area = `${firstPosition} / ${firstPosition} / ${firstPosition} / ${thirdPosition}`;
+      } else { // columns are the same - three in row is vertical
+        area = `${firstPosition} / ${firstPosition} / ${thirdPosition} / ${firstPosition}`;
+      }
+      const threeInRow = Helper.create({
+        type: "div", class: "threeInRow", 
+        area,
+        parent: document.querySelector(".gameboard")
+      });
+    });
+
+
   }
 
   // Properties
@@ -147,9 +184,13 @@ export class Player {
   get prohibitedPositions() { return _prohibitedPositions.get(this); }
   get allPiecePositions() { return _allPiecePositions.get(this); }
   get allProhibitedPositions() { return _allProhibitedPositions.get(this); }
+  get phase() { return _phase.get(this); }
 
   set allPiecePositions(value) { _allPiecePositions.set(this, value); }
   set allProhibitedPositions(value) { _allProhibitedPositions.set(this, value); }
+  set prohibitedPositions(value) { _prohibitedPositions.set(this, value); }
+  set playerPiecePositions(value) { _playerPiecePositions.set(this, value); }
+  set opponentPiecePositions(value) { _opponentPiecePositions.set(this, value); }
   
 
 

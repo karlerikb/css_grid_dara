@@ -25,12 +25,15 @@ const _deactivatePlayer = new WeakMap();
 const _switchPlayers = new WeakMap();
 const _scrollToActivePieceContainer = new WeakMap();
 const _configureGameboardPositions = new WeakMap();
+const _testPhase = new WeakMap();
+const _configureGameboardMovementPositions = new WeakMap();
+const _getSurroundingPositions = new WeakMap();
 
 
 export class Game {
   constructor(app) {
     // Temporary development variables
-    _gamePiecesForEachPlayer.set(this, 12);
+    _gamePiecesForEachPlayer.set(this, 3);
     _animationTime.set(this, ".5s");
 
     // Properties
@@ -65,17 +68,21 @@ export class Game {
       const targetPositionTop = this.targetPosition.getBoundingClientRect().top;
       const targetPositionLeft = this.targetPosition.getBoundingClientRect().left;
 
-      root.style.setProperty("--targetPositionTop", (targetPositionTop - targetPieceTop) + "px");
-      root.style.setProperty("--targetPositionLeft", (targetPositionLeft - targetPieceLeft) + "px");
+      const top = targetPositionTop - targetPieceTop;
+      const left = targetPositionLeft - targetPieceLeft;
+
+      root.style.setProperty("--targetPositionTop", `${top}px`);
+      root.style.setProperty("--targetPositionLeft", `${left}px`);
       root.style.setProperty("--animationTime", this.animationTime); // Development setting
 
-      this.targetPiece.classList.add("moveBetweenGrids");
+      this.targetPiece.classList.add("animateMovement");
       this.targetPiece.addEventListener("animationstart", this.movementStarts);
       this.targetPiece.addEventListener("animationend", this.movementEnds);
     });
 
     _movementStarts.set(this, () => {
       this.animationStarts();
+      this.app.selectors.playerTurnDescription.textContent = this.app.turnDescription.whenMoving;
     });
 
     _movementEnds.set(this, () => {
@@ -84,6 +91,7 @@ export class Game {
       this.targetPiece.remove();
       this.resetActivation();
       this.switchTurn();
+      this.app.selectors.playerTurnDescription.textContent = this.app.turnDescription.toActivatePiece;
     });
 
     _animationStarts.set(this, () => {
@@ -106,12 +114,19 @@ export class Game {
         area: targetArea,
         parent: this.app.selectors.gameboard
       });
-      this.configureGameboardPositions(targetArea);
+      // 
+      if (this.app.activePhase === "one") this.configureGameboardPositions(targetArea);
+      if (this.app.activePhase === "two") {
+        _configureGameboardMovementPositions.get(this)(targetArea);
+        // console.log(this.app.phases[1]);
+        newPiece.addEventListener("click", this.app.phases[1].activatePiece);
+      }
     });
 
     _configureGameboardPositions.set(this, (targetArea) => {
       this.piecesPositions[targetArea] = this.targetPiece.id;
-      this.app.activePlayer.setPlayerPiecePosition(this.piecesPositions);
+      this.app.activePlayer.setPlayerPiecePosition(this.piecesPositions, this.app.activePhase);
+      this.app.deactivePlayer.setPlayerPiecePosition(this.piecesPositions, this.app.activePhase);
     });
 
     _switchTurn.set(this, () => {
@@ -119,6 +134,7 @@ export class Game {
       this.activatePlayer();
       this.deactivatePlayer();
       this.scrollToActivePieceContainer();
+      this.testPhase();
     });
 
     _activatePlayer.set(this, () => {
@@ -144,6 +160,40 @@ export class Game {
       const numberString = Helper.upperCaseFirstLetter(this.app.deactivePlayer.numberString);
       const piecesContainer = document.querySelector(`.player${numberString}.piecesContainer`);
       piecesContainer.scrollIntoView({ behavior: "smooth" });
+    });
+
+    _testPhase.set(this, () => {
+      const piecesOnTable = Object.keys(this.piecesPositions).length;
+      if (piecesOnTable === this.gamePiecesForEachPlayer * 2) this.app.startPhaseTwo();
+    });
+
+    _configureGameboardMovementPositions.set(this, (targetArea) => {
+      const targetPieceArea = window.getComputedStyle(this.targetPiece).gridArea.split("/")[0].trim();
+      const pieceToBeMoved = this.app.activePlayer.allPiecePositions[targetPieceArea];
+
+      this.app.activePlayer.playerPiecePositions = [];
+      this.app.deactivePlayer.playerPiecePositions = [];
+      this.app.activePlayer.opponentPiecePositions = [];
+      this.app.deactivePlayer.opponentPiecePositions = [];
+      
+
+      this.app.activePlayer.allPiecePositions[targetArea] = pieceToBeMoved;
+      delete this.app.activePlayer.allPiecePositions[targetPieceArea];
+
+      const piecesPositions = this.app.activePlayer.allPiecePositions;
+      this.app.activePlayer.setPlayerPiecePosition(piecesPositions, this.app.activePhase);
+      this.app.deactivePlayer.setPlayerPiecePosition(piecesPositions, this.app.activePhase);
+
+    });
+
+    _getSurroundingPositions.set(this, () => {
+      const targetPieceArea = window.getComputedStyle(this.targetPiece).gridArea.split("/")[0].trim();
+      const row = +targetPieceArea[1], column = +targetPieceArea[2];
+      const topArea = (row > 1) ? `a${row - 1}${column}` : null;
+      const bottomArea = (row < 5) ? `a${row + 1}${column}` : null;
+      const leftArea = (column > 1) ? `a${row}${column - 1}` : null;
+      const rightArea = (column < 6) ? `a${row}${column + 1}` : null;
+      return [topArea, leftArea, bottomArea, rightArea];
     });
   }
 
@@ -181,6 +231,8 @@ export class Game {
   get switchPlayers() { return _switchPlayers.get(this); }
   get scrollToActivePieceContainer() { return _scrollToActivePieceContainer.get(this); }
   get configureGameboardPositions() { return _configureGameboardPositions.get(this); }
+  get testPhase() { return _testPhase.get(this); }
+  get getSurroundingPositions() { return _getSurroundingPositions.get(this); }
 
 
   init() {

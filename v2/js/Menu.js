@@ -16,6 +16,8 @@ const _app = new WeakMap();
 
 export class Menu {
   constructor(app) {
+
+    // Properties
     _app.set(this, app);
     _activeButton.set(this, "open");
     _buttonTypes.set(this, ["open", "close"]);
@@ -23,16 +25,18 @@ export class Menu {
     _menuListItems.set(this, ["resume", "exit"]);
     _menuListItemsEstTranslation.set(this, ["Jätka mängu", "Välju mängust"]);
 
+
+    // Methods
     _createMenuButton.set(this, (type) => {
-      const buttonIndex = _buttonTypes.get(this).findIndex(button => button === type);
+      const buttonIndex = this.buttonTypes.findIndex(button => button === type);
       const gameContainer = this.app.selectors.gameContainer;
       const menuButton = Helper.create({
         type: "div", class: `${type}MenuButton`, text: "",
-        event: { type: "click", function: _toggleMenu.get(this) },
+        event: { type: "click", function: this.toggleMenu },
         parent: gameContainer
       });
       const menuButtonIcon = Helper.create({
-        type: "i", class: _buttonIcons.get(this)[buttonIndex],
+        type: "i", class: this.buttonIcons[buttonIndex],
         parent: menuButton
       });
     });
@@ -92,23 +96,34 @@ export class Menu {
     });
 
     _initMenu.set(this, () => {
-      _createMenuButton.get(this)("open");
+      this.createMenuButton("open");
     });
   }
 
+  // Properties
   get app() { return _app.get(this); }
+  get activeButton() { return _activeButton.get(this); }
+  get buttonTypes() { return _buttonTypes.get(this); }
+  get buttonIcons() { return _buttonIcons.get(this); }
   get newButtonType() {
     const buttonTypes = _buttonTypes.get(this);
     const active = buttonTypes.findIndex(button => button === this.activeButton);
     return buttonTypes[+(!active)];
   }
-  get activeButton() { return _activeButton.get(this); }
   get menuOptions() { return _menuListItems.get(this); }
   get menuOptionsEstLang() { return _menuListItemsEstTranslation.get(this); }
 
   set activeButton(value) { _activeButton.set(this, value); }
 
+
+  // Methods
+  get initMenu() { return _initMenu.get(this); }
+  get createMenuButton() { return _createMenuButton.get(this); }
+  get toggleMenu() { return _toggleMenu.get(this); }
+  get createMenuButton() { return _createMenuButton.get(this); }
+
+
   init() {
-    _initMenu.get(this)();
+    this.initMenu();
   }
 }
