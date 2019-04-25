@@ -1,54 +1,226 @@
-import MenuButton from "./Button/MenuButton";
 import Settings from "../settings/Settings";
 import Helper from "../Helper/Helper";
 
 export default class Menu {
   private static _instance: Menu;
-  private _settings: Settings | null = null;
-  private buttons: MenuButton[] = [];
+  private _settings: Settings = <Settings>{};
 
   private constructor() {
   }
 
-  private createMenu(): void {
-    const selectors = (this.settings) ? this.settings.selectors : null;
-    const element = {
-      type: "div",
-      class: "menu",
-      parent: selectors.gameContainer
-    }
-    // const menu = Helper.create(element);
-    const activeBtn = this.buttons.find(btn => btn.active);
-    const inactiveBtn = this.buttons.find(btn => !btn.active);
-    if (activeBtn) activeBtn.create(this.settings!.selectors);
-    if (inactiveBtn) inactiveBtn.remove(this.settings!.selectors);
+  private initializeMenuButtons(): void {
+    const openBtn = new OpenMenu(this.settings);
+    const closeBtn = new CloseMenu(this.settings);
+    this.settings.menuBtns.push(openBtn, closeBtn);
   }
 
-  private initializeButtons(): void {
-    const openButton = new MenuButton("open", "fas fa-bars");
-    const closeButton = new MenuButton("close", "fas fa-times");
-    this.buttons.push(openButton, closeButton);
-    openButton.active = true;
+  private initializeMenuCreation(): void {
+    const activeBtn: any = this.settings.menuBtns.find((btn: any) => btn.active);
+    activeBtn!.init();
   }
 
-  private init(settings: Settings | null): void {
+  public init(settings: Settings): void {
     this.settings = settings;
-    this.initializeButtons();
-    this.createMenu();
+    this.initializeMenuButtons();
+    this.initializeMenuCreation();
   }
 
-  public static create(settings: Settings | null): Menu {
+  public static get instance(): Menu {
     if (!Menu._instance) {
       Menu._instance = new Menu();
-      Menu._instance.init(settings);
     }
     return Menu._instance;
   }
-  public get settings(): Settings | null {
+  private get settings(): Settings {
     return this._settings;
   }
-
-  public set settings(value: Settings | null) {
+  private set settings(value: Settings) {
     this._settings = value;
   }
 }
+
+export abstract class MenuButtons {
+  constructor(protected settings: Settings) {}
+
+  protected createMenuButton(btn: any): HTMLElement {
+    const menuBtn = Helper.create({
+      type: "div",
+      class: `${btn.type}MenuButton`,
+      parent: this.settings.selectors.gameContainer
+    });
+    const icon = Helper.create({
+      type: "i",
+      class: btn.iconType,
+      parent: menuBtn
+    });
+    return icon;
+  }
+
+  protected toggleBtn(button: any): void {
+    const btn: any = this.switchBtns(button);
+    btn.init();
+  }
+
+  private switchBtns(button: any): any {
+    const activeBtn: any = button;
+    const inactiveBtn: any = this.settings.menuBtns.find(btn => btn !== button);
+    activeBtn.active = false;
+    inactiveBtn.active = true;
+    return inactiveBtn;
+  }
+
+}
+
+class OpenMenu extends MenuButtons {
+  active: boolean = true;
+  readonly type: string = "open";
+  readonly iconType: string = "fas fa-bars";
+  private openMenuHandler: any = this.openMenu.bind(this);
+
+  constructor(settings: Settings) {
+    super(settings);
+  }
+
+  private openMenu(e: any): void {
+    e.target.removeEventListener("click", this.openMenuHandler);
+    e.target.parentElement.remove();
+    this.createMenu();
+    this.toggleBtn(this);
+  }
+
+  private createMenu(): void {
+    const menu = Helper.create({
+      type: "div",
+      class: "menu",
+      parent: this.settings.selectors.gameContainer
+    });
+    this.settings.players.forEach(player => {
+      const number = Helper.upperCaseFirstLetter(player.numberString);
+      Helper.create({
+        type: "div", class: `player${number}Title`, text: player.name,
+        parent: menu
+      });
+    });
+    const menuList = Helper.create({
+      type: "ul", class: "gameMenuList",
+      parent: menu
+    });
+    this.settings.menuOptions.forEach((option, index) => {
+      Helper.create({
+        type: "li", class: option,
+        text: this.settings.menuOptionsEst[index],
+        parent: menuList
+      });
+    });
+  }
+
+  init(): void {
+    const icon = this.createMenuButton(this);
+    icon.addEventListener("click", this.openMenuHandler);
+  }
+}
+
+class CloseMenu extends MenuButtons {
+  active: boolean = false;
+  readonly type: string = "close";
+  readonly iconType: string = "fas fa-times";
+  private closeMenuHandler: any = this.closeMenu.bind(this);
+
+  constructor(settings: Settings) {
+    super(settings);
+  }
+
+  private closeMenu(e: any): void {
+    e.target.removeEventListener("click", this.closeMenuHandler);
+    e.target.parentElement.remove();
+    document.querySelector(".menu")!.remove();
+    this.toggleBtn(this);
+  }
+
+  init(): void {
+    const icon = this.createMenuButton(this);
+    icon.addEventListener("click", this.closeMenuHandler);
+  }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// class MenuButton extends Menu {
+//   active: boolean = false;
+//   readonly type: string;
+//   readonly iconType: string;
+
+//   openMenuHandler = this.openMenu.bind(this);
+//   closeMenuHandler = this.closeMenu.bind(this);
+
+//   constructor(type: string, iconType: string, settings: Settings) {
+//     super(settings);
+//     this.type = type;
+//     this.iconType = iconType;
+//   }
+
+//   createMenu(): void {
+//     console.log(this.buttons);
+//     const icon = this.createMenuButton();
+//     icon.addEventListener("click", this.openMenuHandler);
+//   }
+
+//   removeMenu(): void {
+//     const icon = this.createMenuButton();
+//     icon.addEventListener("click", this.closeMenuHandler);
+//   }
+
+//   private openMenu(e): void {
+//     e.target.removeEventListener("click", this.openMenuHandler);
+//     const btn = this.toggleButton(e);
+//     console.log(btn);
+//     btn!.removeMenu();
+
+//     const menu = Helper.create({
+//       type: "div",
+//       class: "menu",
+//       parent: this.settings.selectors.gameContainer
+//     });
+//   }
+
+//   private closeMenu(e): void {
+//     e.target.removeEventListener("click", this.closeMenuHandler);
+//     const btn = this.toggleButton(e);
+//     btn!.createMenu();
+
+//     document.querySelector(".menu")!.remove();
+//   }
+
+//   private toggleButton(e) {
+//     const inactiveBtn = this.buttons.find(btn => btn !== this);
+//     e.target.parentElement.remove();
+//     return inactiveBtn;
+//   }
+
+//   private createMenuButton(): HTMLElement {
+//     console.log(this.settings);
+//     const menuBtn = Helper.create({
+//       type: "div",
+//       class: `${this.type}MenuButton`,
+//       parent: this.settings.selectors.gameContainer
+//     });
+//     const icon = Helper.create({
+//       type: "i",
+//       class: this.iconType,
+//       parent: menuBtn
+//     });
+//     return icon;
+//   }
+// }

@@ -42,7 +42,8 @@ class App {
   }
 
   private initializeMenu(): void {
-    this.menu = Menu.create(this.settings);
+    this.menu = Menu.instance;
+    this.menu.init(<Settings>this.settings);
   }
 
   public static get instance(): App {

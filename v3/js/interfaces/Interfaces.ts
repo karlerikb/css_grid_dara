@@ -3,11 +3,5 @@ export interface NewElement {
   class?: string;
   id?: string;
   text?: string;
-  eventlistener?: NewElementEventListener;
   parent: HTMLElement;
-}
-
-export interface NewElementEventListener {
-  type: string;
-  function: (e?: any) => void;
 }
