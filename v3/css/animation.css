@@ -1,0 +1,22 @@
+:root {
+  --targetPositionTop: 0;
+  --targetPositionLeft: 0;
+  /* temporary variable for development */
+  --animationTime: 2s;
+}
+
+@keyframes animateMovement {
+  0% {
+    top: 0;
+    left: 0;
+  }
+  100% {
+    top: var(--targetPositionTop);
+    left: var(--targetPositionLeft);
+  }
+}
+
+.animateMovement {
+  position: relative;
+  animation: animateMovement var(--animationTime);
+}

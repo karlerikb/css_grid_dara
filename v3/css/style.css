@@ -1,0 +1,221 @@
+
+/* Defining Grid Elements */
+
+.gameContainer, .piecesContainer, .gameboard, .menu {
+  display: grid;
+}
+
+
+/* Game Container Element */
+
+.gameContainer {
+  grid-template-columns: [menu-start] 2fr 5fr 2fr [menu-end];
+  grid-template-rows: auto [menu-start] auto auto [menu-end];
+  grid-template-areas:
+    "...............   menuButton       ..............."
+    "playerOnePieces   gameboard        playerTwoPieces"
+    "playerOnePieces   hintsContainer   playerTwoPieces"
+  ;
+  justify-items: center;
+  align-items: start;
+}
+
+/* Pieces Container Element */
+
+.piecesContainer {
+  margin: 1vw 0;
+  border-radius: 2px;
+  padding: .5vw;
+  grid-template-columns: repeat(2, auto);
+  grid-template-rows: repeat(6, auto);
+  gap: .5vw;
+}
+
+.piecesContainer.playerOne {
+  grid-area: playerOnePieces;
+  grid-template-areas:
+    "p1_7   p1_1"
+    "p1_8   p1_2"
+    "p1_9   p1_3"
+    "p1_10  p1_4"
+    "p1_11  p1_5"
+    "p1_12  p1_6"
+  ;
+}
+
+.piecesContainer.playerTwo {
+  grid-area: playerTwoPieces;
+  grid-template-areas:
+    "p2_1  p2_7 "
+    "p2_2  p2_8 "
+    "p2_3  p2_9 "
+    "p2_4  p2_10"
+    "p2_5  p2_11"
+    "p2_6  p2_12"
+  ;
+}
+
+.piecesContainer.playerOne.active { background: #afc1f1; }
+.piecesContainer.playerTwo.active { background: #eeb1b1; }
+
+.piecesContainer.active { border: 1px solid black; }
+
+.piecesContainer .piece { z-index: 3; }
+
+/* Gameboard Element */
+
+.gameboard {
+  margin: 1vw 0;
+  border: 1px solid black;
+  border-radius: 2px;
+  padding: 1vw;
+  grid-area: gameboard;
+  gap: .5vw;
+  grid-template-columns: repeat(6, 7vw);
+  grid-template-rows: repeat(5, 7vw);
+  grid-template-areas:
+    "a11 a12 a13 a14 a15 a16"
+    "a21 a22 a23 a24 a25 a26"
+    "a31 a32 a33 a34 a35 a36"
+    "a41 a42 a43 a44 a45 a46"
+    "a51 a52 a53 a54 a55 a56"
+  ;
+  background: yellow;
+  justify-items: center;
+  align-items: center;
+}
+
+.gameboard .threeInRow {
+  border: 2px dashed black;
+  border-radius: 2px;
+  width: 100%;
+  height: 100%;
+  background: lightblue;
+  justify-self: center;
+  align-self: center;
+  z-index: 1;
+}
+
+
+/* Hints Container Element */
+
+.hintsContainer {
+  border-radius: 2px;
+  padding: 1vw;
+  text-align: center;
+  grid-area: hintsContainer
+}
+
+
+/* Game Piece Elements */
+
+.piecesContainer.playerOne > .piece { background: royalblue; }
+.piecesContainer.playerTwo > .piece { background: brown; }
+
+.piecesContainer .piece {
+  text-align: center;
+  color: white;
+}
+
+.piecesContainer.active > .piece,
+.piece.active,
+.piece.inactive { cursor: pointer; }
+
+.piece.active { box-shadow: 0 0 4px 1px #303030 !important; }
+.piece.inactive { opacity: .5 !important; }
+
+
+
+.gameboard .playerOne.piece { background: royalblue; }
+.gameboard .playerTwo.piece { background: brown; }
+
+.piece, .temporaryPosition {
+  border: 1px solid black;
+  border-radius: 2px;
+  width: 6vw;
+  height: 6vw;
+  z-index: 2;
+  /* position: relative; */
+}
+
+.gameboard .temporaryPosition {
+  border: 1px dashed #303030;
+  z-index: 1;
+}
+
+.gameboard .temporaryPosition:hover {
+  cursor: pointer;
+  background: lightgreen;
+}
+
+
+/* Game Menu Element */
+
+.menu {
+  border-radius: 5px;
+  width: 100%;
+  height: 100%;
+  background: #3f4142;
+  opacity: .95;
+  grid-area: menu;
+  grid-template-columns: 2fr 5fr 2fr;
+  grid-template-rows: 1fr 4fr;
+  grid-template-areas:
+    "playerOneTitle  ............  playerTwoTitle"
+    "..............  gameMenuList  .............."
+  ;
+  justify-items: center;
+  align-items: center;
+  z-index: 4;
+}
+
+/* Menu Button Element */
+
+.openMenuButton, .closeMenuButton {
+  margin: 1vw 0;
+  grid-area: menuButton;
+  cursor: pointer;
+  font-size: 2rem;
+}
+
+/* Player Titles, Menu List */
+
+.playerOneTitle, .playerTwoTitle, .gameMenuList {
+  border: 2px solid whitesmoke;
+  border-radius: 5px;
+  padding: 1vw;
+  color: whitesmoke;
+  background: #202020;
+  opacity: 1;
+  text-align: center;
+}
+
+/* Player Title */
+
+.playerOneTitle { grid-area: playerOneTitle; }
+.playerTwoTitle { grid-area: playerTwoTitle; }
+
+/* Menu List */
+
+.gameMenuList {
+  grid-area: gameMenuList;
+  align-self: start;
+}
+
+.gameMenuList > li {
+  margin: 0;
+  padding: 1.5vw 10vw;;
+  list-style: none;
+}
+
+.gameMenuList > li:hover {
+  color: #202020;
+  background: whitesmoke;
+  cursor: pointer;
+}
+
+/* Remove Element Class */
+
+.removed { display: none !important; }
+.notAllowed { cursor: not-allowed !important; }
+.selectable { cursor: pointer !important; }
