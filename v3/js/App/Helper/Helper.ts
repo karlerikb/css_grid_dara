@@ -7,6 +7,7 @@ export default class Helper {
     if (element.id) newElement.id = element.id;
     if (element.class) newElement.className = element.class;
     if (element.text) newElement.textContent = element.text;
+    if (element.area) newElement.style.gridArea = element.area;
     element.parent.appendChild(newElement);
     return newElement;
   }

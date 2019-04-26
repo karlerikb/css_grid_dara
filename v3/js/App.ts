@@ -7,8 +7,8 @@ import Menu from "./App/Menu/Menu";
 class App {
   private static _instance: App;
 
-  private _settings: Settings | null = null;
-  private _menu: Menu | null = null;
+  private _settings: Settings = <Settings>{};
+  private _menu: Menu = <Menu>{};
 
   private constructor() {
   }
@@ -27,18 +27,18 @@ class App {
 
   private initializePlayers(): void {
     console.log("Creating players...");
-    const playerOne = new Player("Mängija 1", 1, "one");
-    const playerTwo = new Player("Mängija 2", 2, "two");
-    if (this.settings) this.settings.players.push(playerOne, playerTwo);
+    const playerOne = new Player("Mängija 1", 1, "one", this.settings);
+    const playerTwo = new Player("Mängija 2", 2, "two", this.settings);
+    this.settings!.players.push(playerOne, playerTwo);
     playerOne.active = true;
   }
 
   private initializePhases(): void {
     console.log("Initializing game phases...");
-    const phaseOne = new PhaseOne();
-    const phaseTwo = new PhaseTwo();
-    if (this.settings) this.settings.phases.push(phaseOne, phaseTwo);
-    phaseOne.active = true;
+    const phaseOne = new PhaseOne(this.settings);
+    const phaseTwo = new PhaseTwo(this.settings);
+    this.settings!.phases.push(phaseOne, phaseTwo);
+    phaseOne.init();
   }
 
   private initializeMenu(): void {
@@ -53,17 +53,17 @@ class App {
     }
     return App._instance;
   }
-  private get settings(): Settings | null {
+  private get settings(): Settings {
     return this._settings;
   }
-  private get menu(): Menu | null {
+  private get menu(): Menu {
     return this._menu;
   }
 
-  private set settings(value: Settings | null) {
+  private set settings(value: Settings) {
     this._settings = value;
   }
-  private set menu(value: Menu | null) {
+  private set menu(value: Menu) {
     this._menu = value;
   }  
 }

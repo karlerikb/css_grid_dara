@@ -3,5 +3,6 @@ export interface NewElement {
   class?: string;
   id?: string;
   text?: string;
-  parent: HTMLElement;
+  area?: string;
+  parent: HTMLElement | DocumentFragment;
 }

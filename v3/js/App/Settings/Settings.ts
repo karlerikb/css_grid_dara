@@ -8,7 +8,8 @@ export default class Settings {
   private _phases: Game[] = [];
   private _players: Player[] = [];
   private _menuBtns: MenuButtons[] = [];
-  private _piecesForEachPlayer: number = 12;
+  private _piecesForEachPlayer: number = 3;
+  private _animationTime: string = ".5s";
 
   readonly menuOptions: string[] = ["resume", "exit"];
   readonly menuOptionsEst: string[] = ["Jätka mängu", "Välju mängust"];
@@ -17,6 +18,7 @@ export default class Settings {
     gameContainer: document.querySelector(".gameContainer"),
     gameboard: document.querySelector(".gameboard")
   };
+  public animationInProgress: boolean = false;
 
   private constructor() {
   }
@@ -38,6 +40,9 @@ export default class Settings {
   public get piecesForEachPlayer(): number {
     return this._piecesForEachPlayer;
   }
+  public get animationTime(): string {
+    return this._animationTime;
+  }
 
   public set menuBtns(value: MenuButtons[]) {
     this._menuBtns = value;
@@ -45,5 +50,8 @@ export default class Settings {
   public set piecesForEachPlayer(value: number) {
     if (value > 0 && value < 13) this._piecesForEachPlayer = value;
     else throw new Error("The amount of player pieces must be between 1 and 12");
+  }
+  public set animationTime(value: string) {
+    this._animationTime = value;
   }
 }
