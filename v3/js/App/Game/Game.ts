@@ -28,12 +28,14 @@ export default abstract class Game {
   }
 
   protected testPhase(): void {
-    if (this.piecesOnTable === (2 * this.settings.piecesForEachPlayer)) {
+    if (this.piecesOnTable < (2 * this.settings.piecesForEachPlayer)) {
+      this.configurePiecesDataForPhaseOne();
+    } else if (this.piecesOnTable === (2 * this.settings.piecesForEachPlayer)) {
       this.switchPhases();
       this.activatePhase();
       this.configurePiecesDataForPhaseTwo();
     } else {
-      this.configurePiecesDataForPhaseOne();
+      this.configurePiecesDataForPhaseTwo();
     }
   }
 
@@ -56,36 +58,66 @@ export default abstract class Game {
   }
 
   private configurePiecesDataForPhaseOne(): void {
-    this.piecesOnTable++;
     this.threeInRow.prohibitPositionsForPhaseOne();
   }
 
   private configurePiecesDataForPhaseTwo(): void {
-    // ...
+    this.threeInRow.prohibitPositionsForPhaseTwo();
   }
 
-  protected removeGameboardPositions(): void {
+  removeGameboardPositions(): void {
     const temporaryPositionAmount = Array.from(document.querySelectorAll(".gameboard > .temporaryPosition")).length;
     if (temporaryPositionAmount) {
       Array.from(document.querySelectorAll(".gameboard > .temporaryPosition")).forEach(position => {
         position.removeEventListener("click", this.firstPhaseMoveHandler);
+        position.removeEventListener("click", this.secondPhaseMoveHandler);
         position.remove();
       });
     }
   }
 
-  private storeActivatedPiece(activatedPiece: Piece): void {
+  protected storeActivatedPiece(activatedPiece: Piece): void {
     this.activatedPiece = activatedPiece;
   }
 
-  activatePiece(activatedPiece: Piece): void {
-    this.storeActivatedPiece(activatedPiece);
-    const activePhase: any = this;
-    if (activatedPiece.active) {
-      activePhase.initiateMoving(activatedPiece);
-    } else {
-      this.removeGameboardPositions();
-    }
+  protected storeSelectedPosition(position: HTMLElement): void {
+    this.selectedPosition = position;
+  }
+
+  protected calculateTopPosition(): void {
+    const activatedPieceTop = this.activatedPiece.element.getBoundingClientRect().top;
+    const selectedPositionTop = this.selectedPosition.getBoundingClientRect().top;
+    const top = selectedPositionTop - activatedPieceTop;
+    this.settings.selectors.root.style.setProperty("--targetPositionTop", `${top}px`);
+  }
+
+  protected calculateLeftPosition(): void {
+    const activatedPieceLeft = this.activatedPiece.element.getBoundingClientRect().left;
+    const selectedPositionLeft = this.selectedPosition.getBoundingClientRect().left;
+    const left = selectedPositionLeft - activatedPieceLeft;
+    this.settings.selectors.root.style.setProperty("--targetPositionLeft", `${left}px`);
+  }
+
+  protected setAnimationTime(): void {
+    this.settings.selectors.root.style.setProperty("--animationTime", this.settings.animationTime);
+  }
+
+  protected animationStarts(): void {
+    const activePlayer = this.settings.players.find(player => player.active);
+    const temporaryPositions = Array.from(document.querySelectorAll(".gameboard > .temporaryPosition"));
+    activePlayer!.pieces.forEach(piece => piece.element.classList.add("notAllowed"));
+    temporaryPositions.forEach(position => position.classList.add("notAllowed"));
+    this.settings.animationInProgress = true;
+  }
+
+  protected animationEnds(): void {
+    const activePlayer = this.settings.players.find(player => player.active);
+    const inactivePlayer = this.settings.players.find(player => !player.active);
+    const temporaryPositions = Array.from(document.querySelectorAll(".gameboard > .temporaryPosition"));
+    activePlayer!.pieces.forEach(piece => piece.element.classList.remove("notAllowed"));
+    inactivePlayer!.pieces.forEach(piece => piece.element.classList.remove("notAllowed"));
+    temporaryPositions.forEach(position => position.classList.remove("notAllowed"));
+    this.settings.animationInProgress = false;
   }
 }
 
@@ -99,10 +131,23 @@ class ThreeInRow {
   constructor(private settings: Settings) {
   }
 
-  prohibitPositionsForPhaseOne() {
+  prohibitPositionsForPhaseOne(): void {
     this.setPlayers();
     this.combinePlayerPositions();
-    this.searchForPlayerProhibitedPositions();
+    this.searchForThreeInRowProhibitedPositions();
+  }
+
+  prohibitPositionsForPhaseTwo(): void {
+    this.setPlayers();
+    this.combinePlayerPositions();
+    this.resetProhibitedPositions();
+    this.searchForFourInRowProhibitedPositions();
+    console.log(this.settings.players);
+  }
+
+  private setPlayers(): void {
+    this.activePlayer = <Player>this.settings.players.find(player => player.active);
+    this.inactivePlayer = <Player>this.settings.players.find(player => !player.active);
   }
 
   private combinePlayerPositions(): void {
@@ -112,37 +157,32 @@ class ThreeInRow {
     this.playerPositions = playerPositions;
   }
 
-  private setPlayers(): void {
-    this.activePlayer = <Player>this.settings.players.find(player => player.active);
-    this.inactivePlayer = <Player>this.settings.players.find(player => !player.active);
-  }
-
-  private searchForPlayerProhibitedPositions(): void {
+  private searchForThreeInRowProhibitedPositions(): void {
     this.settings.players.forEach(player => {
-      this.searchHorizontally(player);
-      this.searchVertically(player);
+      this.searchHorizontallyThrees(player);
+      this.searchVerticallyThrees(player);
     });
   }
 
-  private searchHorizontally(player: Player): void {
+  private searchHorizontallyThrees(player: Player): void {
     player.piecePositionsOnGameboard.forEach(position => {
-      const reach = this.getReachHorizontally(position);
+      const reach = this.getReachOfFiveHorizontally(position);
       const reachValidation = this.getReachValidation(reach, player);
       const validCount = reachValidation.reduce((valid, area) => valid + area);
       if (validCount > 1) this.divideReachIntoThrees(reach, player);
     });
   }
 
-  private searchVertically(player: Player): void {
+  private searchVerticallyThrees(player: Player): void {
     player.piecePositionsOnGameboard.forEach(position => {
-      const reach = this.getReachVertically(position);
+      const reach = this.getReachOfFiveVertically(position);
       const reachValidation = this.getReachValidation(reach, player);
       const validCount = reachValidation.reduce((valid, area) => valid + area);
       if (validCount > 1) this.divideReachIntoThrees(reach, player);
     });
   }
 
-  private getReachVertically(position: string): (null | string)[] {
+  private getReachOfFiveVertically(position: string): (null | string)[] {
     const row = +position[1], column = +position[2];
     const reach = [
       (row < 3) ? null : `a${row - 2}${column}`,
@@ -154,7 +194,7 @@ class ThreeInRow {
     return reach;
   }
 
-  private getReachHorizontally(position: string): (null | string)[] {
+  private getReachOfFiveHorizontally(position: string): (null | string)[] {
     const row = +position[1], column = +position[2];
     const reach = [
       (column < 3) ? null : `a${row}${column - 2}`,
@@ -187,13 +227,83 @@ class ThreeInRow {
     }
   }
 
-  private determineProhibitedPositions(threeReachPositions: (null | string)[], player: Player): void {
-    threeReachPositions.forEach(position => {
+  private determineProhibitedPositions(reachPositions: (null | string)[], player: Player): void {
+    reachPositions.forEach(position => {
       if (position) {
         if (!this.playerPositions.includes(position) && !player.prohibitedPositions.includes(position)) {
           player.prohibitedPositions.push(position);
         }
       }
     });
+  }
+
+  private resetProhibitedPositions(): void {
+    this.activePlayer.prohibitedPositions = this.playerPositions;
+    this.inactivePlayer.prohibitedPositions = this.playerPositions;
+  }
+
+  private searchForFourInRowProhibitedPositions(): void {
+    this.settings.players.forEach(player => {
+      this.searchHorizontallyFours(player);
+      this.searchVerticallyFours(player);
+    });
+  }
+
+  private searchHorizontallyFours(player: Player): void {
+    player.piecePositionsOnGameboard.forEach(position => {
+      const reach = this.getReachOfSevenHorizontally(position);
+      const reachValidation = this.getReachValidation(reach, player);
+      const validCount = reachValidation.reduce((valid, area) => valid + area);
+      if (validCount > 1) this.divideReachIntoFours(reach, player);
+    });
+  }
+
+  private searchVerticallyFours(player: Player): void {
+    player.piecePositionsOnGameboard.forEach(position => {
+      const reach = this.getReachOfSevenVertically(position);
+      const reachValidation = this.getReachValidation(reach, player);
+      const validCount = reachValidation.reduce((valid, area) => valid + area);
+      if (validCount > 1) this.divideReachIntoFours(reach, player);
+    });
+  }
+
+  private getReachOfSevenHorizontally(position: string): (null | string)[] {
+    const row = +position[1], column = +position[2];
+    const reach = [
+      (column < 4) ? null : `a${row}${column - 3}`,
+      (column < 3) ? null : `a${row}${column - 2}`,
+      (column < 2) ? null : `a${row}${column - 1}`,
+      position,
+      (column > 5) ? null : `a${row}${column + 1}`,
+      (column > 4) ? null : `a${row}${column + 2}`,
+      (column > 3) ? null : `a${row}${column + 3}`
+    ];
+    return reach;
+  }
+
+  private getReachOfSevenVertically(position: string): (null | string)[] {
+    const row = +position[1], column = +position[2];
+    const reach = [
+      (row < 4) ? null : `a${row - 3}${column}`,
+      (row < 3) ? null : `a${row - 2}${column}`,
+      (row < 2) ? null : `a${row - 1}${column}`,
+      position,
+      (row > 5) ? null : `a${row + 1}${column}`,
+      (row > 4) ? null : `a${row + 2}${column}`,
+      (row > 3) ? null : `a${row + 3}${column}`
+    ];
+    return reach;
+  }
+
+  private divideReachIntoFours(reach: (null | string)[], player: Player): void {
+    for (let i = 0; i < 4; i++) {
+      const fourReachPositions: (null | string)[] = reach.slice(i, i + 4);
+      const fourPositions: number[] = fourReachPositions.map(position => {
+        if (!position) return 0;
+        return (player.piecePositionsOnGameboard.includes(position) ? 1 : 0);
+      });
+      const validCount: number = fourPositions.reduce((valid, area) => valid + area);
+      if (validCount === 3) this.determineProhibitedPositions(fourReachPositions, player);
+    }
   }
 }

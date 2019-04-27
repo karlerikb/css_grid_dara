@@ -1,6 +1,7 @@
 import Game from "../Game";
 import Settings from "../../settings/Settings";
 import Helper from "../../Helper/Helper";
+import { Piece } from "../../Player/Player";
 
 export default class PhaseOne extends Game {
   active: boolean = true;
@@ -13,16 +14,16 @@ export default class PhaseOne extends Game {
     super(settings);
   }
 
-  protected initiateMoving(activatedPiece: any) {
-    this.createGameboardPositions();
-    this.storeActivePiece(activatedPiece);
+  activatePiece(activatedPiece: Piece): void {
+    this.storeActivatedPiece(activatedPiece);
+    if (this.activatedPiece.active) {
+      this.createGameboardPositions();
+    } else {
+      this.removeGameboardPositions();
+    }
   }
 
-  private storeActivePiece(activatedPiece: any): void {
-    this.activatedPiece = activatedPiece;
-  }
-
-  private createGameboardPositions() {
+  private createGameboardPositions(): void {
     const temporaryPositionAmount = Array.from(document.querySelectorAll(".gameboard > .temporaryPosition")).length;
     if (!temporaryPositionAmount) {
       const temporaryPositions = document.createDocumentFragment();
@@ -54,20 +55,22 @@ export default class PhaseOne extends Game {
     }
   }
 
-  private storeSelectedPosition(position: HTMLElement): void {
-    this.selectedPosition = position;
-  }
-
   private movePieceToGameboard(): void {
     this.settings.selectors.gameboard.append(this.activatedPiece.element);
     const area = window.getComputedStyle(this.selectedPosition).gridArea!.split("/")[0].trim();
     this.activatedPiece.element.style.gridArea = area;
-    this.activatedPiece.ontable = true;
-    this.activatedPiece.area = area;
+    this.configureActivatedPiece(area);
     this.configurePiecesData(area);
   }
 
+  private configureActivatedPiece(area: string): void {
+    this.activatedPiece.ontable = true;
+    this.activatedPiece.active = false;
+    this.activatedPiece.area = area;
+  }
+
   private configurePiecesData(area: string): void {
+    this.piecesOnTable++;
     const activePlayer = this.settings.players.find(player => player.active);
     const inactivePlayer = this.settings.players.find(player => !player.active);
     activePlayer!.piecePositionsOnGameboard.push(area);
@@ -100,24 +103,6 @@ export default class PhaseOne extends Game {
     this.attachAnimation(); 
   }
 
-  private calculateTopPosition(): void {
-    const activatedPieceTop = this.activatedPiece.element.getBoundingClientRect().top;
-    const selectedPositionTop = this.selectedPosition.getBoundingClientRect().top;
-    const top = selectedPositionTop - activatedPieceTop;
-    this.settings.selectors.root.style.setProperty("--targetPositionTop", `${top}px`);
-  }
-
-  private calculateLeftPosition(): void {
-    const activatedPieceLeft = this.activatedPiece.element.getBoundingClientRect().left;
-    const selectedPositionLeft = this.selectedPosition.getBoundingClientRect().left;
-    const left = selectedPositionLeft - activatedPieceLeft;
-    this.settings.selectors.root.style.setProperty("--targetPositionLeft", `${left}px`);
-  }
-
-  private setAnimationTime(): void {
-    this.settings.selectors.root.style.setProperty("--animationTime", this.settings.animationTime);
-  }
-
   private attachAnimation(): void {
     this.activatedPiece.element.classList.add("animateMovement");
     this.activatedPiece.element.addEventListener("animationstart", this.animationStartsHandler);
@@ -134,24 +119,6 @@ export default class PhaseOne extends Game {
     this.removeGameboardPositions();
     this.switchTurn();
     this.animationEnds();
-  }
-
-  private animationStarts(): void {
-    const activePlayer = this.settings.players.find(player => player.active);
-    const temporaryPositions = Array.from(document.querySelectorAll(".gameboard > .temporaryPosition"));
-    activePlayer!.pieces.forEach(piece => piece.element.classList.add("notAllowed"));
-    temporaryPositions.forEach(position => position.classList.add("notAllowed"));
-    this.settings.animationInProgress = true;
-  }
-
-  private animationEnds(): void {
-    const activePlayer = this.settings.players.find(player => player.active);
-    const inactivePlayer = this.settings.players.find(player => !player.active);
-    const temporaryPositions = Array.from(document.querySelectorAll(".gameboard > .temporaryPosition"));
-    activePlayer!.pieces.forEach(piece => piece.element.classList.remove("notAllowed"));
-    inactivePlayer!.pieces.forEach(piece => piece.element.classList.remove("notAllowed"));
-    temporaryPositions.forEach(position => position.classList.remove("notAllowed"));
-    this.settings.animationInProgress = false;
   }
 
   init(): void {

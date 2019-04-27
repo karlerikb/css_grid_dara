@@ -40,7 +40,7 @@ export default class Player {
 
   private initializePieceActivation(e: any): void {
     if (this.active && !this.settings.animationInProgress) {
-      const activePhase = this.settings.phases.find((phase: any) => phase.active);
+      const activePhase: any = this.settings.phases.find((phase: any) => phase.active);
       const activatedPiece = this.pieces.find(piece => piece.element === e.target);
       this.activatePiece(<Piece>activatedPiece);
       activePhase!.activatePiece(<Piece>activatedPiece);
