@@ -26,19 +26,25 @@ export default class PhaseOne extends Game {
     const temporaryPositionAmount = Array.from(document.querySelectorAll(".gameboard > .temporaryPosition")).length;
     if (!temporaryPositionAmount) {
       const temporaryPositions = document.createDocumentFragment();
+      const playerProhibitedPositions = this.settings.players.find(player => player.active)!.prohibitedPositions;
       for (let row = 1; row <= 5; row++) {
         for (let column = 1; column <= 6; column++) {
           const area = `a${row}${column}`;
-          const position = Helper.create({
-            type: "div", class: "temporaryPosition", area,
-            parent: temporaryPositions
-          });
-          position.addEventListener("click", this.movePieceHandler);
+          if (playerProhibitedPositions.includes(area)) continue;
+          this.createAllowedGameboardPositions(area, temporaryPositions);
         }
         this.settings.selectors.gameboard.appendChild(temporaryPositions);
         super.firstPhaseMoveHandler = this.movePieceHandler;
       }
     }
+  }
+
+  private createAllowedGameboardPositions(area: string, temporaryPositions: DocumentFragment): void {
+    const position = Helper.create({
+      type: "div", class: "temporaryPosition", area,
+      parent: temporaryPositions
+    });
+    position.addEventListener("click", this.movePieceHandler);
   }
 
   private movePiece(e: any): void {
@@ -57,6 +63,16 @@ export default class PhaseOne extends Game {
     const area = window.getComputedStyle(this.selectedPosition).gridArea!.split("/")[0].trim();
     this.activatedPiece.element.style.gridArea = area;
     this.activatedPiece.ontable = true;
+    this.activatedPiece.area = area;
+    this.configurePiecesData(area);
+  }
+
+  private configurePiecesData(area: string): void {
+    const activePlayer = this.settings.players.find(player => player.active);
+    const inactivePlayer = this.settings.players.find(player => !player.active);
+    activePlayer!.piecePositionsOnGameboard.push(area);
+    activePlayer!.prohibitedPositions.push(area);
+    inactivePlayer!.prohibitedPositions.push(area);
   }
 
   private resetMovedPiece(): void {

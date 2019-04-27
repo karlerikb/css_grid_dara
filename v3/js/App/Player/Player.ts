@@ -12,6 +12,8 @@ export default class Player {
 
   private settings: Settings = <Settings>{};
   public pieces: Piece[] = [];
+  public piecePositionsOnGameboard: string[] = [];
+  public prohibitedPositions: string[] = [];
 
   constructor(name: string, number: number, numberString: string, settings: Settings) {
     this.name = name;
@@ -94,10 +96,25 @@ export class Piece {
   readonly player: Player;
   readonly id: string;
   readonly element: HTMLElement;
+  private _area: string = "";
 
   constructor(player: Player, id: string, element: HTMLElement) {
     this.player = player;
     this.id = id;
     this.element = element;
+  }
+
+  get area(): string {
+    return this._area;
+  }
+
+  set area(value: string) {
+    if (
+      value.length === 3 && 
+      value[0] === "a" && 
+      +value[1] >= 1 && +value[1] <= 5 &&
+      +value[2] >= 1 && +value[2] <= 6) {
+      this._area = value;
+    }
   }
 }
