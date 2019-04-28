@@ -42,10 +42,11 @@ export default class PhaseTwo extends Game {
     this.removeGameboardPositions();
     const temporaryPositions = document.createDocumentFragment();
     const playerProhibitedPositions = this.settings.players.find(player => player.active)!.prohibitedPositions;
+    const activePhase = this.settings.phases.find((phase: any) => phase.active);
     const areas = this.getSurroundingPositions();
     areas.forEach(area => {
       if (area) {
-        if (!playerProhibitedPositions.includes(area)) {
+        if (!playerProhibitedPositions.includes(area) && activePhase!.fourInRow.exists(area, this.activatedPiece)) {
           this.createAllowedGameboardPositions(area, temporaryPositions);
         }
       }
