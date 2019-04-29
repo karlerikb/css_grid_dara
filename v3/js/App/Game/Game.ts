@@ -1,9 +1,11 @@
 import Settings from "../settings/Settings";
 import Player, { Piece } from "../Player/Player";
+import Helper from "../Helper/Helper";
 
 export default abstract class Game {
   firstPhaseMoveHandler: any;
   secondPhaseMoveHandler: any;
+  pieceRemovalInProgress: boolean = false;
   protected activatedPiece: Piece = <Piece>{};
   protected selectedPosition: any;
   protected piecesOnTable: number = 0;
@@ -20,6 +22,7 @@ export default abstract class Game {
     const inactivePlayer = this.settings.players.find(player => !player.active);
     activePlayer!.piecesContainer.classList.add("active");
     inactivePlayer!.piecesContainer.classList.remove("active");
+    
   }
 
   protected switchPlayers(): void {
@@ -128,6 +131,11 @@ class ThreeInRow {
   private activePlayer: Player = <Player>{};
   private inactivePlayer: Player = <Player>{};
   private playerPositions: string[] = [];
+  protected doubleRowSelectionHandler: any = this.initializeDoubleRowSelection.bind(this);
+  protected selectRowHandler: any = this.selectedThreeInRow.bind(this);
+  rowSelectionInProgress: boolean = false;
+
+  private threeInRowSelections: any = [];
 
   constructor(private settings: Settings) {
   }
@@ -143,6 +151,252 @@ class ThreeInRow {
     this.combinePlayerPositions();
     this.resetProhibitedPositions();
   }
+
+  checkIfExists(activatedPiece: Piece): boolean {
+    const threeInRows: string[][] = [];
+    const topReach: (boolean | string[]) = this.getTopReach(activatedPiece);
+    const leftReach: (boolean | string[]) = this.getLeftReach(activatedPiece);
+    const bottomReach: (boolean | string[]) = this.getBottomReach(activatedPiece);
+    const rightReach: (boolean | string[]) = this.getRightReach(activatedPiece);
+    const topAndBottomReach: (boolean | string[]) = this.getTopAndBottomReach(activatedPiece);
+    const leftAndRightReach: (boolean | string[]) = this.getLeftAndRightReach(activatedPiece);
+
+    if (topReach) threeInRows.push(<string[]>topReach);
+    if (leftReach) threeInRows.push(<string[]>leftReach);
+    if (bottomReach) threeInRows.push(<string[]>bottomReach);
+    if (rightReach) threeInRows.push(<string[]>rightReach);
+    if (topAndBottomReach) threeInRows.push(<string[]>topAndBottomReach);
+    if (leftAndRightReach) threeInRows.push(<string[]>leftAndRightReach);
+    return this.markThreeInRows(threeInRows, activatedPiece.player);
+  }
+
+  private getTopReach(piece: Piece): boolean | string[] {
+    const reach = this.getReachOfThreeTop(piece.area);
+    const reachValidation = this.getReachValidation(reach, piece.player);
+    const validCount = reachValidation.reduce((valid, area) => valid + area);
+    if (validCount === 3) return <string[]>reach;
+    return false;
+  }
+
+  private getLeftReach(piece: Piece): boolean | string[] {
+    const reach = this.getReachOfThreeLeft(piece.area);
+    const reachValidation = this.getReachValidation(reach, piece.player);
+    const validCount = reachValidation.reduce((valid, area) => valid + area);
+    if (validCount === 3) return <string[]>reach;
+    return false;
+  }
+
+  private getBottomReach(piece: Piece): boolean | string[] {
+    const reach = this.getReachOfThreeBottom(piece.area);
+    const reachValidation = this.getReachValidation(reach, piece.player);
+    const validCount = reachValidation.reduce((valid, area) => valid + area);
+    if (validCount === 3) return <string[]>reach;
+    return false;
+  }
+
+  private getRightReach(piece: Piece): boolean | string[] {
+    const reach = this.getReachOfThreeRight(piece.area);
+    const reachValidation = this.getReachValidation(reach, piece.player);
+    const validCount = reachValidation.reduce((valid, area) => valid + area);
+    if (validCount === 3) return <string[]>reach;
+    return false;
+  }
+
+  private getTopAndBottomReach(piece: Piece): boolean | string[] {
+    const reach = this.getReachOfMiddleTopAndBottom(piece.area);
+    const reachValidation = this.getReachValidation(reach, piece.player);
+    const validCount = reachValidation.reduce((valid, area) => valid + area);
+    if (validCount === 3) return <string[]>reach;
+    return false;
+  }
+
+  private getLeftAndRightReach(piece: Piece): boolean | string[] {
+    const reach = this.getReachOfMiddleLeftAndRight(piece.area);
+    const reachValidation = this.getReachValidation(reach, piece.player);
+    const validCount = reachValidation.reduce((valid, area) => valid + area);
+    if (validCount === 3) return <string[]>reach;
+    return false;
+  }
+
+  private markThreeInRows(threeInRows: string[][], player: Player): boolean {
+    if (threeInRows.length === 1) {
+      this.determineIndicationDimension(threeInRows, player);
+      return true;
+    }
+    if (threeInRows.length > 1) {
+      this.rowSelectionInProgress = true;
+      this.determineIndicationDimensions(threeInRows, player);
+      return true;
+    }
+    return false;
+  }
+
+  private determineIndicationDimension(threeInRows: string[][], player: Player) {
+    const [positions] = threeInRows;
+    const [firstPos, secondPos, thirdPos] = positions;
+    if (firstPos[1] === secondPos[1]) this.createHorizontalIndication(firstPos, secondPos, thirdPos, player);
+    if (firstPos[2] === secondPos[2]) this.createVerticalIndication(firstPos, secondPos, thirdPos, player);
+    this.markPiecesAsPartOfThreeInRow(positions);
+  }
+
+  private determineIndicationDimensions(threeInRows: string[][], player: Player) {
+    threeInRows.forEach(threeInRow => {
+      const [firstPos, secondPos, thirdPos] = threeInRow;
+      if (firstPos[1] === secondPos[1]) {
+        const indicationElement = this.createHorizontalIndication(firstPos, secondPos, thirdPos, player);
+        this.addRowSelectionEventListeners(indicationElement);
+        this.threeInRowSelections.push({ indicationElement, positions: threeInRow });
+      }
+      if (firstPos[2] === secondPos[2]) {
+        const indicationElement = this.createVerticalIndication(firstPos, secondPos, thirdPos, player);
+        this.addRowSelectionEventListeners(indicationElement);
+        this.threeInRowSelections.push({ indicationElement, positions: threeInRow });
+      }
+    });
+  }
+
+  private markPiecesAsPartOfThreeInRow(threeInRow: string[]) {
+    const activePlayer = this.settings.players.find(player => player.active);
+    threeInRow.forEach(area => {
+      const piece = activePlayer!.pieces.find(piece => piece.area === area);
+      piece!.partOfThreeInRow = true;
+    });
+  }
+
+  private addRowSelectionEventListeners(indicationElement: HTMLElement): void {
+    indicationElement.classList.add("doubleRowIndication");
+    indicationElement.addEventListener("click", this.doubleRowSelectionHandler);
+    indicationElement.addEventListener("dblclick", this.selectRowHandler);
+  }
+
+  private removeSelectionEventListeners(indicationElement: Element): void {
+    indicationElement.removeEventListener("click", this.doubleRowSelectionHandler);
+    indicationElement.removeEventListener("dblclick", this.selectRowHandler);
+    indicationElement.classList.remove("selectedRow", "doubleRowIndication");
+  }
+
+  private initializeDoubleRowSelection(e: any): void {
+    const threeInRows = Array.from(document.querySelectorAll(".threeInRow.doubleRowIndication"));
+    threeInRows.forEach(threeInRow => {
+      threeInRow.classList.remove("selectedRow");
+    });
+    e.target.classList.add("selectedRow");
+  }
+
+  private selectedThreeInRow(e: any): void {
+    const activePhase = <any>this.settings.phases.find((phase: any) => phase.active);
+    const doubleThreeInRows = Array.from(document.querySelectorAll(".threeInRow.doubleRowIndication"));
+    doubleThreeInRows.forEach(threeInRow => {
+      this.removeSelectionEventListeners(threeInRow);
+    });
+    this.markOnlySelectedPiecesAsPartOfThreeInRow(e.target);
+    this.removeNotSelectedRowIndicationElement(doubleThreeInRows, e.target);
+    this.resetPieceRemovalFlags(activePhase);
+    activePhase!.initiateOpponentPieceRemoval();
+  }
+
+  private markOnlySelectedPiecesAsPartOfThreeInRow(selectedRow: Element) {
+    const threeInRow = this.threeInRowSelections.find((row: any) => row.indicationElement === selectedRow);
+    this.markPiecesAsPartOfThreeInRow(threeInRow.positions);
+  }
+
+  private removeNotSelectedRowIndicationElement(doubleThreeInRows: Element[], selectedRow: Element): void {
+    const notSelectedRow = doubleThreeInRows.find(row => row !== selectedRow);
+    notSelectedRow!.remove();
+  }
+
+  private resetPieceRemovalFlags(activePhase: any): void {
+    this.rowSelectionInProgress = false;
+    activePhase!.pieceRemovalInProgress = false;
+  }
+
+  private createHorizontalIndication(firstPos: string, secondPos: string, thirdPos: string, player: Player): HTMLElement {
+    const area = `${firstPos} / ${firstPos} / ${firstPos} / ${thirdPos}`;
+    const threeInRow = Helper.create({
+      type: "div", class: `player${player.numberStringUpperCase} threeInRow`, area,
+      parent: this.settings.selectors.gameboard
+    });
+    player.threeInRows.push({
+      positions: [firstPos, secondPos, thirdPos],
+      element: threeInRow
+    });
+    return threeInRow;
+  }
+
+  private createVerticalIndication(firstPos: string, secondPos: string, thirdPos: string, player: Player): HTMLElement {
+    const area = `${firstPos} / ${firstPos} / ${thirdPos} / ${firstPos}`;
+    const threeInRow = Helper.create({
+      type: "div", class: `player${player.numberStringUpperCase} threeInRow`, area,
+      parent: this.settings.selectors.gameboard
+    });
+    player.threeInRows.push({
+      positions: [firstPos, secondPos, thirdPos],
+      element: threeInRow
+    });
+    return threeInRow;
+  }
+
+  private getReachOfThreeTop(position: string): (null | string)[] {
+    const row = +position[1], column = +position[2];
+    const reach = [
+      (row < 3) ? null : `a${row - 2}${column}`,
+      (row < 2) ? null : `a${row - 1}${column}`,
+      position
+    ];
+    return reach;
+  }
+
+  private getReachOfThreeBottom(position: string): (null | string)[] {
+    const row = +position[1], column = +position[2];
+    const reach = [
+      position,
+      (row > 5) ? null : `a${row + 1}${column}`,
+      (row > 4) ? null : `a${row + 2}${column}`
+    ];
+    return reach;
+  }
+
+  private getReachOfThreeLeft(position: string): (null | string)[] {
+    const row = +position[1], column = +position[2];
+    const reach = [
+      (column < 3) ? null : `a${row}${column - 2}`,
+      (column < 2) ? null : `a${row}${column - 1}`,
+      position
+    ];
+    return reach;
+  }
+
+  private getReachOfThreeRight(position: string): (null | string)[] {
+    const row = +position[1], column = +position[2];
+    const reach = [
+      position,
+      (column > 5) ? null : `a${row}${column + 1}`,
+      (column > 4) ? null : `a${row}${column + 2}`
+    ];
+    return reach;
+  }
+
+  private getReachOfMiddleTopAndBottom(position: string): (null | string)[] {
+    const row = +position[1], column = +position[2];
+    const reach = [
+      (row < 2) ? null : `a${row - 1}${column}`,
+      position,
+      (row > 5) ? null : `a${row + 1}${column}`
+    ];
+    return reach;
+  }
+
+  private getReachOfMiddleLeftAndRight(position: string): (null | string)[] {
+    const row = +position[1], column = +position[2];
+    const reach = [
+      (column < 2) ? null : `a${row}${column - 1}`,
+      position,
+      (column > 5) ? null : `a${row}${column + 1}`
+    ];
+    return reach;
+  }
+
+
 
   private setPlayers(): void {
     this.activePlayer = <Player>this.settings.players.find(player => player.active);
@@ -208,8 +462,12 @@ class ThreeInRow {
   private getReachValidation(reach: (null | string)[], player: Player): number[] {
     const reachValidation = reach.map(position => {
       if (!position) return 0;
-      else if (!player.piecePositionsOnGameboard.includes(position)) return 0; 
-      else return 1;
+      if (player.piecePositionsOnGameboard.includes(position)) {
+        if (player.pieces.find(piece => piece.area === position)!.partOfThreeInRow) return 0;
+        else return 1;
+      }
+      if (!player.piecePositionsOnGameboard.includes(position)) return 0; 
+      return 1;
     });
     return reachValidation;
   }

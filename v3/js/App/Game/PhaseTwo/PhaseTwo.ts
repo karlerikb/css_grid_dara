@@ -1,6 +1,6 @@
 import Game from "../Game";
 import Settings from "../../settings/Settings";
-import { Piece } from "../../Player/Player";
+import Player, { Piece } from "../../Player/Player";
 import Helper from "../../Helper/Helper";
 
 export default class PhaseTwo extends Game {
@@ -9,6 +9,7 @@ export default class PhaseTwo extends Game {
   private movePieceHandler: any = this.movePiece.bind(this);
   private animationStartsHandler: any = this.movementStarts.bind(this);
   private animationEndsHandler: any = this.movementEnds.bind(this);
+  private removePieceHandler: any = this.initializePieceRemoval.bind(this);
 
   constructor(protected settings: Settings) {
     super(settings);
@@ -99,15 +100,18 @@ export default class PhaseTwo extends Game {
     this.movePieceWithinGameboard();
     this.resetMovedPiece();
     this.removeGameboardPositions();
-    this.switchTurn();
     this.animationEnds();
+    if (!this.pieceRemovalInProgress) this.switchTurn();
   }
 
   private movePieceWithinGameboard(): void {
     const area = window.getComputedStyle(this.selectedPosition).gridArea!.split("/")[0].trim();
+    const piecePositionBeforeMoving = this.activatedPiece.area;
     this.activatedPiece.element.style.gridArea = area;
     this.configurePiecesData(area);
     this.configureActivatedPiece(area);
+    this.checkIfThreeInRowNeedsToBeCreated();
+    this.checkIfThreeInRowNeedsToBeRemoved(piecePositionBeforeMoving);
   }
 
   private configurePiecesData(area: string): void {
@@ -120,6 +124,27 @@ export default class PhaseTwo extends Game {
   private configureActivatedPiece(area: string): void {
     this.activatedPiece.active = false;
     this.activatedPiece.area = area;
+  }
+
+  private checkIfThreeInRowNeedsToBeCreated(): void {
+    const activePhase = this.settings.phases.find((phase: any) => phase.active);
+    const threeInRowExists = activePhase!.threeInRow.checkIfExists(this.activatedPiece);
+    const rowSelectionInProgress = this.threeInRow.rowSelectionInProgress;
+    if (threeInRowExists && !rowSelectionInProgress) this.initiateOpponentPieceRemoval();
+    if (threeInRowExists && rowSelectionInProgress) this.pieceRemovalInProgress = true;
+    if (!threeInRowExists) this.pieceRemovalInProgress = false;
+  }
+
+  private checkIfThreeInRowNeedsToBeRemoved(oldPosition: string): void {
+    const threeInRows = this.activatedPiece.player.threeInRows;
+    if (this.activatedPiece.player.threeInRows) {
+      threeInRows.forEach((threeInRow, index) => {
+        if (threeInRow.positions.includes(oldPosition)) {
+          threeInRow.element.remove();
+          threeInRows.splice(index, 1);
+        }
+      });
+    }
   }
 
   private resetMovedPiece(): void {
@@ -137,5 +162,61 @@ export default class PhaseTwo extends Game {
   private removeActivePlayerEventListeners(): void {
     this.activatedPiece.element.removeEventListener("animationstart", this.animationStartsHandler);
     this.activatedPiece.element.removeEventListener("animationend", this.animationEndsHandler);
+  }
+
+  initiateOpponentPieceRemoval(): void {
+    this.pieceRemovalInProgress = true;
+    const inactivePlayer = this.settings.players.find(player => !player.active);
+    inactivePlayer!.pieces.forEach(piece => {
+      let removablePiece = true;
+      piece.player.threeInRows.forEach(threeInRow => {
+        if (threeInRow.positions.includes(piece.area)) removablePiece = false;
+      });
+      if (removablePiece) {
+        piece.element.addEventListener("click", this.removePieceHandler);
+        piece.element.classList.add("toBeRemoved");
+      }
+    });
+
+  }
+
+  private initializePieceRemoval(e: any): void {
+    const inactivePlayer: Player = <Player>this.settings.players.find(player => !player.active);
+    const piece: Piece = <Piece>inactivePlayer!.pieces.find(piece => piece.element === e.target);
+      this.removePiece(piece);
+      this.switchTurn();
+  }
+
+  private removePiece(piece: Piece) {
+    this.removeOpponentPieceEventListeners(piece);
+    this.removeOpponentPiece(piece);
+    this.removePlayerPieceData(piece.area);
+    this.pieceRemovalInProgress = false;
+  }
+
+  private removeOpponentPieceEventListeners(piece: Piece): void {
+    piece.element.removeEventListener("click", piece.player.initializePieceHandler);
+    piece.player.pieces.forEach(piece => {
+      piece.element.removeEventListener("click", this.removePieceHandler);
+      piece.element.classList.remove("toBeRemoved");
+    });
+  }
+
+  private removeOpponentPiece(piece: Piece): void {
+    const area = piece.area;
+    const opponentPieceAreas = piece.player.piecePositionsOnGameboard;
+    const opponentProhibitedPositions = piece.player.prohibitedPositions;
+    const opponentPieces = piece.player.pieces;
+    
+    opponentPieceAreas.splice(opponentPieceAreas.indexOf(area), 1);
+    opponentProhibitedPositions.splice(opponentProhibitedPositions.indexOf(area), 1);
+    piece.element.remove();
+    opponentPieces.splice(opponentPieces.indexOf(piece), 1);
+  }
+
+  private removePlayerPieceData(area: string): void {
+    const activePlayer = this.settings.players.find(player => player.active);
+    const activePlayerProhibitedPositions = activePlayer!.prohibitedPositions;
+    activePlayerProhibitedPositions.splice(activePlayerProhibitedPositions.indexOf(area), 1);
   }
 }

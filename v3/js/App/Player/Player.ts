@@ -14,6 +14,7 @@ export default class Player {
   public pieces: Piece[] = [];
   public piecePositionsOnGameboard: string[] = [];
   public prohibitedPositions: string[] = [];
+  public threeInRows: any[] = [];
 
   constructor(name: string, number: number, numberString: string, settings: Settings) {
     this.name = name;
@@ -39,9 +40,9 @@ export default class Player {
   }
 
   private initializePieceActivation(e: any): void {
-    if (this.active && !this.settings.animationInProgress) {
-      const activePhase: any = this.settings.phases.find((phase: any) => phase.active);
-      const activatedPiece = this.pieces.find(piece => piece.element === e.target);
+    const activePhase: any = this.settings.phases.find((phase: any) => phase.active);
+    const activatedPiece = this.pieces.find(piece => piece.element === e.target);
+    if (this.active && !this.settings.animationInProgress && !activePhase.pieceRemovalInProgress) {
       this.activatePiece(<Piece>activatedPiece);
       activePhase!.activatePiece(<Piece>activatedPiece);
     }
@@ -93,6 +94,7 @@ export default class Player {
 export class Piece {
   active: boolean = false;
   ontable: boolean = false;
+  partOfThreeInRow: boolean = false;
   readonly player: Player;
   readonly id: string;
   readonly element: HTMLElement;

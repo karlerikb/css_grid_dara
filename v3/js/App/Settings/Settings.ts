@@ -8,7 +8,7 @@ export default class Settings {
   private _phases: Game[] = [];
   private _players: Player[] = [];
   private _menuBtns: MenuButtons[] = [];
-  private _piecesForEachPlayer: number = 4;
+  private _piecesForEachPlayer: number = 5;
   private _animationTime: string = ".5s";
 
   readonly menuOptions: string[] = ["resume", "exit"];
