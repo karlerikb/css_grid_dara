@@ -18,11 +18,23 @@ export default abstract class Game {
   }
 
   protected activatePlayer(): void {
-    const activePlayer = this.settings.players.find(player => player.active);
-    const inactivePlayer = this.settings.players.find(player => !player.active);
+    const activePlayer = <Player>this.settings.players.find(player => player.active);
+    const inactivePlayer = <Player>this.settings.players.find(player => !player.active);
     activePlayer!.piecesContainer.classList.add("active");
     inactivePlayer!.piecesContainer.classList.remove("active");
-    
+    this.playerActivationVisualIndication(activePlayer);
+  }
+
+  private playerActivationVisualIndication(player: Player) {
+    // console.log(player.pieces);
+    player.pieces.forEach(piece => {
+      piece.element.classList.add("pieceActivation");
+    });
+    setTimeout(() => {
+      player.pieces.forEach(piece => {
+        piece.element.classList.remove("pieceActivation");
+      });
+    }, 1000);
   }
 
   protected switchPlayers(): void {

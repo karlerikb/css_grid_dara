@@ -20,3 +20,20 @@
   position: relative;
   animation: animateMovement var(--animationTime);
 }
+
+
+@keyframes pieceActivation {
+  0% {
+    box-shadow: 0 0 0 0 #333;
+  }
+  50% {
+    box-shadow: 0 0 8px 2px #333;
+  }
+  100% {
+    box-shadow: 0 0 0 0 #333;
+  }
+}
+
+.pieceActivation {
+  animation: pieceActivation 1s;
+}
