@@ -293,6 +293,10 @@ class ThreeInRow {
     this.removeNotSelectedRowIndicationElement(doubleThreeInRows, e.target);
     this.resetPieceRemovalFlags(activePhase);
     activePhase!.initiateOpponentPieceRemoval();
+
+    const threeInRows = this.settings.players.find(player => player.active)!.threeInRows;
+    const toBeRemovedObj = threeInRows.find(row => row.element !== e.target);
+    threeInRows.splice(threeInRows.indexOf(toBeRemovedObj), 1);
   }
 
   private markOnlySelectedPiecesAsPartOfThreeInRow(selectedRow: Element) {

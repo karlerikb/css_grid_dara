@@ -111,7 +111,7 @@ export default class PhaseTwo extends Game {
     this.configurePiecesData(area);
     this.configureActivatedPiece(area);
     this.checkIfThreeInRowNeedsToBeCreated();
-    this.checkIfThreeInRowNeedsToBeRemoved(piecePositionBeforeMoving);
+    this.checkIfThreeInRowNeedsToBeRemoved(piecePositionBeforeMoving, area);
   }
 
   private configurePiecesData(area: string): void {
@@ -130,21 +130,36 @@ export default class PhaseTwo extends Game {
     const activePhase = this.settings.phases.find((phase: any) => phase.active);
     const threeInRowExists = activePhase!.threeInRow.checkIfExists(this.activatedPiece);
     const rowSelectionInProgress = this.threeInRow.rowSelectionInProgress;
-    if (threeInRowExists && !rowSelectionInProgress) this.initiateOpponentPieceRemoval();
-    if (threeInRowExists && rowSelectionInProgress) this.pieceRemovalInProgress = true;
+    if (threeInRowExists && !rowSelectionInProgress) {
+      this.initiateOpponentPieceRemoval();
+    }
+    if (threeInRowExists && rowSelectionInProgress) {
+      this.pieceRemovalInProgress = true;
+      this.initiateOpponentPieceRemoval();
+    }
     if (!threeInRowExists) this.pieceRemovalInProgress = false;
   }
 
-  private checkIfThreeInRowNeedsToBeRemoved(oldPosition: string): void {
+  private checkIfThreeInRowNeedsToBeRemoved(oldPosition: string, newPosition: string): void {
     const threeInRows = this.activatedPiece.player.threeInRows;
     if (this.activatedPiece.player.threeInRows) {
       threeInRows.forEach((threeInRow, index) => {
         if (threeInRow.positions.includes(oldPosition)) {
           threeInRow.element.remove();
           threeInRows.splice(index, 1);
+          this.unmarkPiecesThatAreNotPartOfThreeInRow(threeInRow.positions, oldPosition, newPosition);
         }
       });
     }
+  }
+
+  private unmarkPiecesThatAreNotPartOfThreeInRow(threeInRow: string[], oldPos: string, newPos: string) {
+    const activePlayer = this.settings.players.find(player => player.active);
+    threeInRow.splice(threeInRow.indexOf(oldPos), 1, newPos);
+    threeInRow.forEach(position => {
+      const piece = activePlayer!.pieces.find(piece => piece.area === position);
+      piece!.partOfThreeInRow = false;
+    });
   }
 
   private resetMovedPiece(): void {
@@ -168,11 +183,7 @@ export default class PhaseTwo extends Game {
     this.pieceRemovalInProgress = true;
     const inactivePlayer = this.settings.players.find(player => !player.active);
     inactivePlayer!.pieces.forEach(piece => {
-      let removablePiece = true;
-      piece.player.threeInRows.forEach(threeInRow => {
-        if (threeInRow.positions.includes(piece.area)) removablePiece = false;
-      });
-      if (removablePiece) {
+      if (!piece.partOfThreeInRow) {
         piece.element.addEventListener("click", this.removePieceHandler);
         piece.element.classList.add("toBeRemoved");
       }
