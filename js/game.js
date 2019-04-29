@@ -57,7 +57,7 @@ const playerTwoGameboard = [
 
 
 /* TEMPORARY VARIABLES for Development */
-const gamePiecesForEachPlayer = 3;
+const gamePiecesForEachPlayer = 12;
 const animationTime = ".5s";
 
 
@@ -137,9 +137,9 @@ function createPlayerPieceElement(playerPieceId, position) {
 
 function switchTurnToPlayer(playerNumber) {
   activePlayer = playerNumber;
-  scrollToActivePlayerPiecesContainer(playerNumber);
-  activatingCurrentPlayer(playerNumber);
-  deactivatingOpponentPlayer(playerNumber);
+  scrollToActivePlayerPiecesContainer(playerNumber); // scroll
+  activatingCurrentPlayer(playerNumber); // activateplayer
+  deactivatingOpponentPlayer(playerNumber); // deactivate player
   setInitialDescriptions();
   testGamePhase();
 }
@@ -272,6 +272,9 @@ function removeGameboardPositionElements(temporaryPositions) {
   });
 }
 
+
+// Gameboard positions for phase one
+
 function createGameboardPositionElementsForPhaseOne(activePiece, activatedPlayerPieces) {
   const player = +activePiece.id[1];
   if (player === 1) {
@@ -286,7 +289,8 @@ function createPlayerGameboardPositions(playerGameboard, activePiece, activatedP
   for (let row = 1; row <= 5; row++) {
     for (let column = 1; column <= 6; column++) {
       const position = `a${row}${column}`;
-      if (!playerGameboard[row][column]) continue;
+      const area = playerGameboard[row][column];
+      if (area === false || area === null || area === "player") continue;
       createTemporaryPositionElement(position, activePiece, activatedPlayerPieces);
     }
   }
@@ -399,12 +403,14 @@ function createProhibitedPositionsInArrays(playerPieceId, row, column) {
     playerTwoGameboard[row][column] = false;
     horizontalRow(1, row, column);
     verticalRow(1, row, column);
+    console.log(playerOneGameboard);
   }
   if (+playerPieceId[1] === 2) {
     playerOneGameboard[row][column] = false;
     playerTwoGameboard[row][column] = "player";
     horizontalRow(2, row, column);
     verticalRow(2, row, column);
+    console.log(playerTwoGameboard);
   }
 }
 
@@ -464,12 +470,12 @@ function prohibitThreeInARow(playerGameboard, analyzePositionsArray, analyzePosi
 
     // In a three area sequence, there are two player pieces
     if (playerOccupiedAreas === 2) {
-      findAreaAndMakeItProhibited(playerGameboard, analyzePositionAreas);
+      findAreaAndMakeItProhibited(i, playerGameboard, analyzePositionAreas);
     }
   }
 }
 
-function findAreaAndMakeItProhibited(playerGameboard, analyzePositionAreas) {
+function findAreaAndMakeItProhibited(i, playerGameboard, analyzePositionAreas) {
   const potentialThreeInRow = analyzePositionAreas.slice(i, i + 3);
   potentialThreeInRow.forEach(area => {
     const row = area[1];
@@ -518,63 +524,3 @@ function removePlayerActivePiece(piece) {
 }
 
 
-// Animating Movement Between Grids
-
-function animateMovementBetweenGrids(activePiece, targetPosition, activatedPlayerPieces) {
-  const activePieceTop = activePiece.getBoundingClientRect().top;
-  const activePieceLeft = activePiece.getBoundingClientRect().left;
-  const targetPositionTop = targetPosition.getBoundingClientRect().top;
-  const targetPositionLeft = targetPosition.getBoundingClientRect().left;
-
-  root.style.setProperty("--targetPositionTop", (targetPositionTop - activePieceTop) + "px");
-  root.style.setProperty("--targetPositionLeft", (targetPositionLeft - activePieceLeft) + "px");
-
-  /* temporary setting for development */
-  root.style.setProperty("--animationTime", animationTime);
-
-  activePiece.classList.add("moveBetweenGrids");
-  activePiece.addEventListener("animationend", animationBetweenGridsEnds);
-  activePiece.addEventListener("animationstart", animationStarted);
-
-  activePiece.positionElement = targetPosition;
-  activePiece.activatedPlayerPieces = activatedPlayerPieces;
-}
-
-function animationBetweenGridsEnds(e) {
-  const opponentPlayer = (players.filter(player => player !== activePlayer))[0];
-  const playerPieceElement = e.target;
-  const targetPositionElement = e.target.positionElement;
-  const activatedPlayerPieces = e.target.activatedPlayerPieces;
-
-  addPlayerPieceToGameboard(playerPieceElement.id, targetPositionElement);
-  removePlayerActivePiece(playerPieceElement);
-  removePlayerPieceActivation(activatedPlayerPieces);
-  removeGameboardPositions();
-  switchTurnToPlayer(opponentPlayer);
-  animationEnded(e);
-}
-
-function animationStarted(e) {
-  const temporaryPositions = Array.from(document.querySelectorAll(".gameboard > .temporaryPosition"));
-  const activatedPieces = e.target.activatedPlayerPieces;
-  activatedPieces.forEach(piece => {
-    if (!piece.classList.contains("notAllowed")) piece.classList.add("notAllowed");
-  });
-  temporaryPositions.forEach(temporaryPosition => {
-    if (!temporaryPosition.classList.contains("notAllowed")) temporaryPosition.classList.add("notAllowed");
-  });
-  setPlayerTurnDescriptionState(2);
-  animationInProgress = true;
-}
-
-function animationEnded(e) {
-  const temporaryPositions = Array.from(document.querySelectorAll(".gameboard > .temporaryPosition"));
-  const activatedPieces = e.target.activatedPlayerPieces;
-  activatedPieces.forEach(piece => {
-    if (piece.classList.contains("notAllowed")) piece.classList.remove("notAllowed");
-  });
-  temporaryPositions.forEach(temporaryPosition => {
-    if (temporaryPosition.classList.contains("notAllowed")) temporaryPosition.classList.remove("notAllowed");
-  });
-  animationInProgress = false;
-}

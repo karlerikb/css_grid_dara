@@ -1,0 +1,39 @@
+:root {
+  --targetPositionTop: 0;
+  --targetPositionLeft: 0;
+  /* temporary variable for development */
+  --animationTime: 2s;
+}
+
+@keyframes animateMovement {
+  0% {
+    top: 0;
+    left: 0;
+  }
+  100% {
+    top: var(--targetPositionTop);
+    left: var(--targetPositionLeft);
+  }
+}
+
+.animateMovement {
+  position: relative;
+  animation: animateMovement var(--animationTime);
+}
+
+
+@keyframes pieceActivation {
+  0% {
+    box-shadow: 0 0 0 0 #333;
+  }
+  50% {
+    box-shadow: 0 0 8px 2px #333;
+  }
+  100% {
+    box-shadow: 0 0 0 0 #333;
+  }
+}
+
+.pieceActivation {
+  animation: pieceActivation 1s;
+}
