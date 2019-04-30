@@ -57,7 +57,8 @@ export default class PhaseOne extends Game {
 
   private movePieceToGameboard(): void {
     this.settings.selectors.gameboard.append(this.activatedPiece.element);
-    const area = window.getComputedStyle(this.selectedPosition).gridArea!.split("/")[0].trim();
+    let area = window.getComputedStyle(this.selectedPosition).gridArea!.split("/")[0].trim();
+    if (!area) area = this.selectedPosition.style["gridArea"].split("/")[0].trim();
     this.activatedPiece.element.style.gridArea = area;
     this.configureActivatedPiece(area);
     this.configurePiecesData(area);

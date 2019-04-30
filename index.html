@@ -22,17 +22,6 @@
       <p><span class="additionDescription"></span></p>
     </div>
   </div>
-  <script src="node_modules/systemjs/dist/system.js"></script>
-  <script>
-    SystemJS.config({
-      baseURL: 'app/js',
-      packages: {
-        '/': {
-          defaultExtension: 'js'
-        }
-      }
-    });
-    SystemJS.import('App.js');
-  </script>
+  <script src="dist/bundle.js"></script>
 </body>
 </html>

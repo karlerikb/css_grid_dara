@@ -327,7 +327,7 @@ class ThreeInRow {
   }
 
   private createHorizontalIndication(firstPos: string, secondPos: string, thirdPos: string, player: Player): HTMLElement {
-    const area = `${firstPos} / ${firstPos} / ${firstPos} / ${thirdPos}`;
+    const area = `${firstPos} / ${firstPos} / ${thirdPos} / ${thirdPos}`;
     const threeInRow = Helper.create({
       type: "div", class: `player${player.numberStringUpperCase} threeInRow`, area,
       parent: this.settings.selectors.gameboard
@@ -340,7 +340,7 @@ class ThreeInRow {
   }
 
   private createVerticalIndication(firstPos: string, secondPos: string, thirdPos: string, player: Player): HTMLElement {
-    const area = `${firstPos} / ${firstPos} / ${thirdPos} / ${firstPos}`;
+    const area = `${firstPos} / ${firstPos} / ${thirdPos} / ${thirdPos}`;
     const threeInRow = Helper.create({
       type: "div", class: `player${player.numberStringUpperCase} threeInRow`, area,
       parent: this.settings.selectors.gameboard

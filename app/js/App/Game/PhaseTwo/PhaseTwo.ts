@@ -105,7 +105,8 @@ export default class PhaseTwo extends Game {
   }
 
   private movePieceWithinGameboard(): void {
-    const area = window.getComputedStyle(this.selectedPosition).gridArea!.split("/")[0].trim();
+    let area = window.getComputedStyle(this.selectedPosition).gridArea!.split("/")[0].trim();
+    if (!area) area = this.selectedPosition.style["gridArea"].split("/")[0].trim();
     const piecePositionBeforeMoving = this.activatedPiece.area;
     this.activatedPiece.element.style.gridArea = area;
     this.configurePiecesData(area);
