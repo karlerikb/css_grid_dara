@@ -105,8 +105,14 @@ export default class PhaseTwo extends Game {
   }
 
   private movePieceWithinGameboard(): void {
-    let area = window.getComputedStyle(this.selectedPosition).gridArea!.split("/")[0].trim();
-    if (!area) area = this.selectedPosition.style["gridArea"].split("/")[0].trim();
+    const selectedPosition = this.selectedPosition;
+    const computedStyle = window.getComputedStyle(selectedPosition).gridArea;
+    let area: string;
+    if (computedStyle) {
+      area = computedStyle.split("/")[0].trim();
+    } else {
+      area = selectedPosition.style["gridArea"].split("/")[0].trim();
+    }
     const piecePositionBeforeMoving = this.activatedPiece.area;
     this.activatedPiece.element.style.gridArea = area;
     this.configurePiecesData(area);
@@ -131,6 +137,7 @@ export default class PhaseTwo extends Game {
     const activePhase = this.settings.phases.find((phase: any) => phase.active);
     const threeInRowExists = activePhase!.threeInRow.checkIfExists(this.activatedPiece);
     const rowSelectionInProgress = this.threeInRow.rowSelectionInProgress;
+    console.log(threeInRowExists, rowSelectionInProgress);
     if (threeInRowExists && !rowSelectionInProgress) {
       this.initiateOpponentPieceRemoval();
     }
@@ -193,10 +200,12 @@ export default class PhaseTwo extends Game {
   }
 
   private initializePieceRemoval(e: any): void {
-    const inactivePlayer: Player = <Player>this.settings.players.find(player => !player.active);
-    const piece: Piece = <Piece>inactivePlayer!.pieces.find(piece => piece.element === e.target);
+    if (!this.threeInRow.rowSelectionInProgress) {
+      const inactivePlayer: Player = <Player>this.settings.players.find(player => !player.active);
+      const piece: Piece = <Piece>inactivePlayer!.pieces.find(piece => piece.element === e.target);
       this.removePiece(piece);
       this.switchTurn();
+    }
   }
 
   private removePiece(piece: Piece) {

@@ -145,6 +145,7 @@ class ThreeInRow {
   private playerPositions: string[] = [];
   protected doubleRowSelectionHandler: any = this.initializeDoubleRowSelection.bind(this);
   protected selectRowHandler: any = this.selectedThreeInRow.bind(this);
+  protected selectRowHandlerForMobile: any = this.selectedThreeInRowForMobile.bind(this);
   rowSelectionInProgress: boolean = false;
 
   private threeInRowSelections: any = [];
@@ -279,11 +280,13 @@ class ThreeInRow {
     indicationElement.classList.add("doubleRowIndication");
     indicationElement.addEventListener("click", this.doubleRowSelectionHandler);
     indicationElement.addEventListener("dblclick", this.selectRowHandler);
+    indicationElement.addEventListener("touchstart", this.selectRowHandlerForMobile);
   }
 
   private removeSelectionEventListeners(indicationElement: Element): void {
     indicationElement.removeEventListener("click", this.doubleRowSelectionHandler);
     indicationElement.removeEventListener("dblclick", this.selectRowHandler);
+    indicationElement.removeEventListener("touchstart", this.selectRowHandlerForMobile);
     indicationElement.classList.remove("selectedRow", "doubleRowIndication");
   }
 
@@ -309,6 +312,15 @@ class ThreeInRow {
     const threeInRows = this.settings.players.find(player => player.active)!.threeInRows;
     const toBeRemovedObj = threeInRows.find(row => row.element !== e.target);
     threeInRows.splice(threeInRows.indexOf(toBeRemovedObj), 1);
+    this.rowSelectionInProgress = false;
+    // ...
+    activePhase.initiateOpponentPieceRemoval();
+  }
+
+
+  private selectedThreeInRowForMobile(e: any): void {
+    console.log(e.timeStamp);
+
   }
 
   private markOnlySelectedPiecesAsPartOfThreeInRow(selectedRow: Element) {
@@ -327,7 +339,7 @@ class ThreeInRow {
   }
 
   private createHorizontalIndication(firstPos: string, secondPos: string, thirdPos: string, player: Player): HTMLElement {
-    const area = `${firstPos} / ${firstPos} / ${thirdPos} / ${thirdPos}`;
+    const area = `${thirdPos} / ${firstPos} / ${firstPos} / ${thirdPos}`;
     const threeInRow = Helper.create({
       type: "div", class: `player${player.numberStringUpperCase} threeInRow`, area,
       parent: this.settings.selectors.gameboard
