@@ -1,6 +1,13 @@
-import { NewElement } from "../../interfaces/Interfaces";
+import { NewElement } from "./interfaces";
 
-export default class Helper {
+export class Helper {
+
+  public static upperCaseFirstLetter(str: string): string {
+    const firstLetter = str.charAt(0).toUpperCase();
+    if (str.length === 1) return firstLetter;
+    if (str.length > 1) return firstLetter + str.slice(1);
+    return "";
+  }
 
   public static create(element: NewElement): HTMLElement {
     const newElement = document.createElement(element.type);
@@ -10,12 +17,5 @@ export default class Helper {
     if (element.area) newElement.style.gridArea = element.area;
     element.parent.appendChild(newElement);
     return newElement;
-  }
-
-  public static upperCaseFirstLetter(string: string) {
-    if (string.length === 0) return "";
-    const firstLetter = string.charAt(0).toUpperCase();
-    if (string.length === 1) return firstLetter;
-    if (string.length > 1) return firstLetter + string.slice(1);
   }
 }
