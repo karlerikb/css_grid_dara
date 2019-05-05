@@ -19,7 +19,7 @@
     padding: 1vw;
     grid-template-columns: repeat(6, auto);
     grid-template-rows: repeat(2, auto);
-    gap: 1vw;
+    /* gap: 1vw; */
   }
 
   .piecesContainer.playerTwo {
@@ -35,6 +35,8 @@
       "p1_7   p1_8   p1_9  p1_10  p1_11  p1_12"
     ;
   }
+
+  .piecesContainer .piece { margin: .25vw; }
 
   /* Gameboard Element */
 

@@ -28,7 +28,7 @@
   padding: .5vw;
   grid-template-columns: repeat(2, auto);
   grid-template-rows: repeat(6, auto);
-  gap: .5vw;
+  /* gap: .5vw; */
 }
 
 .piecesContainer.playerOne {
@@ -60,7 +60,10 @@
 
 .piecesContainer.active { border: 1px solid black; }
 
-.piecesContainer .piece { z-index: 3; }
+.piecesContainer .piece {
+  margin: .25vw;
+  z-index: 3;
+}
 
 /* Gameboard Element */
 
