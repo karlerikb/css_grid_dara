@@ -4,6 +4,7 @@ import PhaseOne from "./App/Game/PhaseOne/PhaseOne";
 import PhaseTwo from "./App/Game/PhaseTwo/PhaseTwo";
 import Menu from "./App/Menu/Menu";
 
+// ...
 class App {
   private static _instance: App;
 
