@@ -2,7 +2,7 @@
 
 ## Rakenduse prototüüp
 
-Rakendus on kättesaadav [aadressil](http://www.tlu.ee/~karlerik/dara_v2/v3/).
+Rakendus on kättesaadav [veebis](http://www.tlu.ee/~karlerik/dara_v2/v3/).
 Käesoleva repositiooriumi harus `bachelorsDegree` on rakenduse prototüübi versioon bakalaureusetöö tähtaja seisuga.
 Rakendust arendatakse edasi harus `refactorIteration4`.
 
