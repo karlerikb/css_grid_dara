@@ -6,3 +6,4 @@ export interface NewElement {
   area?: string;
   parent: HTMLElement | DocumentFragment;
 }
+

@@ -1,8 +1,8 @@
 import { Settings } from "./conf/settings";
 import { Configuration } from "./conf/configuration";
 import { Player } from "./players/player";
-import { PhaseOne } from "./game/phaseOne";
-import { PhaseTwo } from "./game/phaseTwo";
+import { PhaseOne } from "./game/phase-one";
+import { PhaseTwo } from "./game/phase-two";
 
 class App {
   private static _instance: App;
@@ -22,15 +22,15 @@ class App {
   }
 
   private createPlayers(): void {
-    const playerOne = new Player("Mängija 1", 1, "one", this.settings, this.conf);
-    const playerTwo = new Player("Mängija 2", 2, "two", this.settings, this.conf);
+    const playerOne = new Player("Mängija 1", 1, "one");
+    const playerTwo = new Player("Mängija 2", 2, "two");
     this.conf.players.push(playerOne, playerTwo);
     playerOne.active = true;
   }
 
   private initializePhases(): void {
-    const phaseOne = new PhaseOne(this.settings, this.conf);
-    const phaseTwo = new PhaseTwo(this.settings, this.conf);
+    const phaseOne = new PhaseOne();
+    const phaseTwo = new PhaseTwo();
     this.conf.phases.push(phaseOne, phaseTwo);
     phaseOne.init();
   }
