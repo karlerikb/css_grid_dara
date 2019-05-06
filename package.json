@@ -20,5 +20,13 @@
   },
   "dependencies": {
     "systemjs": "^0.21.5"
-  }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://karlerikb@github.com/karlerikb/css_grid_dara.git"
+  },
+  "bugs": {
+    "url": "https://github.com/karlerikb/css_grid_dara/issues"
+  },
+  "homepage": "https://github.com/karlerikb/css_grid_dara#readme"
 }

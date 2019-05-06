@@ -22,7 +22,7 @@ export default abstract class Game {
     const inactivePlayer = <Player>this.settings.players.find(player => !player.active);
     activePlayer!.piecesContainer.classList.add("active");
     inactivePlayer!.piecesContainer.classList.remove("active");
-    this.playerActivationVisualIndication(activePlayer);
+    // this.playerActivationVisualIndication(activePlayer);
   }
 
   private playerActivationVisualIndication(player: Player) {
