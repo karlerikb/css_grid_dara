@@ -3,14 +3,14 @@ import { NewElement } from "./interfaces";
 export class Helper {
 
   public static upperCaseFirstLetter(str: string): string {
-    const firstLetter = str.charAt(0).toUpperCase();
+    const firstLetter: string = str.charAt(0).toUpperCase();
     if (str.length === 1) return firstLetter;
     if (str.length > 1) return firstLetter + str.slice(1);
     return "";
   }
 
   public static create(element: NewElement): HTMLElement {
-    const newElement = document.createElement(element.type);
+    const newElement: HTMLElement = document.createElement(element.type);
     if (element.id) newElement.id = element.id;
     if (element.class) newElement.className = element.class;
     if (element.text) newElement.textContent = element.text;

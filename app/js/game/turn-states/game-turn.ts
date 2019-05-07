@@ -1,14 +1,10 @@
 import { WaitingPieceActivationState } from "./waiting-piece-activation";
 import { PieceActivatedState } from "./piece-activated";
+import { State } from "../../conf/interfaces";
 
-export interface State {
-  gameMove: GameMove;
 
-  enablePieceActivation(): void;
-  enablePieceHighlight(): void;
-}
 
-export class GameMove {
+export class GameTurn {
   private _state: State = <State>{};
 
   private waitingPieceActivationState: State;
@@ -18,10 +14,10 @@ export class GameMove {
   constructor() {
     this.waitingPieceActivationState = new WaitingPieceActivationState(this);
     this.pieceActivatedState = new PieceActivatedState(this);
-    this.initializeGameMove();
+    this.initializeGameTurn();
   }
 
-  initializeGameMove(): void {
+  initializeGameTurn(): void {
     this.state = this.waitingPieceActivationState;
   }
 

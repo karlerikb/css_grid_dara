@@ -1,12 +1,12 @@
 import { Settings } from "../conf/settings";
 import { Configuration } from "../conf/configuration";
 import { Player } from "../players/player";
-import { GameMove } from "./move-states/game-move";
+import { GameTurn } from "./turn-states/game-turn";
 
 export abstract class Game {
   protected settings: Settings = Settings.instance;
   protected conf: Configuration = Configuration.instance;
-  readonly gameTurn = new GameMove();
+  readonly gameTurn = new GameTurn();
 
   constructor() {
   }
