@@ -11,4 +11,8 @@ export class PhaseTwo extends Game {
   activatePiece(): void {
     
   }
+
+  createGameboardPositions(): void {
+    
+  }
 }

@@ -23,12 +23,14 @@ export class WaitingPieceActivationState implements State {
     const activePlayer: Player = <Player>this.conf.players.find(player => player.active);
     const inactivePlayer: Player = <Player>this.conf.players.find(player => !player.active);
     const allPieces: Piece[] = activePlayer.pieces.concat(inactivePlayer.pieces);
+
     allPieces.forEach(piece => {
-      piece.element.removeEventListener("click", this.conf.eventListeners.pieceActivation);
+      piece.element.removeEventListener("click", this.conf.eventListeners.activatingPiece);
     });
+
     activePlayer.pieces.forEach(piece => {
       if (!piece.movedToTable) {
-        piece.element.addEventListener("click", this.conf.eventListeners.pieceActivation);
+        piece.element.addEventListener("click", this.conf.eventListeners.activatingPiece);
       }
     });
   }

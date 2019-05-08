@@ -18,7 +18,7 @@ class App {
   private init(): void {
     this.createPlayers();
     this.initializePhases();
-    console.log(this.settings, this.conf);
+    // console.log(this.settings, this.conf);
   }
 
   private createPlayers(): void {

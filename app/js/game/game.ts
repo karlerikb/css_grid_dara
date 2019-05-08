@@ -14,11 +14,15 @@ export abstract class Game {
   protected activatePlayer(): void {
     const activePlayer: Player = <Player>this.conf.players.find(player => player.active);
     const inactivePlayer: Player = <Player>this.conf.players.find(player => !player.active);
-    activePlayer.piecesContainerElement.classList.add("active");
-    inactivePlayer.piecesContainerElement.classList.remove("active");
+    activePlayer.piecesContainerElement.classList.add(this.conf.classes.activeContainer);
+    inactivePlayer.piecesContainerElement.classList.remove(this.conf.classes.activeContainer);
   }
 
   protected activateGameTurn(): void {
     this.gameTurn.state.enablePieceActivation();
+  }
+
+  protected removeGameboardPositions(): void {
+
   }
 }

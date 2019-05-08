@@ -1,25 +1,50 @@
 import { Player } from "../players/player";
 import { Game } from "../game/game";
-import { Phase, EventListenerCollection } from "./custom-types";
+import { Phase, EventListenerCollection, ElementClasses, ElementSelectors } from "./custom-types";
 import { Piece } from "../players/piece";
 
 export class Configuration {
   private static _instance: Configuration;
-  private _players: Player[] = [];
-  private _phases: Game[] = [];
+  private _acitvePiece: Piece | null = null;
 
-  private _eventListeners: EventListenerCollection = {
-    pieceActivation: this.activatePiece.bind(this)
+  readonly players: Player[] = [];
+  readonly phases: Game[] = [];
+
+  readonly eventListeners: EventListenerCollection = {
+    activatingPiece: this.activatePiece.bind(this),
+    movingPiece: this.movePiece.bind(this)
   };
 
-  acitvePiece: Piece | null = null;
+  readonly classes: ElementClasses = {
+    playerOne: "playerOne",
+    playerTwo: "playerTwo",
+    piecesContainer: "piecesContainer",
+    activeContainer: "active",
+    highlighted: "active",
+    dehighlighted: "inactive",
+    temporaryPosition: "temporaryPosition",
+    gameboard: "gameboard",
+    piece: "piece",
+  }
+
+  readonly selectors: ElementSelectors = {
+    playerOnePiecesContainer: `.${this.classes.playerOne}.${this.classes.piecesContainer}`,
+    playerTwoPiecesContainer: `.${this.classes.playerTwo}.${this.classes.piecesContainer}`,
+    gameboard: `.${this.classes.gameboard}`,
+    temporaryPositions: `.${this.classes.gameboard} > .${this.classes.temporaryPosition}`
+  }
+
 
   private constructor() {
   }
 
   private activatePiece(e: MouseEvent): void {
     const activePhase: Phase = <Phase>this.phases.find((phase: any) => phase.active);
-    activePhase.activatePiece(e);
+    activePhase.activatePiece(<EventTarget>e.target);
+  }
+
+  private movePiece(e: MouseEvent): void {
+    console.log(e.target);
   }
 
 
@@ -29,13 +54,10 @@ export class Configuration {
     }
     return Configuration._instance;
   }
-  public get players(): Player[] {
-    return this._players;
+  public get activePiece(): Piece | null {
+    return this._acitvePiece;
   }
-  public get phases(): Game[] {
-    return this._phases;
-  }
-  public get eventListeners(): any {
-    return this._eventListeners;
+  public set activePiece(piece: Piece | null) {
+    this._acitvePiece = piece;
   }
 }
