@@ -18,7 +18,9 @@ export type ElementClasses = {
   dehighlighted: string,
   temporaryPosition: string,
   gameboard: string,
-  piece: string
+  piece: string,
+  notAllowed: string,
+  animateMovement: string
 }
 
 export type ElementSelectors = {

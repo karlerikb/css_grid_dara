@@ -12,10 +12,6 @@ export class PhaseTwo extends Game {
     console.log("phase two started...");
   }
 
-  activatePiece(): void {
-    
-  }
-
   createGameboardPositions(): void {
 
   }
@@ -24,4 +20,6 @@ export class PhaseTwo extends Game {
 
     // ... this is the places where further states are determined
   }
+
+
 }

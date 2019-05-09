@@ -27,6 +27,8 @@ export class Configuration {
     temporaryPosition: "temporaryPosition",
     gameboard: "gameboard",
     piece: "piece",
+    notAllowed: "notAllowed",
+    animateMovement: "animateMovement"
   }
 
   readonly selectors: ElementSelectors = {

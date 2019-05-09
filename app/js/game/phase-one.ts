@@ -57,7 +57,7 @@ export class PhaseOne extends Game {
   }
 
   private removeAnimation(): void {
-    this.conf.activePiece!.element.classList.remove("animateMovement");
+    this.conf.activePiece!.element.classList.remove(this.conf.classes.animateMovement);
     this.conf.activePiece!.element.removeEventListener("animationend", this.conf.eventListeners.movementEnds);
   }
 
@@ -99,7 +99,7 @@ export class PhaseOne extends Game {
 
   private configureMovedPieceStyles(): void {
     const playerClass: string = `player${this.conf.activePiece!.player.numberStringUpperCase}`;
-    this.conf.activePiece!.element.classList.remove("active", "notAllowed");
+    this.conf.activePiece!.element.classList.remove(this.conf.classes.highlighted, this.conf.classes.notAllowed);
     this.conf.activePiece!.element.classList.add(playerClass);
   }
 }

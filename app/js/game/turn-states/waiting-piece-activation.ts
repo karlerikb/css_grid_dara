@@ -43,9 +43,9 @@ export class WaitingPieceActivationState implements State {
     const activePlayer: Player = <Player>this.conf.players.find(player => player.active);
     const inactivePlayer: Player = <Player>this.conf.players.find(player => !player.active);
     const allPieces: Piece[] = activePlayer.pieces.concat(inactivePlayer.pieces);
-    
+
     allPieces.forEach(piece => {
-      piece.element.classList.remove("inactive", "notAllowed");
+      piece.element.classList.remove(this.conf.classes.dehighlighted, this.conf.classes.notAllowed);
     });
   }
 }

@@ -17,7 +17,7 @@ export class MovingPieceState implements State {
   enablePieceHighlight(): void {
     throw new Error("Gamepiece is moving, cannot highlight it!");
   }
-  
+
   movingPiece(): void {
     this.disablePieceActivation();
     this.disablePositionSelection();
@@ -27,7 +27,7 @@ export class MovingPieceState implements State {
   private disablePieceActivation(): void {
     this.conf.activePiece!.player.pieces.forEach(piece => {
       piece.element.removeEventListener("click", this.conf.eventListeners.activatingPiece);
-      piece.element.classList.add("notAllowed");
+      piece.element.classList.add(this.conf.classes.notAllowed);
     });
   }
 
@@ -35,7 +35,7 @@ export class MovingPieceState implements State {
     const tempPositions: NodeListOf<Element> = document.querySelectorAll(this.conf.selectors.temporaryPositions);
     for (let position of tempPositions) {
       position.removeEventListener("click", this.conf.eventListeners.movingPiece);
-      position.classList.add("notAllowed");
+      position.classList.add(this.conf.classes.notAllowed);
     }
   }
 
@@ -68,7 +68,7 @@ export class MovingPieceState implements State {
   }
 
   private attachAnimation(): void {
-    this.conf.activePiece!.element.classList.add("animateMovement");
+    this.conf.activePiece!.element.classList.add(this.conf.classes.animateMovement);
     this.conf.activePiece!.element.addEventListener("animationend", this.conf.eventListeners.movementEnds);
   }
 }
