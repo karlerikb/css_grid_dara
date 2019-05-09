@@ -13,6 +13,7 @@ export class Player {
   readonly piecesContainerElement: HTMLElement;
 
   readonly pieces: Piece[] = [];
+  readonly gameboardPieceAreas: string[] = [];
   readonly prohibitedPositions: string[] = [];
 
   private settings: Settings = Settings.instance;
@@ -27,6 +28,18 @@ export class Player {
       this.conf.selectors[`player${this.numberStringUpperCase}PiecesContainer`]
     );
     this.createPieces();
+  }
+
+  addPieceAreaToGameboardAreas(area: string): void {
+    this.gameboardPieceAreas.push(area);
+    this.updatePlayersGameboardPositions(area);
+  }
+
+  private updatePlayersGameboardPositions(area: string): void {
+    const player: Player = this;
+    const opponent: Player = <Player>this.conf.players.find(player => player !== this);
+    player.prohibitedPositions.push(area);
+    opponent.prohibitedPositions.push(area);
   }
 
   private createPieces(): void {

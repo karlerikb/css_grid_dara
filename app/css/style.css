@@ -65,6 +65,10 @@
   z-index: 3;
 }
 
+.piecesContainer.active .piece:hover {
+  box-shadow: 0 0 4px 1px #303030;
+}
+
 /* Gameboard Element */
 
 .gameboard {

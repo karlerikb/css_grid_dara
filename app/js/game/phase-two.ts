@@ -8,11 +8,20 @@ export class PhaseTwo extends Game {
     super();
   }
 
+  init(): void {
+    console.log("phase two started...");
+  }
+
   activatePiece(): void {
     
   }
 
   createGameboardPositions(): void {
-    
+
+  }
+
+  finalizeMovement(): void {
+
+    // ... this is the places where further states are determined
   }
 }

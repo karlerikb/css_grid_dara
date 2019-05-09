@@ -1,4 +1,4 @@
-import { GameTurn } from "../game/turn-states/game-turn";
+import { GameTurn } from "../game/game-turn";
 
 export interface NewElement {
   type: string;
@@ -14,4 +14,5 @@ export interface State {
 
   enablePieceActivation(): void;
   enablePieceHighlight(): void;
+  movingPiece(): void;
 }

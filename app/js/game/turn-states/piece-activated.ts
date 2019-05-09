@@ -1,4 +1,4 @@
-import { GameTurn } from "./game-turn";
+import { GameTurn } from "../game-turn";
 import { Configuration } from "../../conf/configuration";
 import { State } from "../../conf/interfaces";
 import { Phase } from "../../conf/custom-types";
@@ -17,11 +17,16 @@ export class PieceActivatedState implements State {
     if (this.conf.activePiece!.active) {
       this.deactivatePieces();
       this.removeActivePieceReference();
+      this.removeGameboardPositions();
     } else {
       this.togglePieceActivation();
       this.highlightActivePiece();
       this.createGameboardPositions();
     }
+  }
+
+  movingPiece(): void {
+    throw new Error("Gamepiece is highlighted, but moving it is not yet initiated!")
   }
 
   private togglePieceActivation(): void {
@@ -56,5 +61,10 @@ export class PieceActivatedState implements State {
   private createGameboardPositions(): void {
     const activePhase: Phase = <Phase>this.conf.phases.find((phase: any) => phase.active);
     activePhase.createGameboardPositions();
+  }
+
+  private removeGameboardPositions(): void {
+    const activePhase: Phase = <Phase>this.conf.phases.find((phase: any) => phase.active);
+    activePhase.removeGameboardPositions();
   }
 }

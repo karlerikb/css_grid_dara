@@ -4,8 +4,9 @@ import { PhaseTwo } from "../game/phase-two";
 export type Phase = PhaseOne | PhaseTwo;
 
 export type EventListenerCollection = {
-  activatingPiece: (e: MouseEvent) => void,
-  movingPiece: (e: MouseEvent) => void
+  activatingPiece: (e: any) => void,
+  movingPiece: (e: any) => void,
+  movementEnds: (e: any) => void
 };
 
 export type ElementClasses = {
@@ -24,5 +25,6 @@ export type ElementSelectors = {
   playerOnePiecesContainer: string,
   playerTwoPiecesContainer: string,
   gameboard: string,
-  temporaryPositions: string
+  temporaryPositions: string,
+  root: string
 }
