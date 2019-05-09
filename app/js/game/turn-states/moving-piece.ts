@@ -25,7 +25,7 @@ export class MovingPieceState implements State {
   }
   
   private disablePieceActivation(): void {
-    this.conf.activePiece!.player.pieces.forEach(piece => {
+    this.conf.activePlayer.pieces.forEach(piece => {
       piece.element.removeEventListener("click", this.conf.eventListeners.activatingPiece);
       piece.element.classList.add(this.conf.classes.notAllowed);
     });

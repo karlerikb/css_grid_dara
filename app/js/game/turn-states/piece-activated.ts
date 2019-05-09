@@ -39,7 +39,7 @@ export class PieceActivatedState implements State {
   }
 
   private deactivatePieces(): void {
-    this.conf.activePiece!.player.pieces.forEach(piece => {
+    this.conf.activePlayer.pieces.forEach(piece => {
       piece.active = false;
       piece.element.classList.remove(this.conf.classes.highlighted, this.conf.classes.dehighlighted);
     });
@@ -51,7 +51,7 @@ export class PieceActivatedState implements State {
   }
 
   private dehighlightNonActicePieces(): void {
-    this.conf.activePiece!.player.pieces.forEach(piece => {
+    this.conf.activePlayer.pieces.forEach(piece => {
       if (!piece.active && !piece.movedToTable) {
         piece.element.classList.add(this.conf.classes.dehighlighted);
       }
@@ -59,12 +59,10 @@ export class PieceActivatedState implements State {
   }
 
   private createGameboardPositions(): void {
-    const activePhase: Phase = <Phase>this.conf.phases.find((phase: any) => phase.active);
-    activePhase.createGameboardPositions();
+    this.conf.activePhase.createGameboardPositions();
   }
 
   private removeGameboardPositions(): void {
-    const activePhase: Phase = <Phase>this.conf.phases.find((phase: any) => phase.active);
-    activePhase.removeGameboardPositions();
+    this.conf.activePhase.removeGameboardPositions();
   }
 }

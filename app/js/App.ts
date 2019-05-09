@@ -18,7 +18,6 @@ class App {
   private init(): void {
     this.createPlayers();
     this.initializePhases();
-    // console.log(this.settings, this.conf);
   }
 
   private createPlayers(): void {
@@ -41,20 +40,17 @@ class App {
     }
     return App._instance;
   }
-
-  public set settings(settings: Settings) {
-    this._settings = settings;
-  }
-  public set conf(configuration: Configuration) {
-    this._conf = configuration;
-  }
-
   public get settings() {
     return this._settings;
+  }
+  public set settings(settings: Settings) {
+    this._settings = settings;
   }
   public get conf() {
     return this._conf;
   }
+  public set conf(configuration: Configuration) {
+    this._conf = configuration;
+  }
 }
-
 App.instance;

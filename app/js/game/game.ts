@@ -22,8 +22,7 @@ export abstract class Game {
   }
 
   activatePiece(target: EventTarget): void {
-    const activePlayer: Player = <Player>this.conf.players.find(player => player.active);
-    const activatedPiece: Piece = <Piece>activePlayer.pieces.find(piece => piece.element === target);
+    const activatedPiece: Piece = <Piece>this.conf.activePlayer.pieces.find(piece => piece.element === target);
     this.conf.activePiece = activatedPiece;
     this.gameTurn.activatePiece();
   }
@@ -43,16 +42,14 @@ export abstract class Game {
   }
 
   protected activatePlayer(): void {
-    const activePlayer: Player = <Player>this.conf.players.find(player => player.active);
-    const inactivePlayer: Player = <Player>this.conf.players.find(player => !player.active);
-    activePlayer.piecesContainerElement.classList.add(this.conf.classes.activeContainer);
-    inactivePlayer.piecesContainerElement.classList.remove(this.conf.classes.activeContainer);
+    this.conf.activePlayer.piecesContainerElement.classList.add(this.conf.classes.activeContainer);
+    this.conf.inactivePlayer.piecesContainerElement.classList.remove(this.conf.classes.activeContainer);
     this.gameTurn.initializeGameTurn();
   }
 
   private switchPlayers(): void {
-    const activePlayer: Player = <Player>this.conf.players.find(player => player.active);
-    const inactivePlayer: Player = <Player>this.conf.players.find(player => !player.active);
+    const activePlayer: Player = this.conf.activePlayer;
+    const inactivePlayer: Player = this.conf.inactivePlayer;
     activePlayer.active = false;
     inactivePlayer.active = true;
   }
@@ -67,15 +64,10 @@ export abstract class Game {
   }
 
   private switchPhase(): void {
-    const activePhase: Phase = <Phase>this.conf.phases.find((phase: any) => phase.active);
-    const inactivePhase: Phase = <Phase>this.conf.phases.find((phase: any) => !phase.active);
+    const activePhase: Phase = this.conf.activePhase;
+    const inactivePhase: Phase = this.conf.inactivePhase;
     activePhase.active = false;
     inactivePhase.active = true;
-    this.activatePhase();
-  }
-
-  private activatePhase(): void {
-    const activePhase: Phase = <Phase>this.conf.phases.find((phase: any) => phase.active);
-    activePhase.init();
+    this.conf.activePhase.init();
   }
 }

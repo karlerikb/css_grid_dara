@@ -18,7 +18,6 @@ export class Piece {
   get area(): string {
     return this._area;
   }
-
   set area(areaStr: string) {
     if (
       areaStr.length === 3 && 

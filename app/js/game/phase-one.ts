@@ -32,7 +32,7 @@ export class PhaseOne extends Game {
   private createPositions(): void {
     const gameboard: HTMLElement = <HTMLElement>document.querySelector(this.conf.selectors.gameboard);
     const tempPositions: DocumentFragment = document.createDocumentFragment();
-    const prohibitedPositions: string[] = this.conf.activePiece!.player.prohibitedPositions;
+    const prohibitedPositions: string[] = this.conf.activePlayer.prohibitedPositions;
     for (let row = 1; row <= 5; row++) {
       for (let column = 1; column <= 6; column++) {
         const area: string = `a${row}${column}`;
@@ -87,7 +87,7 @@ export class PhaseOne extends Game {
 
   private configureGameData(area: string) {
     this.piecesOnGameboard.push(<Piece>this.conf.activePiece);
-    this.conf.activePiece!.player.addPieceAreaToGameboardAreas(area);
+    this.conf.activePlayer.addPieceAreaToGameboardAreas(area);
   }
 
   private configureMovedPieceData(area: string): void {

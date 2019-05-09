@@ -44,18 +44,15 @@ export class Configuration {
   }
 
   private activatePiece(e: any): void {
-    const activePhase: Phase = <Phase>this.phases.find((phase: any) => phase.active);
-    activePhase.activatePiece(<EventTarget>e.target);
+    this.activePhase.activatePiece(<EventTarget>e.target);
   }
 
   private movePiece(e: any): void {
-    const activePhase: Phase = <Phase>this.phases.find((phase: any) => phase.active);
-    activePhase.initializeMovement(<EventTarget>e.target);
+    this.activePhase.initializeMovement(<EventTarget>e.target);
   }
 
-  private movementEnds(e: any): void {
-    const activePhase: Phase = <Phase>this.phases.find((phase: any) => phase.active);
-    activePhase.finalizeMovement();
+  private movementEnds(): void {
+    this.activePhase.finalizeMovement();
   }
 
 
@@ -76,5 +73,22 @@ export class Configuration {
   }
   public set selectedPosition(position: EventTarget | null) {
     this._selectedPosition = position;
+  }
+
+  public get activePlayer(): Player {
+    return <Player>this.players.find(player => player.active);
+  }
+  public get inactivePlayer(): Player {
+    return <Player>this.players.find(player => !player.active);
+  }
+  public get allPlayerPieces(): Piece[] {
+    return this.activePlayer.pieces.concat(this.inactivePlayer.pieces);
+  }
+
+  public get activePhase(): Phase {
+    return <Phase>this.phases.find((phase: any) => phase.active);
+  }
+  public get inactivePhase(): Phase {
+    return <Phase>this.phases.find((phase: any) => !phase.active);
   }
 }
