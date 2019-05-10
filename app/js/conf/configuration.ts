@@ -89,6 +89,10 @@ export class Configuration {
     return <Phase>this.phases.find((phase: any) => phase.active);
   }
   public get inactivePhase(): Phase | null {
-    return <Phase>this.phases.find((phase: any) => !phase.active);
+    const inactivePhase: Phase | undefined = <Phase | undefined>this.phases.find((phase: any) => !phase.active);
+    if (inactivePhase) {
+      return <Phase>inactivePhase;
+    }
+    return null;
   }
 }
