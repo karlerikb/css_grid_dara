@@ -28,7 +28,7 @@ export class PhaseOne extends Game {
   }
 
   configureProhibitedPositions(): void {
-    
+    this.threeInRow.prohibited();
   }
 
   private createPositions(): void {

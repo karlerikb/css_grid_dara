@@ -37,6 +37,11 @@ export class Player {
     this.updatePlayersGameboardPositions();
   }
 
+  addAreaToProhibitedAreas(area: string): void {
+    this.prohibitedPositionsMadeByRows.push(area);
+    this.updatePlayersGameboardPositions();
+  }
+
   private updatePlayersGameboardPositions(): void {
     const thisPlayer: Player = this;
     const opponent: Player = <Player>this.conf.players.find(player => player !== this);
