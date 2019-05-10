@@ -11,6 +11,9 @@ export class WaitingPieceActivationState implements State {
   enablePieceActivation(): void {
     this.resetPieceClasses();
     this.handlePieceEventListeners();
+    if (this.conf.activePhase.phase === "two") {
+      this.setPlayerTurnPieceClasses();
+    }
   }
 
   enablePieceHighlight(): void {
@@ -34,7 +37,17 @@ export class WaitingPieceActivationState implements State {
 
   private resetPieceClasses(): void {
     this.conf.allPlayerPieces.forEach(piece => {
-      piece.element.classList.remove(this.conf.classes.dehighlighted, this.conf.classes.notAllowed);
+      piece.element.classList.remove(
+        this.conf.classes.dehighlighted,
+        this.conf.classes.notAllowed,
+        this.conf.classes.playerTurn
+      );
+    });
+  }
+
+  private setPlayerTurnPieceClasses(): void {
+    this.conf.activePlayer.pieces.forEach(piece => {
+      piece.element.classList.add(this.conf.classes.playerTurn);
     });
   }
 }

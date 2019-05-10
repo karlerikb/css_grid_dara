@@ -14,7 +14,9 @@ export class Player {
 
   readonly pieces: Piece[] = [];
   readonly gameboardPieceAreas: string[] = [];
-  readonly prohibitedPositions: string[] = [];
+  
+  prohibitedPositions: string[] = [];
+  prohibitedPositionsMadeByRows: string[] = [];
 
   private settings: Settings = Settings.instance;
   private conf: Configuration = Configuration.instance;
@@ -32,14 +34,18 @@ export class Player {
 
   addPieceAreaToGameboardAreas(area: string): void {
     this.gameboardPieceAreas.push(area);
-    this.updatePlayersGameboardPositions(area);
+    this.updatePlayersGameboardPositions();
   }
 
-  private updatePlayersGameboardPositions(area: string): void {
-    const player: Player = this;
+  private updatePlayersGameboardPositions(): void {
+    const thisPlayer: Player = this;
     const opponent: Player = <Player>this.conf.players.find(player => player !== this);
-    player.prohibitedPositions.push(area);
-    opponent.prohibitedPositions.push(area);
+    this.conf.players.forEach(player => {
+      player.prohibitedPositions = this.prohibitedPositionsMadeByRows.concat(
+        thisPlayer.gameboardPieceAreas,
+        opponent.gameboardPieceAreas,
+      );
+    });
   }
 
   private createPieces(): void {

@@ -2,6 +2,7 @@ import { PhaseOne } from "../game/phase-one";
 import { PhaseTwo } from "../game/phase-two";
 
 export type Phase = PhaseOne | PhaseTwo;
+export type GameboardAreas = (string | null)[];
 
 export type EventListenerCollection = {
   activatingPiece: (e: any) => void,
@@ -20,7 +21,8 @@ export type ElementClasses = {
   gameboard: string,
   piece: string,
   notAllowed: string,
-  animateMovement: string
+  animateMovement: string,
+  playerTurn: string
 }
 
 export type ElementSelectors = {

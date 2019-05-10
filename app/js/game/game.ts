@@ -4,6 +4,7 @@ import { Player } from "../players/player";
 import { GameTurn } from "./game-turn";
 import { Piece } from "../players/piece";
 import { Phase } from "../conf/custom-types";
+import { Helper } from "../conf/helper";
 
 export abstract class Game {
   private phaseIsNotSwitched: boolean = true;
@@ -45,6 +46,35 @@ export abstract class Game {
     this.conf.activePlayer.piecesContainerElement.classList.add(this.conf.classes.activeContainer);
     this.conf.inactivePlayer.piecesContainerElement.classList.remove(this.conf.classes.activeContainer);
     this.gameTurn.initializeGameTurn();
+  }
+
+  protected createAllowedPositionElement(area: string, documentFragment: DocumentFragment): void {
+    const position: HTMLElement = Helper.create({
+      type: "div", class: this.conf.classes.temporaryPosition, area,
+      parent: documentFragment
+    });
+    position.addEventListener("click", this.conf.eventListeners.movingPiece);
+  }
+
+  protected findGridArea(): string {
+    const computedStyle: string | null = window.getComputedStyle(<Element>this.conf.selectedPosition).gridArea;
+    let area: string;
+    if (computedStyle) {
+      area = computedStyle.split("/")[0].trim();
+    } else {
+      area = (<HTMLElement>this.conf.selectedPosition).style.gridArea!.split("/")[0].trim();
+    }
+    return area;
+  }
+
+  protected removeAnimation(): void {
+    this.conf.activePiece!.element.classList.remove(this.conf.classes.animateMovement);
+    this.conf.activePiece!.element.removeEventListener("animationend", this.conf.eventListeners.movementEnds);
+  }
+
+  protected resetPieceReferences(): void {
+    this.conf.activePiece = null;
+    this.conf.selectedPosition = null;
   }
 
   private switchPlayers(): void {

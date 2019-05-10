@@ -14,19 +14,16 @@ export class PhaseOne extends Game {
     this.activatePlayer();
   }
 
+  finalizeMovement(): void {
+    this.movePiece();
+    this.switchTurn();
+  }
+
   createGameboardPositions(): void {
     const tempPositions: NodeListOf<Element> = document.querySelectorAll(this.conf.selectors.temporaryPositions);
     if (tempPositions.length === 0) {
       this.createPositions();
     }
-  }
-
-  finalizeMovement(): void {
-    this.movePiece();
-    this.removeAnimation();
-    this.removeGameboardPositions();
-    this.resetPieceReferences();
-    this.switchTurn();
   }
 
   private createPositions(): void {
@@ -43,46 +40,20 @@ export class PhaseOne extends Game {
     gameboard.appendChild(tempPositions);
   }
 
-  private createAllowedPositionElement(area: string, documentFragment: DocumentFragment): void {
-    const position: HTMLElement = Helper.create({
-      type: "div", class: this.conf.classes.temporaryPosition, area,
-      parent: documentFragment
-    });
-    position.addEventListener("click", this.conf.eventListeners.movingPiece);
-  }
-
-  private resetPieceReferences(): void {
-    this.conf.activePiece = null;
-    this.conf.selectedPosition = null;
-  }
-
-  private removeAnimation(): void {
-    this.conf.activePiece!.element.classList.remove(this.conf.classes.animateMovement);
-    this.conf.activePiece!.element.removeEventListener("animationend", this.conf.eventListeners.movementEnds);
-  }
-
   private movePiece(): void {
     const area: string = this.findGridArea();
     this.movePieceToGameboard();
     this.configureMovedPieceStyles();
     this.configureMovedPieceData(area);
     this.configureGameData(area);
+    this.removeAnimation();
+    this.removeGameboardPositions();
+    this.resetPieceReferences();
   }
 
   private movePieceToGameboard(): void {
     const gameboard: HTMLElement = <HTMLElement>document.querySelector(this.conf.selectors.gameboard);
     gameboard.append(this.conf.activePiece!.element);
-  }
-
-  private findGridArea(): string {
-    const computedStyle: string | null = window.getComputedStyle(<Element>this.conf.selectedPosition).gridArea;
-    let area: string;
-    if (computedStyle) {
-      area = computedStyle.split("/")[0].trim();
-    } else {
-      area = (<HTMLElement>this.conf.selectedPosition).style.gridArea!.split("/")[0].trim();
-    }
-    return area;
   }
 
   private configureGameData(area: string) {

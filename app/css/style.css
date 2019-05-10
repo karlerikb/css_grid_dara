@@ -65,7 +65,8 @@
   z-index: 3;
 }
 
-.piecesContainer.active .piece:hover {
+.piecesContainer.active .piece:hover,
+.gameboard .piece.playerTurn:hover {
   box-shadow: 0 0 4px 1px #303030;
 }
 
@@ -152,7 +153,8 @@
 
 .piecesContainer.active > .piece,
 .piece.active,
-.piece.inactive { cursor: pointer; }
+.piece.inactive,
+.piece.playerTurn { cursor: pointer; }
 
 .piece.active { box-shadow: 0 0 4px 1px #303030 !important; }
 .piece.inactive { opacity: .5 !important; }

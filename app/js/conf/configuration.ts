@@ -28,7 +28,8 @@ export class Configuration {
     gameboard: "gameboard",
     piece: "piece",
     notAllowed: "notAllowed",
-    animateMovement: "animateMovement"
+    animateMovement: "animateMovement",
+    playerTurn: "playerTurn"
   }
 
   readonly selectors: ElementSelectors = {
@@ -38,7 +39,6 @@ export class Configuration {
     temporaryPositions: `.${this.classes.gameboard} > .${this.classes.temporaryPosition}`,
     root: ":root"
   }
-
 
   private constructor() {
   }
