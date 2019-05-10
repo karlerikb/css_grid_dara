@@ -7,7 +7,6 @@ import { Phase } from "../conf/custom-types";
 import { Helper } from "../conf/helper";
 
 export abstract class Game {
-  private phaseIsNotSwitched: boolean = true;
   protected settings: Settings = Settings.instance;
   protected conf: Configuration = Configuration.instance;
 
@@ -38,11 +37,11 @@ export abstract class Game {
 
   protected switchTurn(): void {
     this.switchPlayers();
-    this.activatePlayer();
     this.testPhase();
   }
 
   protected activatePlayer(): void {
+    this.configurePlayerProhibitedPositions();
     this.conf.activePlayer.piecesContainerElement.classList.add(this.conf.classes.activeContainer);
     this.conf.inactivePlayer.piecesContainerElement.classList.remove(this.conf.classes.activeContainer);
     this.gameTurn.initializeGameTurn();
@@ -82,22 +81,33 @@ export abstract class Game {
     const inactivePlayer: Player = this.conf.inactivePlayer;
     activePlayer.active = false;
     inactivePlayer.active = true;
+    this.activatePlayer();
+  }
+
+  private configurePlayerProhibitedPositions(): void {
+    this.conf.activePhase.configureProhibitedPositions();
   }
 
   private testPhase(): void {
     const piecesOnGameboard: number = this.piecesOnGameboard.length;
     const piecesAllowedOnTable: number = 2 * this.settings.piecesForEachPlayer;
-    if (piecesOnGameboard === piecesAllowedOnTable && this.phaseIsNotSwitched) {
+    const gamePhases: number = this.conf.phases.length;
+    if (piecesOnGameboard === piecesAllowedOnTable && gamePhases === 2) {
       this.switchPhase();
-      this.phaseIsNotSwitched = false;
+      this.removeInactivePhase();
     }
   }
 
   private switchPhase(): void {
     const activePhase: Phase = this.conf.activePhase;
-    const inactivePhase: Phase = this.conf.inactivePhase;
+    const inactivePhase: Phase | null = this.conf.inactivePhase;
     activePhase.active = false;
-    inactivePhase.active = true;
+    inactivePhase!.active = true;
     this.conf.activePhase.init();
+  }
+
+  private removeInactivePhase(): void {
+    const inactivePhaseIndex: number = this.conf.phases.indexOf(<Phase>this.conf.inactivePhase);
+    this.conf.phases.splice(inactivePhaseIndex, 1);
   }
 }

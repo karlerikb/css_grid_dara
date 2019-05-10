@@ -10,10 +10,14 @@ export class PhaseTwo extends Game {
   }
 
   init(): void {
-    console.log("phase two started...");
     this.configurePieces();
     this.resetProhibitedPositions();
     this.gameTurn.initializeGameTurn();
+  }
+
+  finalizeMovement(): void {
+    this.movePiece();
+    this.switchTurn();
   }
 
   createGameboardPositions(): void {
@@ -21,10 +25,8 @@ export class PhaseTwo extends Game {
     this.createPositions();
   }
 
-  finalizeMovement(): void {
-    console.log("finalizing movement...");
-    this.movePiece();
-    this.switchTurn();
+  configureProhibitedPositions(): void {
+    
   }
 
   private configurePieces(): void {
@@ -64,7 +66,6 @@ export class PhaseTwo extends Game {
     this.removeGameboardPositions();
     // ... this is the places where further states are determined
     this.resetPieceReferences();
-    console.log(this.conf.players);
   }
 
   private configureMovedPieceStyles(): void {
@@ -79,7 +80,6 @@ export class PhaseTwo extends Game {
 
   private configureGameData(area: string): void {
     const oldPos = this.conf.activePiece!.area, newPos = area;
-    console.log(oldPos, newPos);
     const oldPosAreaIndex: number = this.conf.activePlayer.gameboardPieceAreas.indexOf(oldPos);
     this.conf.activePlayer.gameboardPieceAreas.splice(oldPosAreaIndex, 1);
     this.conf.activePlayer.addPieceAreaToGameboardAreas(newPos);

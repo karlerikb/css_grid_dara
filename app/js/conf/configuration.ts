@@ -88,7 +88,7 @@ export class Configuration {
   public get activePhase(): Phase {
     return <Phase>this.phases.find((phase: any) => phase.active);
   }
-  public get inactivePhase(): Phase {
+  public get inactivePhase(): Phase | null {
     return <Phase>this.phases.find((phase: any) => !phase.active);
   }
 }

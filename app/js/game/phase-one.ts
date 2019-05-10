@@ -1,10 +1,11 @@
 import { Game } from "./game";
-import { Helper } from "../conf/helper";
 import { Piece } from "../players/piece";
+import { ThreeInRow } from "./rows/three-in-row";
 
 export class PhaseOne extends Game {
   active: boolean = true;
   readonly phase: string = "one";
+  private threeInRow = new ThreeInRow();
 
   constructor() {
     super();
@@ -24,6 +25,10 @@ export class PhaseOne extends Game {
     if (tempPositions.length === 0) {
       this.createPositions();
     }
+  }
+
+  configureProhibitedPositions(): void {
+    
   }
 
   private createPositions(): void {
