@@ -79,7 +79,7 @@ export class ThreeInRow {
   }
 
   private findProhibitedPosition(threeReachAreas: GameboardAreas): void {
-    const prohibited: string[] = this.conf.activePlayer.prohibitedPositionsMadeByRows;
+    const prohibited: string[] = this.conf.activePlayer.prohibitedAreasMadeByRows;
     const areas: string[] = this.conf.activePlayer.gameboardPieceAreas;
     threeReachAreas.forEach(area => {
       if (area && !prohibited.includes(area) && !areas.includes(area)) {

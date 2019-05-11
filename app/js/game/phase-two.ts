@@ -37,22 +37,21 @@ export class PhaseTwo extends Game {
 
   private resetProhibitedPositions(): void {
     this.conf.players.forEach(player => {
-      player.prohibitedPositions = [];
-      player.prohibitedPositionsMadeByRows = [];
-      player.prohibitedPositions = this.conf.activePlayer.gameboardPieceAreas.concat(
+      player.prohibitedAreas = [];
+      player.prohibitedAreasMadeByRows = [];
+      player.prohibitedAreas = this.conf.activePlayer.gameboardPieceAreas.concat(
         this.conf.inactivePlayer.gameboardPieceAreas
       );
     });
-    console.log(this.conf.players);
   }
 
   private createPositions(): void {
     const gameboard: HTMLElement = <HTMLElement>document.querySelector(this.conf.selectors.gameboard);
     const tempPositions: DocumentFragment = document.createDocumentFragment();
-    const prohibitedPositions: string[] = this.conf.activePlayer.prohibitedPositions;
+    const prohibitedAreas: string[] = this.conf.activePlayer.prohibitedAreas;
     this.surroundingAreas.forEach(area => {
       if (area) {
-        if (!prohibitedPositions.includes(area)) {
+        if (!prohibitedAreas.includes(area)) {
           this.createAllowedPositionElement(area, tempPositions);
         }
       }
@@ -79,27 +78,15 @@ export class PhaseTwo extends Game {
     this.conf.activePiece!.element.style.gridArea = area;
     this.conf.activePiece!.area = area;
     this.conf.activePiece!.active = false;
+    // temp
+    this.conf.activePiece!.element.textContent = area;
   }
 
   private configureGameData(area: string): void {
     const oldPos = this.conf.activePiece!.area, newPos = area;
-    this.configurePlayerPieceData(oldPos, newPos);
-    this.configurePlayersProhibitedPosition(oldPos, newPos);
+    this.conf.activePlayer.configureAreasWhenMoving(oldPos, newPos);
     console.clear();
     console.log(this.conf.players);
-  }
-
-  private configurePlayerPieceData(oldPos: string, newPos: string): void {
-    const oldPosAreaIndex: number = this.conf.activePlayer.gameboardPieceAreas.indexOf(oldPos);
-    this.conf.activePlayer.gameboardPieceAreas.splice(oldPosAreaIndex, 1);
-    this.conf.activePlayer.addPieceAreaToGameboardAreas(newPos);
-  }
-
-  private configurePlayersProhibitedPosition(oldPos: string, newPos: string): void {
-    this.conf.players.forEach(player => {
-      const oldPosAreaIndex: number = player.prohibitedPositions.indexOf(oldPos);
-      player.prohibitedPositions.splice(oldPosAreaIndex, 1);
-    });
   }
 
   private get surroundingAreas(): GameboardAreas {

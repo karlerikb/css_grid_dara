@@ -15,8 +15,8 @@ export class Player {
   readonly pieces: Piece[] = [];
   readonly gameboardPieceAreas: string[] = [];
   
-  prohibitedPositions: string[] = [];
-  prohibitedPositionsMadeByRows: string[] = [];
+  prohibitedAreas: string[] = [];
+  prohibitedAreasMadeByRows: string[] = [];
 
   private settings: Settings = Settings.instance;
   private conf: Configuration = Configuration.instance;
@@ -32,23 +32,37 @@ export class Player {
     this.createPieces();
   }
 
-  addPieceAreaToGameboardAreas(area: string): void {
+  addAreaToGameboardAreas(area: string): void {
     this.gameboardPieceAreas.push(area);
-    this.updatePlayersGameboardPositions(area);
+    this.updatePlayersGameboardAreas(area);
   }
 
   addAreaToProhibitedAreas(area: string): void {
-    this.prohibitedPositionsMadeByRows.push(area);
-    this.prohibitedPositionsMadeByRows.forEach(area => {
-      if (!this.prohibitedPositions.includes(area)) this.prohibitedPositions.push(area);
+    this.prohibitedAreasMadeByRows.push(area);
+    this.prohibitedAreasMadeByRows.forEach(area => {
+      if (!this.prohibitedAreas.includes(area)) this.prohibitedAreas.push(area);
     });
   }
 
-  private updatePlayersGameboardPositions(area: string): void {
+  configureAreasWhenMoving(oldPos: string, newPos: string): void {
+    const oldPosAreaIndex: number = this.gameboardPieceAreas.indexOf(oldPos);
+    this.gameboardPieceAreas.splice(oldPosAreaIndex, 1);
+    this.addAreaToGameboardAreas(newPos);
+    this.configureProhibitedPositionWhenMoving(oldPos);
+  }
+
+  private updatePlayersGameboardAreas(area: string): void {
     const thisPlayer: Player = this;
     const opponent: Player = <Player>this.conf.players.find(player => player !== this);
-    thisPlayer.prohibitedPositions.push(area);
-    opponent.prohibitedPositions.push(area);
+    thisPlayer.prohibitedAreas.push(area);
+    opponent.prohibitedAreas.push(area);
+  }
+
+  private configureProhibitedPositionWhenMoving(oldPos: string): void {
+    this.conf.players.forEach(player => {
+      const oldPosAreaIndex: number = player.prohibitedAreas.indexOf(oldPos);
+      player.prohibitedAreas.splice(oldPosAreaIndex, 1);
+    });
   }
 
   private createPieces(): void {
