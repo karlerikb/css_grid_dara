@@ -54,17 +54,6 @@ export abstract class Game {
     position.addEventListener("click", this.conf.eventListeners.movingPiece);
   }
 
-  protected findGridArea(): string {
-    const computedStyle: string | null = window.getComputedStyle(<Element>this.conf.selectedPosition).gridArea;
-    let area: string;
-    if (computedStyle) {
-      area = computedStyle.split("/")[0].trim();
-    } else {
-      area = (<HTMLElement>this.conf.selectedPosition).style.gridArea!.split("/")[0].trim();
-    }
-    return area;
-  }
-
   protected removeAnimation(): void {
     this.conf.activePiece!.element.classList.remove(this.conf.classes.animateMovement);
     this.conf.activePiece!.element.removeEventListener("animationend", this.conf.eventListeners.movementEnds);
@@ -104,5 +93,17 @@ export abstract class Game {
   private removeInactivePhase(): void {
     const inactivePhaseIndex: number = this.conf.phases.indexOf(<Phase>this.conf.inactivePhase);
     this.conf.phases.splice(inactivePhaseIndex, 1);
+  }
+  
+
+  protected get gridArea(): string {
+    const computedStyle: string | null = window.getComputedStyle(<Element>this.conf.selectedPosition).gridArea;
+    let area: string;
+    if (computedStyle) {
+      area = computedStyle.split("/")[0].trim();
+    } else {
+      area = (<HTMLElement>this.conf.selectedPosition).style.gridArea!.split("/")[0].trim();
+    }
+    return area;
   }
 }

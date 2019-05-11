@@ -25,10 +25,6 @@ export class PhaseTwo extends Game {
     this.createPositions();
   }
 
-  configureProhibitedPositions(): void {
-
-  }
-
   private configurePieces(): void {
     this.conf.allPlayerPieces.forEach(piece => {
       piece.movedToTable = false;
@@ -50,24 +46,22 @@ export class PhaseTwo extends Game {
     const tempPositions: DocumentFragment = document.createDocumentFragment();
     const prohibitedAreas: string[] = this.conf.activePlayer.prohibitedAreas;
     this.surroundingAreas.forEach(area => {
-      if (area) {
-        if (!prohibitedAreas.includes(area)) {
-          this.createAllowedPositionElement(area, tempPositions);
-        }
+      if (area && !prohibitedAreas.includes(area)) {
+        this.createAllowedPositionElement(area, tempPositions);
       }
       gameboard.appendChild(tempPositions);
     });
   }
 
   private movePiece(): void {
-    const area: string = this.findGridArea();
+    this.configure(this.gridArea);
+    this.reset();
+  }
+
+  private configure(area: string): void {
     this.configureMovedPieceStyles();
     this.configureGameData(area);
     this.configureMovedPieceData(area);
-    this.removeAnimation();
-    this.removeGameboardPositions();
-    // ... this is the places where further states are determined
-    this.resetPieceReferences();
   }
 
   private configureMovedPieceStyles(): void {
@@ -85,9 +79,15 @@ export class PhaseTwo extends Game {
   private configureGameData(area: string): void {
     const oldPos = this.conf.activePiece!.area, newPos = area;
     this.conf.activePlayer.configureAreasWhenMoving(oldPos, newPos);
-    console.clear();
-    console.log(this.conf.players);
   }
+
+  private reset(): void {
+    this.removeAnimation();
+    this.removeGameboardPositions();
+    // ... this is the places where further states are determined
+    this.resetPieceReferences();
+  }
+
 
   private get surroundingAreas(): GameboardAreas {
     const row = +this.conf.activePiece!.area[1], column = +this.conf.activePiece!.area[2];

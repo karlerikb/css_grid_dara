@@ -42,19 +42,20 @@ export class PhaseOne extends Game {
   }
 
   private movePiece(): void {
-    const area: string = this.findGridArea();
-    this.movePieceToGameboard();
+    this.move();
+    this.configure(this.gridArea);
+    this.reset();
+  }
+
+  private move(): void {
+    const gameboard: HTMLElement = <HTMLElement>document.querySelector(this.conf.selectors.gameboard);
+    gameboard.append(this.conf.activePiece!.element);
+  }
+
+  private configure(area: string): void {
     this.configureMovedPieceStyles();
     this.configureMovedPieceData(area);
     this.configureGameData(area);
-    this.removeAnimation();
-    this.removeGameboardPositions();
-    this.resetPieceReferences();
-  }
-
-  private movePieceToGameboard(): void {
-    const gameboard: HTMLElement = <HTMLElement>document.querySelector(this.conf.selectors.gameboard);
-    gameboard.append(this.conf.activePiece!.element);
   }
 
   private configureGameData(area: string) {
@@ -76,5 +77,11 @@ export class PhaseOne extends Game {
     const playerClass: string = `player${this.conf.activePiece!.player.numberStringUpperCase}`;
     this.conf.activePiece!.element.classList.remove(this.conf.classes.highlighted, this.conf.classes.notAllowed);
     this.conf.activePiece!.element.classList.add(playerClass);
+  }
+
+  private reset(): void {
+    this.removeAnimation();
+    this.removeGameboardPositions();
+    this.resetPieceReferences();
   }
 }
