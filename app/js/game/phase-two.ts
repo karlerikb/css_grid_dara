@@ -26,7 +26,7 @@ export class PhaseTwo extends Game {
   }
 
   configureProhibitedPositions(): void {
-    
+
   }
 
   private configurePieces(): void {
@@ -37,10 +37,13 @@ export class PhaseTwo extends Game {
 
   private resetProhibitedPositions(): void {
     this.conf.players.forEach(player => {
+      player.prohibitedPositions = [];
+      player.prohibitedPositionsMadeByRows = [];
       player.prohibitedPositions = this.conf.activePlayer.gameboardPieceAreas.concat(
         this.conf.inactivePlayer.gameboardPieceAreas
       );
     });
+    console.log(this.conf.players);
   }
 
   private createPositions(): void {
@@ -80,9 +83,23 @@ export class PhaseTwo extends Game {
 
   private configureGameData(area: string): void {
     const oldPos = this.conf.activePiece!.area, newPos = area;
+    this.configurePlayerPieceData(oldPos, newPos);
+    this.configurePlayersProhibitedPosition(oldPos, newPos);
+    console.clear();
+    console.log(this.conf.players);
+  }
+
+  private configurePlayerPieceData(oldPos: string, newPos: string): void {
     const oldPosAreaIndex: number = this.conf.activePlayer.gameboardPieceAreas.indexOf(oldPos);
     this.conf.activePlayer.gameboardPieceAreas.splice(oldPosAreaIndex, 1);
     this.conf.activePlayer.addPieceAreaToGameboardAreas(newPos);
+  }
+
+  private configurePlayersProhibitedPosition(oldPos: string, newPos: string): void {
+    this.conf.players.forEach(player => {
+      const oldPosAreaIndex: number = player.prohibitedPositions.indexOf(oldPos);
+      player.prohibitedPositions.splice(oldPosAreaIndex, 1);
+    });
   }
 
   private get surroundingAreas(): GameboardAreas {
