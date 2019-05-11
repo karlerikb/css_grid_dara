@@ -1,9 +1,11 @@
 import { Game } from "./game";
 import { GameboardAreas } from "../conf/custom-types";
+import { FourInRow } from "./rows/four-in-row";
 
 export class PhaseTwo extends Game {
   active: boolean = false;
   readonly phase: string = "two";
+  private fourInRow = new FourInRow();
 
   constructor() {
     super();
@@ -46,7 +48,7 @@ export class PhaseTwo extends Game {
     const tempPositions: DocumentFragment = document.createDocumentFragment();
     const prohibitedAreas: string[] = this.conf.activePlayer.prohibitedAreas;
     this.surroundingAreas.forEach(area => {
-      if (area && !prohibitedAreas.includes(area)) {
+      if (area && !prohibitedAreas.includes(area) && !this.fourInRow.exists(area)) {
         this.createAllowedPositionElement(area, tempPositions);
       }
       gameboard.appendChild(tempPositions);

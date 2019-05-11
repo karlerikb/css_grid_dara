@@ -34,7 +34,6 @@ export class ThreeInRow {
     if (validCount > 1) this.divideReachIntoThrees(reach);
   }
 
-  
   private getReachOfFiveHorizontally(area: string): GameboardAreas {
     const row: number = +area[1], column: number = +area[2];
     const reach: GameboardAreas = [
