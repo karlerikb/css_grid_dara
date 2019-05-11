@@ -41,7 +41,6 @@ export abstract class Game {
   }
 
   protected activatePlayer(): void {
-    this.configurePlayerProhibitedPositions();
     this.conf.activePlayer.piecesContainerElement.classList.add(this.conf.classes.activeContainer);
     this.conf.inactivePlayer.piecesContainerElement.classList.remove(this.conf.classes.activeContainer);
     this.gameTurn.initializeGameTurn();
@@ -82,10 +81,6 @@ export abstract class Game {
     activePlayer.active = false;
     inactivePlayer.active = true;
     this.activatePlayer();
-  }
-
-  private configurePlayerProhibitedPositions(): void {
-    this.conf.activePhase.configureProhibitedPositions();
   }
 
   private testPhase(): void {

@@ -34,23 +34,21 @@ export class Player {
 
   addPieceAreaToGameboardAreas(area: string): void {
     this.gameboardPieceAreas.push(area);
-    this.updatePlayersGameboardPositions();
+    this.updatePlayersGameboardPositions(area);
   }
 
   addAreaToProhibitedAreas(area: string): void {
     this.prohibitedPositionsMadeByRows.push(area);
-    this.updatePlayersGameboardPositions();
+    this.prohibitedPositionsMadeByRows.forEach(area => {
+      if (!this.prohibitedPositions.includes(area)) this.prohibitedPositions.push(area);
+    });
   }
 
-  private updatePlayersGameboardPositions(): void {
+  private updatePlayersGameboardPositions(area: string): void {
     const thisPlayer: Player = this;
     const opponent: Player = <Player>this.conf.players.find(player => player !== this);
-    this.conf.players.forEach(player => {
-      player.prohibitedPositions = this.prohibitedPositionsMadeByRows.concat(
-        thisPlayer.gameboardPieceAreas,
-        opponent.gameboardPieceAreas,
-      );
-    });
+    thisPlayer.prohibitedPositions.push(area);
+    opponent.prohibitedPositions.push(area);
   }
 
   private createPieces(): void {

@@ -27,10 +27,6 @@ export class PhaseOne extends Game {
     }
   }
 
-  configureProhibitedPositions(): void {
-    this.threeInRow.prohibited();
-  }
-
   private createPositions(): void {
     const gameboard: HTMLElement = <HTMLElement>document.querySelector(this.conf.selectors.gameboard);
     const tempPositions: DocumentFragment = document.createDocumentFragment();
@@ -64,6 +60,7 @@ export class PhaseOne extends Game {
   private configureGameData(area: string) {
     this.piecesOnGameboard.push(<Piece>this.conf.activePiece);
     this.conf.activePlayer.addPieceAreaToGameboardAreas(area);
+    this.threeInRow.prohibited();
   }
 
   private configureMovedPieceData(area: string): void {
