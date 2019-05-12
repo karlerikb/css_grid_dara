@@ -1,10 +1,12 @@
 import { Game } from "./game";
-import { GameboardAreas } from "../conf/custom-types";
+import { GameboardAreas, PlayerThreeInRow } from "../conf/custom-types";
 import { Piece } from "../players/piece";
 
 export class PhaseTwo extends Game {
   active: boolean = false;
   readonly name: string = "two";
+  private oldPos: string = "";
+  private newPos: string = "";
 
   constructor() {
     super();
@@ -88,8 +90,8 @@ export class PhaseTwo extends Game {
   }
 
   private configureGameData(area: string): void {
-    const oldPos = this.conf.activePiece!.area, newPos = area;
-    this.conf.activePlayer.configureAreasWhenMoving(oldPos, newPos);
+    this.oldPos = this.conf.activePiece!.area, this.newPos = area;
+    this.conf.activePlayer.configureAreasWhenMoving(this.oldPos, this.newPos);
   }
 
   private reset(): void {
@@ -98,13 +100,36 @@ export class PhaseTwo extends Game {
   }
 
   private checkForThreeInRow(): void {
-    if (this.threeInRow.exists()) {
-      console.log("remove piece...");
-      this.resetPieceReferences();
-    } else {
-      this.resetPieceReferences();
+    this.checkIfThreeInRowNeedsToBeRemoved();
+    this.checkIfThreeInRowNeedsToBeCreated();
+    this.resetPieceReferences();
+  }
+
+  private checkIfThreeInRowNeedsToBeCreated(): void {
+    if (!this.threeInRow.exists()) {
       this.switchTurn();
     }
+  }
+
+  private checkIfThreeInRowNeedsToBeRemoved(): void {
+    const threeInRows: PlayerThreeInRow[] = this.conf.activePiece!.player.threeInRows;
+    if (threeInRows) {
+      threeInRows.forEach((threeInRow, index) => {
+        if (threeInRow.areas.includes(this.oldPos)) {
+          this.configurePiecesAsNotBeingPartOfThreeInRow(threeInRow.areas);
+          threeInRow.element.remove();
+          threeInRows.splice(index, 1);
+        }
+      });
+    }
+  }
+
+  private configurePiecesAsNotBeingPartOfThreeInRow(areas: string[]): void {
+    areas.splice(areas.indexOf(this.oldPos), 1, this.newPos); // making an array which can be iterated over
+    areas.forEach(area => {
+      const piece: Piece = <Piece>this.conf.activePiece!.player.pieces.find(piece => piece.area === area);
+      piece.partOfThreeInRow = false;
+    });
   }
 
   private get surroundingAreas(): GameboardAreas {
