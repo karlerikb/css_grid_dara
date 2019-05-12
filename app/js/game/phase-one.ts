@@ -1,10 +1,9 @@
 import { Game } from "./game";
 import { Piece } from "../players/piece";
-import { ThreeInRow } from "./rows/three-in-row";
 
 export class PhaseOne extends Game {
   active: boolean = true;
-  readonly phase: string = "one";
+  readonly name: string = "one";
 
   constructor() {
     super();

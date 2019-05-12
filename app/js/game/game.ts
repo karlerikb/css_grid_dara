@@ -103,7 +103,7 @@ export abstract class Game {
   get threeInRows(): string[][] {
     return this.threeInRow.threeInRows;
   }
-  
+
   protected get gridArea(): string {
     const computedStyle: string | null = window.getComputedStyle(<Element>this.conf.selectedPosition).gridArea;
     let area: string;

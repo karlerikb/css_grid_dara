@@ -1,5 +1,6 @@
 import { Configuration } from "../../conf/configuration";
 import { GameboardAreas, Reach } from "../../conf/custom-types";
+import { Piece } from "../../players/piece";
 
 export class ThreeInRow {
   threeInRows: string[][] = [];
@@ -117,19 +118,16 @@ export class ThreeInRow {
   }
 
   private threeInRowsExist(): boolean {
-    console.log(this.threeInRows);
     if (this.threeInRows.length === 1) {
-      // ... state for opponent piece removal
       this.initializePieceRemoval();
       this.resetProperties();
-      console.log("one three in row");
       return true;
     } else if (this.threeInRows.length > 1) {
       // ... state for choosing one of the multiple three-in-rows
       console.log("multiple three in rows");
+      this.resetProperties();
       return true;
     } else {
-      console.log("no three in rows");
       this.resetProperties();
       return false;
     }
@@ -139,8 +137,22 @@ export class ThreeInRow {
     this.conf.activePhase.gameTurn.removePiece();
   }
 
+  private getReachValidationForCreatingRows(reach: GameboardAreas, areas: string[]): number[] {
+    const pieces: Piece[] = this.conf.activePlayer.pieces;
+    const phase: string = this.conf.activePhase.name;
+    const reachValidation: number[] = reach.map(area => {
+      if (!area) return 0;
+      if (areas.includes(area)) {
+        if (phase === "two" && (pieces.find(piece => piece.area === area))!.partOfThreeInRow) return 0;
+        return 1;
+      }
+      return 0;
+    });
+    return reachValidation;
+  }
+
   private getValidCount(reach: GameboardAreas, playerAreas: string[]): number {
-    const reachValidation: number[] = this.getReachValidation(reach, playerAreas);
+    const reachValidation: number[] = this.getReachValidationForCreatingRows(reach, playerAreas);
     const validCount: number = reachValidation.reduce((valid, area) => valid + area);
     return validCount;
   }

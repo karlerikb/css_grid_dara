@@ -66,10 +66,10 @@ export class FourInRow {
   private getReachValidation(reach: GameboardAreas): number[] {
     const areas: string[] = this.conf.activePlayer.gameboardPieceAreas;
     const reachValidation: number[] = reach.map(area => {
-      if (!area) return 0;
-      if (area === this.conf.activePiece!.area) return 0;
-      if (area === this.area) return 1;
-      if (areas.includes(area)) return 1;
+      if (!area) return 0; // if area is null
+      if (area === this.conf.activePiece!.area) return 0; // piece area before movement, needs to be 0 because after movement the area will be empty
+      if (area === this.area) return 1; // area that the piece is moved to, needs to be 1, because after movement a player piece will be there
+      if (areas.includes(area)) return 1; // if the area is occupied by a player piece
       return 0;
     });
     return reachValidation;

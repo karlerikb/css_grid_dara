@@ -11,7 +11,7 @@ export class WaitingPieceActivationState implements State {
   enablePieceActivation(): void {
     this.resetPieceClasses();
     this.handlePieceEventListeners();
-    if (this.conf.activePhase.phase === "two") {
+    if (this.conf.activePhase.name === "two") {
       this.setPlayerTurnPieceClasses();
     }
   }

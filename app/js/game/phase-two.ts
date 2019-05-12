@@ -4,7 +4,7 @@ import { Piece } from "../players/piece";
 
 export class PhaseTwo extends Game {
   active: boolean = false;
-  readonly phase: string = "two";
+  readonly name: string = "two";
 
   constructor() {
     super();
@@ -100,6 +100,7 @@ export class PhaseTwo extends Game {
   private checkForThreeInRow(): void {
     if (this.threeInRow.exists()) {
       console.log("remove piece...");
+      this.resetPieceReferences();
     } else {
       this.resetPieceReferences();
       this.switchTurn();

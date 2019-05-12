@@ -91,11 +91,11 @@ export class Player {
 
   private removePieceAreas(area: string): void {
     this.conf.players.forEach(player => {
-      const gameboardAreaIndex: number = player.gameboardPieceAreas.indexOf(area);
       const prohibitedAreaIndex: number = player.prohibitedAreas.indexOf(area);
-      player.gameboardPieceAreas.splice(gameboardAreaIndex, 1);
       player.prohibitedAreas.splice(prohibitedAreaIndex, 1);
     });
+    const gameboardAreaIndex: number = this.conf.inactivePlayer.gameboardPieceAreas.indexOf(area);
+    this.conf.inactivePlayer.gameboardPieceAreas.splice(gameboardAreaIndex, 1);
   }
 
   private removePieceObject(piece: Piece): void {
