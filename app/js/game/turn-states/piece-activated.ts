@@ -29,6 +29,10 @@ export class PieceActivatedState implements State {
     throw new Error("Gamepiece is highlighted, but moving it is not yet initiated!")
   }
 
+  removingOpponentPiece(): void {
+    throw new Error("Cannot remove an opponent piece when player piece is activated, but no game-move has been made!");
+  }
+
   private togglePieceActivation(): void {
     this.deactivatePieces();
     this.conf.activePiece!.active = true;

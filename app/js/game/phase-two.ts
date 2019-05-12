@@ -1,11 +1,10 @@
 import { Game } from "./game";
 import { GameboardAreas } from "../conf/custom-types";
-import { FourInRow } from "./rows/four-in-row";
+import { Piece } from "../players/piece";
 
 export class PhaseTwo extends Game {
   active: boolean = false;
   readonly phase: string = "two";
-  private fourInRow = new FourInRow();
 
   constructor() {
     super();
@@ -18,13 +17,28 @@ export class PhaseTwo extends Game {
   }
 
   finalizeMovement(): void {
-    this.movePiece();
-    this.switchTurn();
+    this.configure(this.gridArea);
+    this.reset();
+    this.checkForThreeInRow();
   }
 
   createGameboardPositions(): void {
     this.removeGameboardPositions();
     this.createPositions();
+  }
+
+  removeOpponentPiece(target: EventTarget): void {
+    const piece: Piece = <Piece>this.conf.inactivePlayer.pieces.find(piece => piece.element === target);
+    this.conf.inactivePlayer.removePiece(piece);
+    this.resetPieceRemoval();
+    this.switchTurn();
+  }
+
+  private resetPieceRemoval(): void {
+    this.conf.inactivePlayer.pieces.forEach(piece => {
+      piece.element.classList.remove(this.conf.classes.removePiece);
+      piece.element.removeEventListener("click", this.conf.eventListeners.removingOpponentPiece);
+    });
   }
 
   private configurePieces(): void {
@@ -55,11 +69,6 @@ export class PhaseTwo extends Game {
     });
   }
 
-  private movePiece(): void {
-    this.configure(this.gridArea);
-    this.reset();
-  }
-
   private configure(area: string): void {
     this.configureMovedPieceStyles();
     this.configureGameData(area);
@@ -86,10 +95,16 @@ export class PhaseTwo extends Game {
   private reset(): void {
     this.removeAnimation();
     this.removeGameboardPositions();
-    // ... this is the places where further states are determined
-    this.resetPieceReferences();
   }
 
+  private checkForThreeInRow(): void {
+    if (this.threeInRow.exists()) {
+      console.log("remove piece...");
+    } else {
+      this.resetPieceReferences();
+      this.switchTurn();
+    }
+  }
 
   private get surroundingAreas(): GameboardAreas {
     const row = +this.conf.activePiece!.area[1], column = +this.conf.activePiece!.area[2];

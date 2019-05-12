@@ -15,4 +15,5 @@ export interface State {
   enablePieceActivation(): void;
   enablePieceHighlight(): void;
   movingPiece(): void;
+  removingOpponentPiece(): void;
 }

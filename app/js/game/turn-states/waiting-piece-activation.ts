@@ -24,6 +24,10 @@ export class WaitingPieceActivationState implements State {
     throw new Error("No piece has been activated, cannot move any gamepiece yet!");
   }
 
+  removingOpponentPiece(): void {
+    throw new Error("Cannot remove an opponent piece when waiting for a player piece to be activated!");
+  }
+
   private handlePieceEventListeners(): void {
     this.conf.allPlayerPieces.forEach(piece => {
       piece.element.removeEventListener("click", this.conf.eventListeners.activatingPiece);

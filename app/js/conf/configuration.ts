@@ -14,7 +14,8 @@ export class Configuration {
   readonly eventListeners: EventListenerCollection = {
     activatingPiece: this.activatePiece.bind(this),
     movingPiece: this.movePiece.bind(this),
-    movementEnds: this.movementEnds.bind(this)
+    movementEnds: this.movementEnds.bind(this),
+    removingOpponentPiece: this.removeOpponentPiece.bind(this)
   };
 
   readonly classes: ElementClasses = {
@@ -29,7 +30,8 @@ export class Configuration {
     piece: "piece",
     notAllowed: "notAllowed",
     animateMovement: "animateMovement",
-    playerTurn: "playerTurn"
+    playerTurn: "playerTurn",
+    removePiece: "toBeRemoved"
   }
 
   readonly selectors: ElementSelectors = {
@@ -44,15 +46,19 @@ export class Configuration {
   }
 
   private activatePiece(e: any): void {
-    this.activePhase.activatePiece(<EventTarget>e.target);
+    this.activePhase.activatePiece(e.target);
   }
 
   private movePiece(e: any): void {
-    this.activePhase.initializeMovement(<EventTarget>e.target);
+    this.activePhase.initializeMovement(e.target);
   }
 
   private movementEnds(): void {
     this.activePhase.finalizeMovement();
+  }
+
+  private removeOpponentPiece(e: any): void {
+    this.activePhase.removeOpponentPiece(e.target);
   }
 
 

@@ -5,10 +5,14 @@ import { GameTurn } from "./game-turn";
 import { Piece } from "../players/piece";
 import { Phase } from "../conf/custom-types";
 import { Helper } from "../conf/helper";
+import { ThreeInRow } from "./rows/three-in-row";
+import { FourInRow } from "./rows/four-in-row";
 
 export abstract class Game {
   protected settings: Settings = Settings.instance;
   protected conf: Configuration = Configuration.instance;
+  protected threeInRow = new ThreeInRow();
+  protected fourInRow = new FourInRow();
 
   readonly gameTurn = new GameTurn();
   readonly piecesOnGameboard: Piece[] = [];
@@ -94,8 +98,12 @@ export abstract class Game {
     const inactivePhaseIndex: number = this.conf.phases.indexOf(<Phase>this.conf.inactivePhase);
     this.conf.phases.splice(inactivePhaseIndex, 1);
   }
-  
 
+
+  get threeInRows(): string[][] {
+    return this.threeInRow.threeInRows;
+  }
+  
   protected get gridArea(): string {
     const computedStyle: string | null = window.getComputedStyle(<Element>this.conf.selectedPosition).gridArea;
     let area: string;

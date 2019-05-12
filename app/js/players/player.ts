@@ -2,6 +2,7 @@ import { Helper } from "../conf/helper";
 import { Settings } from "../conf/settings";
 import { Piece } from "./piece";
 import { Configuration } from "../conf/configuration";
+import { PlayerThreeInRow } from "../conf/custom-types";
 
 
 export class Player {
@@ -14,6 +15,7 @@ export class Player {
 
   readonly pieces: Piece[] = [];
   readonly gameboardPieceAreas: string[] = [];
+  readonly threeInRows: PlayerThreeInRow[] = [];
   
   prohibitedAreas: string[] = [];
   prohibitedAreasMadeByRows: string[] = [];
@@ -51,6 +53,12 @@ export class Player {
     this.configureProhibitedPositionWhenMoving(oldPos);
   }
 
+  removePiece(piece: Piece): void {
+    this.removePieceElement(piece);
+    this.removePieceAreas(piece.area);
+    this.removePieceObject(piece);
+  }
+
   private updatePlayersGameboardAreas(area: string): void {
     const thisPlayer: Player = this;
     const opponent: Player = <Player>this.conf.players.find(player => player !== this);
@@ -75,5 +83,23 @@ export class Player {
       });
       this.pieces.push(new Piece(pieceId, this, pieceElement));
     }
+  }
+
+  private removePieceElement(piece: Piece): void {
+    piece.element.remove();
+  }
+
+  private removePieceAreas(area: string): void {
+    this.conf.players.forEach(player => {
+      const gameboardAreaIndex: number = player.gameboardPieceAreas.indexOf(area);
+      const prohibitedAreaIndex: number = player.prohibitedAreas.indexOf(area);
+      player.gameboardPieceAreas.splice(gameboardAreaIndex, 1);
+      player.prohibitedAreas.splice(prohibitedAreaIndex, 1);
+    });
+  }
+
+  private removePieceObject(piece: Piece): void {
+    const pieceIndex: number = this.pieces.indexOf(piece);
+    this.pieces.splice(pieceIndex, 1);
   }
 }

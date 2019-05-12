@@ -23,6 +23,10 @@ export class MovingPieceState implements State {
     this.disablePositionSelection();
     this.configureAnimation();
   }
+
+  removingOpponentPiece(): void {
+    throw new Error("Cannot remove an opponent piece when moving a piece!");
+  }
   
   private disablePieceActivation(): void {
     this.conf.activePlayer.pieces.forEach(piece => {

@@ -5,7 +5,6 @@ import { ThreeInRow } from "./rows/three-in-row";
 export class PhaseOne extends Game {
   active: boolean = true;
   readonly phase: string = "one";
-  private threeInRow = new ThreeInRow();
 
   constructor() {
     super();
@@ -25,6 +24,10 @@ export class PhaseOne extends Game {
     if (tempPositions.length === 0) {
       this.createPositions();
     }
+  }
+
+  removeOpponentPiece(target: EventTarget): void {
+    throw new Error("Cannot remove opponent pieces in phase one!");
   }
 
   private createPositions(): void {

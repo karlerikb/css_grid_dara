@@ -98,11 +98,14 @@
 
 .gameboard .playerOne.piece.toBeRemoved:hover {
   background: #1d3a92;
-  cursor: pointer;
 }
 .gameboard .playerTwo.piece.toBeRemoved:hover {
   background: #791414;
+}
+
+.gameboard .piece.toBeRemoved:hover {
   cursor: pointer;
+  box-shadow: 0 0 4px 1px #303030;
 }
 
 .gameboard > .threeInRow {
