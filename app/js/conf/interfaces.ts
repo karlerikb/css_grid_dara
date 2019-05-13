@@ -16,4 +16,5 @@ export interface State {
   enablePieceHighlight(): void;
   movingPiece(): void;
   removingOpponentPiece(): void;
+  enableMultipleThreeInRowSelection(): void;
 }

@@ -27,6 +27,10 @@ export class MovingPieceState implements State {
   removingOpponentPiece(): void {
     throw new Error("Cannot remove an opponent piece when moving a piece!");
   }
+
+  enableMultipleThreeInRowSelection(): void {
+    throw new Error("Cannot enable multiple three-in-row selection when moving a piece!");
+  }
   
   private disablePieceActivation(): void {
     this.conf.activePlayer.pieces.forEach(piece => {

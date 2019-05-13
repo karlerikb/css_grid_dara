@@ -15,7 +15,9 @@ export class Configuration {
     activatingPiece: this.activatePiece.bind(this),
     movingPiece: this.movePiece.bind(this),
     movementEnds: this.movementEnds.bind(this),
-    removingOpponentPiece: this.removeOpponentPiece.bind(this)
+    removingOpponentPiece: this.removeOpponentPiece.bind(this),
+    initializingRowSelection: this.initializeRowSelection.bind(this),
+    finalizingRowSelection: this.finalizeRowSelection.bind(this)
   };
 
   readonly classes: ElementClasses = {
@@ -31,7 +33,11 @@ export class Configuration {
     notAllowed: "notAllowed",
     animateMovement: "animateMovement",
     playerTurn: "playerTurn",
-    removePiece: "toBeRemoved"
+    removePiece: "toBeRemoved",
+    threeInRow: "threeInRow",
+    selectableRow: "selectableIndication",
+    selectedRow: "selectedIndication",
+    unselectedRow: "unselectedIndication"
   }
 
   readonly selectors: ElementSelectors = {
@@ -39,6 +45,7 @@ export class Configuration {
     playerTwoPiecesContainer: `.${this.classes.playerTwo}.${this.classes.piecesContainer}`,
     gameboard: `.${this.classes.gameboard}`,
     temporaryPositions: `.${this.classes.gameboard} > .${this.classes.temporaryPosition}`,
+    selectableRows: `.${this.classes.threeInRow}.${this.classes.selectableRow}`,
     root: ":root"
   }
 
@@ -59,6 +66,14 @@ export class Configuration {
 
   private removeOpponentPiece(e: any): void {
     this.activePhase.removeOpponentPiece(e.target);
+  }
+
+  private initializeRowSelection(e: any): void {
+    this.activePhase.initializeRowSelection(e.target);
+  }
+
+  private finalizeRowSelection(e: any): void {
+    this.activePhase.finalizeRowSelection(e.target);
   }
 
 

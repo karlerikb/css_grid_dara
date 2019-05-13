@@ -13,17 +13,25 @@ export class RemovingOpponentPiece implements State {
   enablePieceActivation(): void {
     throw new Error("Cannot select a player player piece when an opponent piece removal is in progress!");
   }
+
   enablePieceHighlight(): void {
     throw new Error("Cannot activate a player piece for movement when an opponent piece removal is in progress!");
   }
+
   movingPiece(): void {
     throw new Error("Cannot move a player piece when an opponent pieces removal is in progress!");
   }
+
   removingOpponentPiece(): void {
     const [areas]: string[][] = this.conf.activePhase.threeInRows;
     this.determineRowDimension(areas);
     this.configurePlayerPieces(areas);
+    this.configureOpponentPieces();
     this.enableOpponentPieceRemoval();
+  }
+
+  enableMultipleThreeInRowSelection(): void {
+    throw new Error("Cannot enable multiple three-in-row selection when removing an opponent piece!");
   }
 
   private determineRowDimension(areas: string[]): void {
@@ -36,7 +44,7 @@ export class RemovingOpponentPiece implements State {
     const gameboard: HTMLElement = <HTMLElement>document.querySelector(this.conf.selectors.gameboard);
     const numberString: string = this.conf.activePlayer.numberStringUpperCase;
     const indicationElement: HTMLElement = Helper.create({
-      type: "div", class: `player${numberString} threeInRow`, area,
+      type: "div", class: `player${numberString} ${this.conf.classes.threeInRow}`, area,
       parent: gameboard
     });
     this.conf.activePlayer.threeInRows.push({
@@ -84,6 +92,13 @@ export class RemovingOpponentPiece implements State {
         piece.element.classList.add(this.conf.classes.removePiece);
         piece.element.addEventListener("click", this.conf.eventListeners.removingOpponentPiece);
       }
+    });
+  }
+
+  private configureOpponentPieces(): void {
+    this.conf.inactivePlayer.pieces.forEach(piece => {
+      piece.element.classList.remove(this.conf.classes.dehighlighted);
+      piece.element.classList.remove(this.conf.classes.notAllowed);
     });
   }
 }

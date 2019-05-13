@@ -96,6 +96,11 @@ export class ThreeInRow {
     return this.threeInRowsExist();
   }
 
+  existsAfterSelection(): void {
+    this.initializePieceRemoval();
+    this.resetProperties();
+  }
+
   private setProperties(): void {
     this.playerAreas = this.conf.activePlayer.gameboardPieceAreas;
     this.area = this.conf.activePiece!.area;
@@ -123,8 +128,7 @@ export class ThreeInRow {
       this.resetProperties();
       return true;
     } else if (this.threeInRows.length > 1) {
-      // ... state for choosing one of the multiple three-in-rows
-      console.log("multiple three in rows");
+      this.initializeMultipleRowSelection();
       this.resetProperties();
       return true;
     } else {
@@ -135,6 +139,10 @@ export class ThreeInRow {
 
   private initializePieceRemoval(): void {
     this.conf.activePhase.gameTurn.removePiece();
+  }
+
+  private initializeMultipleRowSelection(): void {
+    this.conf.activePhase.gameTurn.enableThreeInRowSelection();
   }
 
   private getReachValidationForCreatingRows(reach: GameboardAreas, areas: string[]): number[] {

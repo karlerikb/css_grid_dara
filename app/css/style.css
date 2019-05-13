@@ -121,17 +121,29 @@
 .playerOne.threeInRow { background: lightblue; }
 .playerTwo.threeInRow { background: lightsalmon; }
 
-.threeInRow.doubleRowIndication {
-  box-shadow: 0 0 4px 1px #303030 !important;
-  background: whitesmoke !important;
+.threeInRow.selectableIndication {
+  box-shadow: 0 0 4px 1px #303030;
+  background: whitesmoke;
   opacity: .9;
   z-index: 3;
   cursor: pointer;
 }
 
-.threeInRow.doubleRowIndication:hover {
+.threeInRow.selectableIndication:hover {
+  box-shadow: 0 0 4px 1px #303030;
+  background: whitesmoke;
   z-index: 4;
 }
+
+.threeInRow.unselectedIndication {
+  box-shadow: none;
+  background: #a8a8a8;
+  z-index: 2;
+}
+
+/* .threeInRow.selectedIndication {
+  background: whitesmoke !important;
+} */
 
 
 /* Hints Container Element */

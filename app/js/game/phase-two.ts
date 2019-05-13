@@ -4,6 +4,7 @@ import { Piece } from "../players/piece";
 
 export class PhaseTwo extends Game {
   active: boolean = false;
+  temporaryThreeInRows: PlayerThreeInRow[] = [];
   readonly name: string = "two";
   private oldPos: string = "";
   private newPos: string = "";
@@ -34,6 +35,36 @@ export class PhaseTwo extends Game {
     this.conf.inactivePlayer.removePiece(piece);
     this.resetPieceRemoval();
     this.switchTurn();
+  }
+
+  initializeRowSelection(target: EventTarget): void {
+    const indicationElements: NodeListOf<Element> = document.querySelectorAll(this.conf.selectors.selectableRows);
+    for (let indicationElement of indicationElements) {
+      indicationElement.classList.remove(this.conf.classes.selectedRow);
+      indicationElement.classList.add(this.conf.classes.unselectedRow);
+    }
+    (<HTMLElement>target).classList.remove(this.conf.classes.unselectedRow);
+    (<HTMLElement>target).classList.add(this.conf.classes.selectedRow);
+  }
+
+  finalizeRowSelection(target: EventTarget): void {
+    this.determineAreasForSelectedThreeInRow(target);
+    this.removeTemporaryThreeInRows();
+    this.threeInRow.existsAfterSelection();
+  }
+
+  private determineAreasForSelectedThreeInRow(target: EventTarget): void {
+    const chosenRow: PlayerThreeInRow = <PlayerThreeInRow>this.temporaryThreeInRows.find(threeInRow => {
+      return threeInRow.element === target;
+    });
+    this.conf.activePhase.threeInRows.push(chosenRow.areas);
+  }
+
+  private removeTemporaryThreeInRows() {
+    this.temporaryThreeInRows.forEach(threeInRow => {
+      threeInRow.element.remove();
+    });
+    this.temporaryThreeInRows = [];
   }
 
   private resetPieceRemoval(): void {

@@ -9,7 +9,9 @@ export type EventListenerCollection = {
   activatingPiece: (e: any) => void,
   movingPiece: (e: any) => void,
   movementEnds: (e: any) => void,
-  removingOpponentPiece: (e:any) => void
+  removingOpponentPiece: (e:any) => void,
+  initializingRowSelection: (e: any) => void,
+  finalizingRowSelection: (e: any) => void
 };
 
 export type ElementClasses = {
@@ -25,7 +27,11 @@ export type ElementClasses = {
   notAllowed: string,
   animateMovement: string,
   playerTurn: string,
-  removePiece: string
+  removePiece: string,
+  threeInRow: string,
+  selectableRow: string,
+  selectedRow: string,
+  unselectedRow: string
 }
 
 export type ElementSelectors = {
@@ -33,6 +39,7 @@ export type ElementSelectors = {
   playerTwoPiecesContainer: string,
   gameboard: string,
   temporaryPositions: string,
+  selectableRows: string,
   root: string
 }
 

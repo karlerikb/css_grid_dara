@@ -3,6 +3,7 @@ import { PieceActivatedState } from "./turn-states/piece-activated";
 import { State } from "../conf/interfaces";
 import { MovingPieceState } from "./turn-states/moving-piece";
 import { RemovingOpponentPiece } from "./turn-states/removing-opponent-piece";
+import { WaitingThreeInRowSelection } from "./turn-states/waiting-three-in-row-selection";
 
 export class GameTurn {
   private _state: State = <State>{};
@@ -11,6 +12,7 @@ export class GameTurn {
   private pieceActivatedState: State;
   private movingPieceState: State;
   private removingOpponentPiece: State;
+  private waitingThreeInRowSelection: State;
 
 
   constructor() {
@@ -18,6 +20,7 @@ export class GameTurn {
     this.pieceActivatedState = new PieceActivatedState(this);
     this.movingPieceState = new MovingPieceState(this);
     this.removingOpponentPiece = new RemovingOpponentPiece(this);
+    this.waitingThreeInRowSelection = new WaitingThreeInRowSelection(this);
   }
 
   initializeGameTurn(): void {
@@ -38,6 +41,11 @@ export class GameTurn {
   removePiece(): void {
     this.state = this.removingOpponentPiece;
     this.state.removingOpponentPiece();
+  }
+
+  enableThreeInRowSelection(): void {
+    this.state = this.waitingThreeInRowSelection;
+    this.state.enableMultipleThreeInRowSelection();
   }
 
   get state(): State {

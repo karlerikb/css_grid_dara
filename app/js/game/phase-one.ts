@@ -1,8 +1,10 @@
 import { Game } from "./game";
 import { Piece } from "../players/piece";
+import { PlayerThreeInRow } from "../conf/custom-types";
 
 export class PhaseOne extends Game {
   active: boolean = true;
+  temporaryThreeInRows: PlayerThreeInRow[] = [];
   readonly name: string = "one";
 
   constructor() {
@@ -27,6 +29,14 @@ export class PhaseOne extends Game {
 
   removeOpponentPiece(target: EventTarget): void {
     throw new Error("Cannot remove opponent pieces in phase one!");
+  }
+
+  initializeRowSelection(target: EventTarget): void {
+    throw new Error("Cannot initialize three-in-row selection in phase one!");
+  }
+
+  finalizeRowSelection(target: EventTarget): void {
+    throw new Error("Cannot finalize three-in-row selection in phase one!");
   }
 
   private createPositions(): void {

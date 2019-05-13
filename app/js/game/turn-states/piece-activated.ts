@@ -1,7 +1,6 @@
 import { GameTurn } from "../game-turn";
 import { Configuration } from "../../conf/configuration";
 import { State } from "../../conf/interfaces";
-import { Phase } from "../../conf/custom-types";
 
 export class PieceActivatedState implements State {
   private conf: Configuration = Configuration.instance;
@@ -31,6 +30,10 @@ export class PieceActivatedState implements State {
 
   removingOpponentPiece(): void {
     throw new Error("Cannot remove an opponent piece when player piece is activated, but no game-move has been made!");
+  }
+
+  enableMultipleThreeInRowSelection(): void {
+    throw new Error("Cannot enable multiple three-in-row selectin when placing a piece on the gameboard!");
   }
 
   private togglePieceActivation(): void {
