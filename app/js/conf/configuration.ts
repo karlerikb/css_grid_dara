@@ -37,7 +37,8 @@ export class Configuration {
     threeInRow: "threeInRow",
     selectableRow: "selectableIndication",
     selectedRow: "selectedIndication",
-    unselectedRow: "unselectedIndication"
+    unselectedRow: "unselectedIndication",
+    pieceActivated: "pieceActivated"
   }
 
   readonly selectors: ElementSelectors = {

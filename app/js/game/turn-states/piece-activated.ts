@@ -48,7 +48,9 @@ export class PieceActivatedState implements State {
   private deactivatePieces(): void {
     this.conf.activePlayer.pieces.forEach(piece => {
       piece.active = false;
-      piece.element.classList.remove(this.conf.classes.highlighted, this.conf.classes.dehighlighted);
+      if (!piece.movedToTable) {
+        piece.element.classList.remove(this.conf.classes.highlighted, this.conf.classes.dehighlighted);
+      }
     });
   }
 

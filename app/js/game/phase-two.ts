@@ -117,7 +117,7 @@ export class PhaseTwo extends Game {
     this.conf.activePiece!.area = area;
     this.conf.activePiece!.active = false;
     // temp
-    this.conf.activePiece!.element.textContent = area;
+    // this.conf.activePiece!.element.textContent = area;
   }
 
   private configureGameData(area: string): void {

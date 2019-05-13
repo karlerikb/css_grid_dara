@@ -82,7 +82,7 @@ export class PhaseOne extends Game {
     this.conf.activePiece!.movedToTable = true;
     this.conf.activePiece!.active = false;
     // temp
-    this.conf.activePiece!.element.textContent = area;
+    // this.conf.activePiece!.element.textContent = area;
   }
 
   private configureMovedPieceStyles(): void {

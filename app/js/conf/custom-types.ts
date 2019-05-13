@@ -31,7 +31,8 @@ export type ElementClasses = {
   threeInRow: string,
   selectableRow: string,
   selectedRow: string,
-  unselectedRow: string
+  unselectedRow: string,
+  pieceActivated: string
 }
 
 export type ElementSelectors = {

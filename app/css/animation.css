@@ -24,16 +24,16 @@
 
 @keyframes pieceActivation {
   0% {
-    box-shadow: 0 0 0 0 #333;
+    box-shadow: 0 0 0 0 #535353;
   }
   50% {
-    box-shadow: 0 0 8px 2px #333;
+    box-shadow: 0 0 6px 1px #535353;
   }
   100% {
-    box-shadow: 0 0 0 0 #333;
+    box-shadow: 0 0 0 0 #535353;
   }
 }
 
-.pieceActivation {
-  animation: pieceActivation 1s;
+.pieceActivated {
+  animation: pieceActivation .3s;
 }

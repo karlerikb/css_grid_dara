@@ -78,8 +78,7 @@ export class Player {
       const pieceId = `p${this.number}_${pieceNumber}`;
       const pieceElement = Helper.create({
         type: "div", id: pieceId, class: this.conf.classes.piece,
-        text: `${pieceNumber}`, area: pieceId,
-        parent: this.piecesContainerElement
+        area: pieceId, parent: this.piecesContainerElement
       });
       this.pieces.push(new Piece(pieceId, this, pieceElement));
     }
