@@ -1,7 +1,8 @@
 import { Player } from "../players/player";
 import { Game } from "../game/game";
-import { Phase, EventListenerCollection, ElementClasses, ElementSelectors } from "./custom-types";
+import { Phase, EventListenerCollection, ElementClasses, ElementSelectors, MenuListItem } from "./custom-types";
 import { Piece } from "../players/piece";
+import { Menu } from "../menu/menu";
 
 export class Configuration {
   private static _instance: Configuration;
@@ -17,7 +18,11 @@ export class Configuration {
     movementEnds: this.movementEnds.bind(this),
     removingOpponentPiece: this.removeOpponentPiece.bind(this),
     initializingRowSelection: this.initializeRowSelection.bind(this),
-    finalizingRowSelection: this.finalizeRowSelection.bind(this)
+    finalizingRowSelection: this.finalizeRowSelection.bind(this),
+    openingMenu: this.openMenu.bind(this),
+    closingMenu: this.closeMenu.bind(this),
+    openingSettings: this.openSettings.bind(this),
+    closingApp: this.closeApp.bind(this)
   };
 
   readonly classes: ElementClasses = {
@@ -38,7 +43,10 @@ export class Configuration {
     selectableRow: "selectableIndication",
     selectedRow: "selectedIndication",
     unselectedRow: "unselectedIndication",
-    pieceActivated: "pieceActivated"
+    pieceActivated: "pieceActivated",
+    gameContainer: "gameContainer",
+    menu: "menu",
+    menuList: "gameMenuList"
   }
 
   readonly selectors: ElementSelectors = {
@@ -47,8 +55,15 @@ export class Configuration {
     gameboard: `.${this.classes.gameboard}`,
     temporaryPositions: `.${this.classes.gameboard} > .${this.classes.temporaryPosition}`,
     selectableRows: `.${this.classes.threeInRow}.${this.classes.selectableRow}`,
-    root: ":root"
+    root: ":root",
+    gameContainer: `.${this.classes.gameContainer}`
   }
+
+  readonly menuItems: MenuListItem[] = [
+    { option: "resume", text: "Jätka mängu", eventListener: this.eventListeners.closingMenu },
+    { option: "settings", text: "Mängu seaded", eventListener: this.eventListeners.openingSettings },
+    { option: "exit", text: "Välju mängust", eventListener: this.eventListeners.closingApp }
+  ];
 
   private constructor() {
   }
@@ -75,6 +90,22 @@ export class Configuration {
 
   private finalizeRowSelection(e: any): void {
     this.activePhase.finalizeRowSelection(e.target);
+  }
+
+  private openMenu(e: any): void {
+    Menu.instance.open();
+  }
+
+  private closeMenu(e: any): void {
+    Menu.instance.close();
+  }
+
+  private openSettings(e: any): void {
+    console.log("opening settings...");
+  }
+
+  private closeApp(e: any): void {
+    console.log("closing app...");
   }
 
 

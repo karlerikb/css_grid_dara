@@ -11,7 +11,11 @@ export type EventListenerCollection = {
   movementEnds: (e: any) => void,
   removingOpponentPiece: (e:any) => void,
   initializingRowSelection: (e: any) => void,
-  finalizingRowSelection: (e: any) => void
+  finalizingRowSelection: (e: any) => void,
+  openingMenu: (e: any) => void,
+  closingMenu: (e: any) => void,
+  openingSettings: (e: any) => void,
+  closingApp: (e: any) => void
 };
 
 export type ElementClasses = {
@@ -32,7 +36,10 @@ export type ElementClasses = {
   selectableRow: string,
   selectedRow: string,
   unselectedRow: string,
-  pieceActivated: string
+  pieceActivated: string,
+  gameContainer: string,
+  menu: string,
+  menuList: string
 }
 
 export type ElementSelectors = {
@@ -41,10 +48,17 @@ export type ElementSelectors = {
   gameboard: string,
   temporaryPositions: string,
   selectableRows: string,
-  root: string
+  root: string,
+  gameContainer: string
 }
 
 export type PlayerThreeInRow = {
   areas: string[],
   element: HTMLElement
+}
+
+export type MenuListItem = {
+  option: string,
+  text: string,
+  eventListener: (e: any) => void
 }

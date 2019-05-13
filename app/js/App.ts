@@ -3,11 +3,13 @@ import { Configuration } from "./conf/configuration";
 import { Player } from "./players/player";
 import { PhaseOne } from "./game/phase-one";
 import { PhaseTwo } from "./game/phase-two";
+import { Menu } from "./menu/menu";
 
 class App {
   private static _instance: App;
   private _settings: Settings;
-  private _conf: Configuration
+  private _conf: Configuration;
+  private menu: Menu = Menu.instance;
 
   private constructor() {
     this._settings = Settings.instance;
