@@ -1,3 +1,7 @@
+body {
+  color: #333;
+  font-family: "Lato", "sans-serif";
+}
 
 /* Defining Grid Elements */
 
@@ -28,7 +32,6 @@
   padding: .5vw;
   grid-template-columns: repeat(2, auto);
   grid-template-rows: repeat(6, auto);
-  /* gap: .5vw; */
 }
 
 .piecesContainer.playerOne {
@@ -60,7 +63,6 @@
 
 .piecesContainer.active {
   box-shadow: 0 0 1px 1px #575757;
-  /* border: 1px solid #333; */
 }
 
 .piece {
@@ -82,7 +84,6 @@
 
 .gameboard {
   margin: 1vw 0;
-  /* border: 1px solid black; */
   box-shadow: 0 0 2px 1px #575757;
   border-radius: 2px;
   padding: 1vw;
@@ -186,7 +187,6 @@
   width: 6vw;
   height: 6vw;
   z-index: 2;
-  /* position: relative; */
 }
 
 .gameboard .temporaryPosition {
@@ -203,11 +203,12 @@
 /* Game Menu Element */
 
 .menu {
-  border-radius: 5px;
+  border-radius: 2px;
+  border: 1px solid #555;
+  box-shadow: 0 0 3px 2px #555;
   width: 100%;
   height: 100%;
-  background: #3f4142;
-  opacity: .95;
+  background: rgba(37, 37, 37, .5);
   grid-area: menu;
   grid-template-columns: 2fr 5fr 2fr;
   grid-template-rows: 1fr 4fr;
@@ -232,12 +233,12 @@
 /* Player Titles, Menu List */
 
 .playerOneTitle, .playerTwoTitle, .gameMenuList {
-  border: 2px solid whitesmoke;
-  border-radius: 5px;
+  box-shadow: 0 0 3px 1px #444;
+  border: 1px solid #222;
+  border-radius: 3px;
   padding: 1vw;
   color: whitesmoke;
-  background: #202020;
-  opacity: 1;
+  background: #333;
   text-align: center;
 }
 
@@ -254,13 +255,14 @@
 }
 
 .gameMenuList > li {
+  border-radius: 2px;
   margin: 0;
   padding: 1.5vw 10vw;;
   list-style: none;
 }
 
 .gameMenuList > li:hover {
-  color: #202020;
+  color: #333;
   background: whitesmoke;
   cursor: pointer;
 }
