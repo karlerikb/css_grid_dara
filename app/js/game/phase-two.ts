@@ -1,6 +1,7 @@
 import { Game } from "./game";
 import { GameboardAreas, PlayerThreeInRow } from "../conf/custom-types";
 import { Piece } from "../players/piece";
+import { Player } from "../players/player";
 
 export class PhaseTwo extends Game {
   active: boolean = false;
@@ -94,8 +95,9 @@ export class PhaseTwo extends Game {
     const gameboard: HTMLElement = <HTMLElement>document.querySelector(this.conf.selectors.gameboard);
     const tempPositions: DocumentFragment = document.createDocumentFragment();
     const prohibitedAreas: string[] = this.conf.activePlayer.prohibitedAreas;
+    const activePlayer: Player = this.conf.activePlayer;
     this.surroundingAreas.forEach(area => {
-      if (area && !prohibitedAreas.includes(area) && !this.fourInRow.exists(area)) {
+      if (area && !prohibitedAreas.includes(area) && !this.fourInRow.exists(area) && activePlayer.lastMove(area)) {
         this.createAllowedPositionElement(area, tempPositions);
       }
       gameboard.appendChild(tempPositions);
@@ -116,8 +118,7 @@ export class PhaseTwo extends Game {
     this.conf.activePiece!.element.style.gridArea = area;
     this.conf.activePiece!.area = area;
     this.conf.activePiece!.active = false;
-    // temp
-    // this.conf.activePiece!.element.textContent = area;
+    this.conf.activePlayer.registerLastMove(this.oldPos);
   }
 
   private configureGameData(area: string): void {

@@ -20,6 +20,9 @@ export class Player {
   prohibitedAreas: string[] = [];
   prohibitedAreasMadeByRows: string[] = [];
 
+  private lastMovePieceId: string = "";
+  private lastMovePieceArea: string = "";
+
   private settings: Settings = Settings.instance;
   private conf: Configuration = Configuration.instance;
 
@@ -57,6 +60,19 @@ export class Player {
     this.removePieceElement(piece);
     this.removePieceAreas(piece.area);
     this.removePieceObject(piece);
+  }
+
+  registerLastMove(oldPos: string): void {
+    this.lastMovePieceId = (<Piece>this.conf.activePiece).id;
+    this.lastMovePieceArea = oldPos;
+  }
+
+  lastMove(area: string): boolean {
+    if (this.lastMovePieceArea === area && this.lastMovePieceId === (<Piece>this.conf.activePiece).id) {
+      return false;
+    } else {
+      return true;
+    }
   }
 
   private updatePlayersGameboardAreas(area: string): void {
