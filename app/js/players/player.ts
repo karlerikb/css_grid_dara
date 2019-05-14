@@ -3,7 +3,7 @@ import { Settings } from "../conf/settings";
 import { Piece } from "./piece";
 import { Configuration } from "../conf/configuration";
 import { PlayerThreeInRow } from "../conf/custom-types";
-
+import { Hints } from "../hints/hints";
 
 export class Player {
   active: boolean = false;

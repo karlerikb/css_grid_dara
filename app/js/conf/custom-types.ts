@@ -39,7 +39,21 @@ export type ElementClasses = {
   pieceActivated: string,
   gameContainer: string,
   menu: string,
-  menuList: string
+  menuList: string,
+  hintsContainer: string,
+  playerInHints: string,
+  turnInHints: string,
+  gamePhase: string,
+  currentPhase: string,
+  additionalDetails: string,
+  hidden: string,
+  detail: string,
+  noThreeInRow: string,
+  pieceChangeAllowed: string,
+  lastMoveNotAllowed: string,
+  removingFromThreeInRowNotAllowed: string,
+  noFourInRow: string,
+  waitingThreeInRowSelection: string
 }
 
 export type ElementSelectors = {
@@ -49,7 +63,13 @@ export type ElementSelectors = {
   temporaryPositions: string,
   selectableRows: string,
   root: string,
-  gameContainer: string
+  gameContainer: string,
+  playerOneInHints: string,
+  playerTwoInHints: string,
+  playerOneTurnInHints: string,
+  playerTwoTurnInHints: string,
+  gamePhaseName: string,
+  detailsInHints: string
 }
 
 export type PlayerThreeInRow = {

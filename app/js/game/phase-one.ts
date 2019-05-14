@@ -1,6 +1,7 @@
 import { Game } from "./game";
 import { Piece } from "../players/piece";
 import { PlayerThreeInRow } from "../conf/custom-types";
+import { Hints } from "../hints/hints";
 
 export class PhaseOne extends Game {
   active: boolean = true;
@@ -46,7 +47,12 @@ export class PhaseOne extends Game {
     for (let row = 1; row <= 5; row++) {
       for (let column = 1; column <= 6; column++) {
         const area: string = `a${row}${column}`;
-        if (prohibitedAreas.includes(area)) continue;
+        if (prohibitedAreas.includes(area)) {
+          if (this.conf.activePlayer.prohibitedAreasMadeByRows.length > 0) {
+            Hints.instance.setNoThreeInRowAllowedDetail();
+          }
+          continue;
+        }
         this.createAllowedPositionElement(area, tempPositions);
       }
     }

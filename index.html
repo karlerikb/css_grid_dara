@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato:400">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato:400,700">
   <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
   
   <link rel="stylesheet" href="app/css/style.css">
@@ -20,9 +20,12 @@
     <div class="gameboard">
     </div>
     <div class="hintsContainer">
-      <p><span class="gamePhase"></span> <span class="playerTurn"></span></p>
-      <p><span class="turnDescription"></span></p>
-      <p><span class="additionDescription"></span></p>
+      <p class="playerInHints playerOne"></p>
+      <p class="playerInHints playerTwo"></p>
+      <p class="gamePhase">Käimas on mängu <strong class="currentPhase"></strong> faas</p>
+      <p class="turnInHints playerOne"></p>
+      <p class="turnInHints playerTwo"></p>
+      <div class="additionalDetails"></div>
     </div>
   </div>
   <script src="dist/bundle.js"></script>

@@ -46,7 +46,21 @@ export class Configuration {
     pieceActivated: "pieceActivated",
     gameContainer: "gameContainer",
     menu: "menu",
-    menuList: "gameMenuList"
+    menuList: "gameMenuList",
+    hintsContainer: "hintsContainer",
+    playerInHints: "playerInHints",
+    turnInHints: "turnInHints",
+    gamePhase: "gamePhase",
+    currentPhase: "currentPhase",
+    additionalDetails: "additionalDetails",
+    hidden: "hidden",
+    detail: "detail",
+    noThreeInRow: "noThreeInRow",
+    pieceChangeAllowed: "pieceChangeAllowed",
+    lastMoveNotAllowed: "lastMoveNotAllowed",
+    removingFromThreeInRowNotAllowed: "removingFromThreeInRowNotAllowed",
+    noFourInRow: "noFourInRow",
+    waitingThreeInRowSelection: "waitingThreeInRowSelection"
   }
 
   readonly selectors: ElementSelectors = {
@@ -56,7 +70,13 @@ export class Configuration {
     temporaryPositions: `.${this.classes.gameboard} > .${this.classes.temporaryPosition}`,
     selectableRows: `.${this.classes.threeInRow}.${this.classes.selectableRow}`,
     root: ":root",
-    gameContainer: `.${this.classes.gameContainer}`
+    gameContainer: `.${this.classes.gameContainer}`,
+    playerOneInHints: `.${this.classes.hintsContainer} .${this.classes.playerInHints}.${this.classes.playerOne}`,
+    playerTwoInHints: `.${this.classes.hintsContainer} .${this.classes.playerInHints}.${this.classes.playerTwo}`,
+    playerOneTurnInHints: `.${this.classes.hintsContainer} .${this.classes.turnInHints}.${this.classes.playerOne}`,
+    playerTwoTurnInHints: `.${this.classes.hintsContainer} .${this.classes.turnInHints}.${this.classes.playerTwo}`,
+    gamePhaseName: `.${this.classes.hintsContainer} .${this.classes.gamePhase} > .${this.classes.currentPhase}`,
+    detailsInHints: `.${this.classes.hintsContainer} .${this.classes.additionalDetails}`
   }
 
   readonly menuItems: MenuListItem[] = [

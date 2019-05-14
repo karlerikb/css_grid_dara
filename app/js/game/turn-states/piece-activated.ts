@@ -1,6 +1,7 @@
 import { GameTurn } from "../game-turn";
 import { Configuration } from "../../conf/configuration";
 import { State } from "../../conf/interfaces";
+import { Hints } from "../../hints/hints";
 
 export class PieceActivatedState implements State {
   private conf: Configuration = Configuration.instance;
@@ -17,6 +18,7 @@ export class PieceActivatedState implements State {
       this.deactivatePieces();
       this.removeActivePieceReference();
       this.removeGameboardPositions();
+      Hints.instance.setDefaultHints();
     } else {
       this.togglePieceActivation();
       this.highlightActivePiece();

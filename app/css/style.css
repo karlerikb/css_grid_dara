@@ -5,7 +5,8 @@ body {
 
 /* Defining Grid Elements */
 
-.gameContainer, .piecesContainer, .gameboard, .menu {
+.gameContainer, .piecesContainer, .hintsContainer,
+.additionalDetails, .gameboard, .menu {
   display: grid;
 }
 
@@ -155,11 +156,112 @@ body {
 /* Hints Container Element */
 
 .hintsContainer {
+  margin: 3vw 0;
   border-radius: 2px;
+  box-shadow: 0 0 2px 1px #575757;
   padding: 1vw;
+  width: 100%;
+  background: #eee;
+  font-size: calc(1rem / 2 + .5vw);
   text-align: center;
+  grid-template-columns: 1fr 2fr 1fr;
+  grid-template-areas:
+    "playerOneTurn           gamePhase              playerTwoTurn        "
+    "playerTurnDescription   playerTurnDescription  playerTurnDescription"
+    "additionalDetails       additionalDetails      additionalDetails    "
+  ;
   grid-area: hintsContainer
 }
+
+.playerInHints, .turnInHints,
+.gamePhase, .additionalDetails {
+  margin: .5vw;
+  border-radius: 2px;
+  box-shadow: 0 0 2px 1px #bbb;
+  padding: .75vw 1vw;
+  background: #ddd;
+  color: #999;
+  cursor: default;
+}
+
+.gamePhase {
+  background: #f9f9f9;
+  box-shadow: 0 0 2px 1px #777;
+  color: #333;
+}
+
+.playerInHints.active {
+  font-weight: 700;
+}
+
+.playerInHints.playerOne { grid-area: playerOneTurn; }
+.playerInHints.playerTwo { grid-area: playerTwoTurn; }
+
+.turnInHints.playerOne { grid-area: playerTurnDescription; }
+.turnInHints.playerTwo { grid-area: playerTurnDescription; }
+
+.playerInHints.playerOne,
+.turnInHints.playerOne,
+.additionalDetails.playerOne { justify-self: left; }
+.playerInHints.playerTwo,
+.turnInHints.playerTwo,
+.additionalDetails.playerTwo { justify-self: right; }
+
+.playerInHints.playerOne.active { background: #617ed4; }
+.playerInHints.playerTwo.active { background: #c54c4c; }
+
+.playerInHints.active {
+  box-shadow: 0 0 2px 1px #202020;
+  color: #f7f7f7;
+  text-shadow: 0 0 1px #555;
+}
+
+.turnInHints.active,
+.additionalDetails.playerOne,
+.additionalDetails.playerTwo {
+  box-shadow: 0 0 2px 1px #777;
+  color: #333;
+}
+
+
+.gamePhase {
+  grid-area: gamePhase;
+}
+.additionalDetails {
+  grid-area: additionalDetails;
+  grid-template-columns: 1fr;
+}
+
+.additionalDetails > .detail:first-child {
+  margin-top: 0;
+  margin-bottom: .25vw;
+}
+.additionalDetails > .detail {
+  margin: .25vw 0;
+}
+.additionalDetails > .detail:last-child {
+  margin-top: .25vw;
+  margin-bottom: 0;
+}
+.additionalDetails.playerOne { justify-items: left; }
+.additionalDetails.playerTwo { justify-items: right; }
+
+.additionalDetails.playerOne,
+.turnInHints.playerOne.active {
+  background: #afc1f1;
+}
+.additionalDetails.playerTwo,
+.turnInHints.playerTwo.active {
+  background: #eeb1b1;
+}
+
+.hintsContainer strong {
+  padding: 0 .25vw;
+  font-weight: 700;
+}
+
+
+
 
 
 /* Game Piece Elements */
@@ -273,3 +375,4 @@ body {
 .removed { display: none !important; }
 .notAllowed { cursor: not-allowed !important; }
 .selectable { cursor: pointer !important; }
+.hidden { visibility: hidden !important; }

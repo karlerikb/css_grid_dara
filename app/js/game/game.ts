@@ -7,6 +7,7 @@ import { Phase } from "../conf/custom-types";
 import { Helper } from "../conf/helper";
 import { ThreeInRow } from "./rows/three-in-row";
 import { FourInRow } from "./rows/four-in-row";
+import { Hints } from "../hints/hints";
 
 export abstract class Game {
   protected settings: Settings = Settings.instance;
@@ -81,6 +82,7 @@ export abstract class Game {
     const piecesAllowedOnTable: number = 2 * this.settings.piecesForEachPlayer;
     const gamePhases: number = this.conf.phases.length;
     if (piecesOnGameboard === piecesAllowedOnTable && gamePhases === 2) {
+      Hints.instance.switchPhaseInHints();
       this.switchPhase();
       this.removeInactivePhase();
     }

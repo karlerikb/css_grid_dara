@@ -2,6 +2,7 @@ import { Game } from "./game";
 import { GameboardAreas, PlayerThreeInRow } from "../conf/custom-types";
 import { Piece } from "../players/piece";
 import { Player } from "../players/player";
+import { Hints } from "../hints/hints";
 
 export class PhaseTwo extends Game {
   active: boolean = false;
@@ -96,12 +97,42 @@ export class PhaseTwo extends Game {
     const tempPositions: DocumentFragment = document.createDocumentFragment();
     const prohibitedAreas: string[] = this.conf.activePlayer.prohibitedAreas;
     const activePlayer: Player = this.conf.activePlayer;
+    // hints
+    const lastMovePositions: number[] = [];
+    const fourInRowPositions: number[] = [];
+
     this.surroundingAreas.forEach(area => {
       if (area && !prohibitedAreas.includes(area) && !this.fourInRow.exists(area) && activePlayer.lastMove(area)) {
         this.createAllowedPositionElement(area, tempPositions);
       }
+      // lastmove
+      if (area && !activePlayer.lastMove(area)) {
+        lastMovePositions.push(1);
+      } else {
+        lastMovePositions.push(0);
+      }
+      // fourinrows
+      if (area && this.fourInRow.exists(area)) {
+        fourInRowPositions.push(1);
+      } else {
+        fourInRowPositions.push(0);
+      }
+
       gameboard.appendChild(tempPositions);
     });
+    // lastmove
+    const lastMoveCount = lastMovePositions.reduce((valid, area) => valid + area);
+    if (lastMoveCount > 0) {
+      Hints.instance.setLastMoveNotAllowedDetail();
+    } else {
+      Hints.instance.removeLastMoveNotAllowedDetail();
+    }
+    const fourInRowCount = fourInRowPositions.reduce((valid, area) => valid + area);
+    if (fourInRowCount > 0) {
+      Hints.instance.setNoFourInRowAllowedDetail();
+    } else {
+      Hints.instance.removeNoFourInRowAllowedDetail();
+    }
   }
 
   private configure(area: string): void {

@@ -5,6 +5,7 @@ export interface NewElement {
   id?: string;
   class?: string;
   text?: string;
+  HTML?: string;
   area?: string;
   parent: HTMLElement | DocumentFragment;
 }
