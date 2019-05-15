@@ -97,42 +97,21 @@ export class PhaseTwo extends Game {
     const tempPositions: DocumentFragment = document.createDocumentFragment();
     const prohibitedAreas: string[] = this.conf.activePlayer.prohibitedAreas;
     const activePlayer: Player = this.conf.activePlayer;
-    // hints
-    const lastMovePositions: number[] = [];
-    const fourInRowPositions: number[] = [];
-
     this.surroundingAreas.forEach(area => {
       if (area && !prohibitedAreas.includes(area) && !this.fourInRow.exists(area) && activePlayer.lastMove(area)) {
         this.createAllowedPositionElement(area, tempPositions);
-      }
-      // lastmove
-      if (area && !activePlayer.lastMove(area)) {
-        lastMovePositions.push(1);
       } else {
-        lastMovePositions.push(0);
+        Hints.instance.findNoPositionsAvailableValidation(true);
       }
-      // fourinrows
-      if (area && this.fourInRow.exists(area)) {
-        fourInRowPositions.push(1);
-      } else {
-        fourInRowPositions.push(0);
+      if (area) {
+        Hints.instance.findLastMoveValidation(!activePlayer.lastMove(area));
+        Hints.instance.findFourInRowValidation(this.fourInRow.exists(area));
       }
-
       gameboard.appendChild(tempPositions);
     });
-    // lastmove
-    const lastMoveCount = lastMovePositions.reduce((valid, area) => valid + area);
-    if (lastMoveCount > 0) {
-      Hints.instance.setLastMoveNotAllowedDetail();
-    } else {
-      Hints.instance.removeLastMoveNotAllowedDetail();
-    }
-    const fourInRowCount = fourInRowPositions.reduce((valid, area) => valid + area);
-    if (fourInRowCount > 0) {
-      Hints.instance.setNoFourInRowAllowedDetail();
-    } else {
-      Hints.instance.removeNoFourInRowAllowedDetail();
-    }
+    Hints.instance.findLastMoveValidCount();
+    Hints.instance.findFourInRowValidCount();
+    Hints.instance.findNoPositionsAvailableValidCount();
   }
 
   private configure(area: string): void {

@@ -4,10 +4,12 @@ import { Helper } from "../conf/helper";
 export class Hints {
   private static _instance: Hints;
   private conf: Configuration = Configuration.instance;
+
   private gameTurnDescriptions = {
     waitingTurn: "Oodatakse mängukorda...",
     waitingPieceActivation: "Vali mängunupp...",
     waitingPositionSelection: "Vali positsioon mängulaual...",
+    noPositionAvailable: "Selle nupuga käia ei saa, aktiveeri mõni teine mängunupp...",
     movingPiece: "Nuppu liigutatakse...",
     waitingThreeInRowSelection: "Vali üks kolmestest ridadest...",
     removeOpponentPiece: "Tekitasid kolmese rea! Eemalda vastaselt üks mängunupp...",
@@ -35,6 +37,11 @@ export class Hints {
       text: "Nupu liigutamisel <strong>ei tohi</strong> tekkida neljast rida"
     }
   }
+
+  private lastMoveValidation: number[] = [];
+  private fourInRowValidation: number[] = [];
+  private noPositionsAvailableValidation: number[] = [];
+
 
   private constructor() {
   }
@@ -74,16 +81,66 @@ export class Hints {
     this.resetAdditionalDetails();
   }
 
+  private setNoPieceAvailableHints(): void {
+    this.activePlayerTurnDescription.textContent = this.gameTurnDescriptions.noPositionAvailable;
+    this.showAdditionalDetails();
+    this.setPieceChangeAllowedDetail();
+  }
 
-  private setRemovingFromThreeInRowNotAllowedDetail(): void {
-    if (this.conf.inactivePlayer.threeInRows.length > 0) {
-      this.showAdditionalDetails();
-      this.additionalDetails.removingFromThreeInRowNotAllowed.active = true;
-      this.configureAdditionalDetails();
+
+
+  findLastMoveValidation(lastMoveFlag: boolean): void {
+    if (lastMoveFlag) {
+      this.lastMoveValidation.push(1);
     } else {
-      this.resetAdditionalDetails();
+      this.lastMoveValidation.push(0);
     }
   }
+
+  findLastMoveValidCount(): void {
+    const validCount: number = this.lastMoveValidation.reduce((count, valid) => count + valid);
+    if (validCount > 0) {
+      this.setLastMoveNotAllowedDetail();
+    } else {
+      this.removeLastMoveNotAllowedDetail();
+    }
+    this.lastMoveValidation = [];
+  }
+
+  findFourInRowValidation(fourInRowFlag: boolean): void {
+    if (fourInRowFlag) {
+      this.fourInRowValidation.push(1);
+    } else {
+      this.fourInRowValidation.push(0);
+    }
+  }
+
+  findFourInRowValidCount(): void {
+    const validCount: number = this.fourInRowValidation.reduce((count, valid) => count + valid);
+    if (validCount > 0) {
+      this.setNoFourInRowAllowedDetail();
+    } else {
+      this.removeNoFourInRowAllowedDetail();
+    }
+    this.fourInRowValidation = [];
+  }
+
+  findNoPositionsAvailableValidation(noPositionsFlag: boolean): void {
+    if (noPositionsFlag) {
+      this.noPositionsAvailableValidation.push(1);
+    }
+  }
+
+  findNoPositionsAvailableValidCount(): void {
+    const validCount: number = this.noPositionsAvailableValidation.reduce((count, valid) => count + valid);
+    if (validCount === 4) {
+      this.setNoPieceAvailableHints();
+    } else {
+      this.setPieceActivationHints();
+    }
+    this.noPositionsAvailableValidation = [];
+  }
+
 
   setNoThreeInRowAllowedDetail(): void {
     if (this.conf.activePhase.name === "one") {
@@ -110,6 +167,16 @@ export class Hints {
   removeNoFourInRowAllowedDetail(): void {
     this.additionalDetails.noFourInRow.active = false;
     this.configureAdditionalDetails();
+  }
+
+  private setRemovingFromThreeInRowNotAllowedDetail(): void {
+    if (this.conf.inactivePlayer.threeInRows.length > 0) {
+      this.showAdditionalDetails();
+      this.additionalDetails.removingFromThreeInRowNotAllowed.active = true;
+      this.configureAdditionalDetails();
+    } else {
+      this.resetAdditionalDetails();
+    }
   }
 
   private setPieceChangeAllowedDetail(): void {
