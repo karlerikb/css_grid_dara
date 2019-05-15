@@ -32,6 +32,10 @@ export class Hints {
       active: false,
       text: "Mängunuppu <strong>ei saa</strong> eemaldada vastase kolmesest reast"
     },
+    removingFromThreeInRowIsAllowed: {
+      active: false,
+      text: "Erandkorras <strong>saab</strong> mängunupu eemaldada vastase kolmesest reast!"
+    },
     noFourInRow: {
       active: false,
       text: "Nupu liigutamisel <strong>ei tohi</strong> tekkida neljast rida"
@@ -80,14 +84,6 @@ export class Hints {
     this.activePlayerTurnDescription.textContent = this.gameTurnDescriptions.waitingThreeInRowSelection;
     this.resetAdditionalDetails();
   }
-
-  private setNoPieceAvailableHints(): void {
-    this.activePlayerTurnDescription.textContent = this.gameTurnDescriptions.noPositionAvailable;
-    this.showAdditionalDetails();
-    this.setPieceChangeAllowedDetail();
-  }
-
-
 
   findLastMoveValidation(lastMoveFlag: boolean): void {
     if (lastMoveFlag) {
@@ -147,7 +143,6 @@ export class Hints {
     }
   }
 
-
   setNoThreeInRowAllowedDetail(): void {
     if (this.conf.activePhase.name === "one") {
       this.additionalDetails.noThreeInRow.active = true;
@@ -175,10 +170,26 @@ export class Hints {
     this.configureAdditionalDetails();
   }
 
+  private setNoPieceAvailableHints(): void {
+    this.activePlayerTurnDescription.textContent = this.gameTurnDescriptions.noPositionAvailable;
+    this.showAdditionalDetails();
+    this.setPieceChangeAllowedDetail();
+  }
+
   private setRemovingFromThreeInRowNotAllowedDetail(): void {
-    if (this.conf.inactivePlayer.threeInRows.length > 0) {
-      this.showAdditionalDetails();
+    let piecesNotInRows: number = 0;
+    this.conf.inactivePlayer.pieces.forEach(piece => {
+      if (!piece.partOfThreeInRow) {
+        piecesNotInRows++;
+      }
+    });
+    this.showAdditionalDetails();
+    if (this.conf.inactivePlayer.threeInRows.length > 0 && piecesNotInRows > 0) {
       this.additionalDetails.removingFromThreeInRowNotAllowed.active = true;
+      this.configureAdditionalDetails();
+    } else if (this.conf.inactivePlayer.threeInRows.length > 0 && piecesNotInRows === 0) {
+      this.additionalDetails.removingFromThreeInRowNotAllowed.active = false;
+      this.additionalDetails.removingFromThreeInRowIsAllowed.active = true;
       this.configureAdditionalDetails();
     } else {
       this.resetAdditionalDetails();

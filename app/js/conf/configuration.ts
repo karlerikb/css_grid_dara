@@ -60,6 +60,7 @@ export class Configuration {
     pieceChangeAllowed: "pieceChangeAllowed",
     lastMoveNotAllowed: "lastMoveNotAllowed",
     removingFromThreeInRowNotAllowed: "removingFromThreeInRowNotAllowed",
+    removingFromThreeInRowIsAllowed: "removingFromThreeInRowIsAllowed",
     noFourInRow: "noFourInRow",
     waitingThreeInRowSelection: "waitingThreeInRowSelection"
   }

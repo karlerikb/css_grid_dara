@@ -53,6 +53,7 @@ export type ElementClasses = {
   pieceChangeAllowed: string,
   lastMoveNotAllowed: string,
   removingFromThreeInRowNotAllowed: string,
+  removingFromThreeInRowIsAllowed: string,
   noFourInRow: string,
   waitingThreeInRowSelection: string
 }

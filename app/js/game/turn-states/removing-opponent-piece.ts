@@ -27,7 +27,7 @@ export class RemovingOpponentPiece implements State {
     this.determineRowDimension(areas);
     this.configurePlayerPieces(areas);
     this.configureOpponentPieces();
-    this.enableOpponentPieceRemoval();
+    this.determineWhichPiecesCanBeRemoved();
   }
 
   enableMultipleThreeInRowSelection(): void {
@@ -84,7 +84,28 @@ export class RemovingOpponentPiece implements State {
     });
   }
 
-  private enableOpponentPieceRemoval(): void {
+  private determineWhichPiecesCanBeRemoved(): void {
+    let piecesNotInRows: number = 0;
+    this.conf.inactivePlayer.pieces.forEach(piece => {
+      if (!piece.partOfThreeInRow) {
+        piecesNotInRows++;
+      }
+    });
+    if (piecesNotInRows > 0) {
+      this.enableNormalOpponentPieceRemoval();
+    } else {
+      this.enableRemovalFromThreeInRows();
+    }
+  }
+
+  private enableRemovalFromThreeInRows(): void {
+    this.conf.inactivePlayer.pieces.forEach(piece => {
+      piece.element.classList.add(this.conf.classes.removePiece);
+      piece.element.addEventListener("click", this.conf.eventListeners.removingOpponentPiece);
+    });
+  }
+
+  private enableNormalOpponentPieceRemoval(): void {
     this.conf.inactivePlayer.pieces.forEach(piece => {
       if (piece.partOfThreeInRow) {
         piece.element.classList.add(this.conf.classes.notAllowed);

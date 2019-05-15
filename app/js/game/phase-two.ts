@@ -12,12 +12,6 @@ export class PhaseTwo extends Game {
   private oldPos: string = "";
   private newPos: string = "";
 
-  // used a guide https://www.kirupa.com/html5/press_and_hold.htm for hold and press functionality
-  // time: number = 0;
-  // timeMaxDuration: number = 60;
-  // timerFunctionId: number = 0;
-  // private rowChosenEvent = new CustomEvent("rowChosen");
-
   constructor() {
     super();
   }
@@ -41,6 +35,9 @@ export class PhaseTwo extends Game {
 
   removeOpponentPiece(target: EventTarget): void {
     const piece: Piece = <Piece>this.conf.inactivePlayer.pieces.find(piece => piece.element === target);
+    if (piece.partOfThreeInRow) {
+      this.removeOpponentThreeInRow(piece);
+    }
     this.conf.inactivePlayer.removePiece(piece);
     this.resetPieceRemoval();
     this.switchTurn();
@@ -68,11 +65,20 @@ export class PhaseTwo extends Game {
     this.threeInRow.existsAfterSelection();
   }
 
+  private removeOpponentThreeInRow(piece: Piece): void {
+    piece.player.threeInRows.forEach((threeInRow, index) => {
+      if (threeInRow.areas.includes(piece.area)) {
+        this.configurePiecesWhenRemovedFromThreeInRow(threeInRow.areas);
+        threeInRow.element.remove();
+        this.conf.inactivePlayer.threeInRows.splice(index, 1);
+      }
+    });
+  }
+
   private startPressDownCounter(target: EventTarget): void {
     PressDownTimer.instance.element = <HTMLElement>target;
     requestAnimationFrame(PressDownTimer.instance.timerFunction);
   }
-
 
   private determineAreasForSelectedThreeInRow(target: EventTarget): void {
     const chosenRow: PlayerThreeInRow = <PlayerThreeInRow>this.temporaryThreeInRows.find(threeInRow => {
@@ -189,6 +195,13 @@ export class PhaseTwo extends Game {
     areas.splice(areas.indexOf(this.oldPos), 1, this.newPos); // making an array which can be iterated over
     areas.forEach(area => {
       const piece: Piece = <Piece>this.conf.activePiece!.player.pieces.find(piece => piece.area === area);
+      piece.partOfThreeInRow = false;
+    });
+  }
+
+  private configurePiecesWhenRemovedFromThreeInRow(areas: string[]): void {
+    areas.forEach(area => {
+      const piece: Piece = <Piece>this.conf.inactivePlayer.pieces.find(piece => piece.area === area);
       piece.partOfThreeInRow = false;
     });
   }
