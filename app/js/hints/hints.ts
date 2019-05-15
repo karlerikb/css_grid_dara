@@ -98,13 +98,15 @@ export class Hints {
   }
 
   findLastMoveValidCount(): void {
-    const validCount: number = this.lastMoveValidation.reduce((count, valid) => count + valid);
-    if (validCount > 0) {
-      this.setLastMoveNotAllowedDetail();
-    } else {
-      this.removeLastMoveNotAllowedDetail();
+    if (this.lastMoveValidation.length > 0) {
+      const validCount: number = this.lastMoveValidation.reduce((count, valid) => count + valid);
+      if (validCount > 0) {
+        this.setLastMoveNotAllowedDetail();
+      } else {
+        this.removeLastMoveNotAllowedDetail();
+      }
+      this.lastMoveValidation = [];
     }
-    this.lastMoveValidation = [];
   }
 
   findFourInRowValidation(fourInRowFlag: boolean): void {
@@ -116,13 +118,15 @@ export class Hints {
   }
 
   findFourInRowValidCount(): void {
-    const validCount: number = this.fourInRowValidation.reduce((count, valid) => count + valid);
-    if (validCount > 0) {
-      this.setNoFourInRowAllowedDetail();
-    } else {
-      this.removeNoFourInRowAllowedDetail();
+    if (this.fourInRowValidation.length > 0) {
+      const validCount: number = this.fourInRowValidation.reduce((count, valid) => count + valid);
+      if (validCount > 0) {
+        this.setNoFourInRowAllowedDetail();
+      } else {
+        this.removeNoFourInRowAllowedDetail();
+      }
+      this.fourInRowValidation = [];
     }
-    this.fourInRowValidation = [];
   }
 
   findNoPositionsAvailableValidation(noPositionsFlag: boolean): void {
@@ -132,13 +136,15 @@ export class Hints {
   }
 
   findNoPositionsAvailableValidCount(): void {
-    const validCount: number = this.noPositionsAvailableValidation.reduce((count, valid) => count + valid);
-    if (validCount === 4) {
-      this.setNoPieceAvailableHints();
-    } else {
-      this.setPieceActivationHints();
+    if (this.noPositionsAvailableValidation.length > 0) {
+      const validCount: number = this.noPositionsAvailableValidation.reduce((count, valid) => count + valid);
+      if (validCount === 4) {
+        this.setNoPieceAvailableHints();
+      } else {
+        this.setPieceActivationHints();
+      }
+      this.noPositionsAvailableValidation = [];
     }
-    this.noPositionsAvailableValidation = [];
   }
 
 
