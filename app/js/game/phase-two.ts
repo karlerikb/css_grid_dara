@@ -3,6 +3,7 @@ import { GameboardAreas, PlayerThreeInRow } from "../conf/custom-types";
 import { Piece } from "../players/piece";
 import { Player } from "../players/player";
 import { Hints } from "../hints/hints";
+import { PressDownTimer } from "../misc/pressdown-timer";
 
 export class PhaseTwo extends Game {
   active: boolean = false;
@@ -10,6 +11,12 @@ export class PhaseTwo extends Game {
   readonly name: string = "two";
   private oldPos: string = "";
   private newPos: string = "";
+
+  // used a guide https://www.kirupa.com/html5/press_and_hold.htm for hold and press functionality
+  // time: number = 0;
+  // timeMaxDuration: number = 60;
+  // timerFunctionId: number = 0;
+  // private rowChosenEvent = new CustomEvent("rowChosen");
 
   constructor() {
     super();
@@ -39,14 +46,20 @@ export class PhaseTwo extends Game {
     this.switchTurn();
   }
 
-  initializeRowSelection(target: EventTarget): void {
+  initializeRowSelection(e: any): void {
+    e.preventDefault();
     const indicationElements: NodeListOf<Element> = document.querySelectorAll(this.conf.selectors.selectableRows);
     for (let indicationElement of indicationElements) {
       indicationElement.classList.remove(this.conf.classes.selectedRow);
       indicationElement.classList.add(this.conf.classes.unselectedRow);
     }
-    (<HTMLElement>target).classList.remove(this.conf.classes.unselectedRow);
-    (<HTMLElement>target).classList.add(this.conf.classes.selectedRow);
+    (<HTMLElement>e.target).classList.remove(this.conf.classes.unselectedRow);
+    (<HTMLElement>e.target).classList.add(this.conf.classes.selectedRow);
+    this.startPressDownCounter(e.target);
+  }
+
+  cancelRowSelection(): void {
+    PressDownTimer.instance.cancelTimer();
   }
 
   finalizeRowSelection(target: EventTarget): void {
@@ -54,6 +67,12 @@ export class PhaseTwo extends Game {
     this.removeTemporaryThreeInRows();
     this.threeInRow.existsAfterSelection();
   }
+
+  private startPressDownCounter(target: EventTarget): void {
+    PressDownTimer.instance.element = <HTMLElement>target;
+    requestAnimationFrame(PressDownTimer.instance.timerFunction);
+  }
+
 
   private determineAreasForSelectedThreeInRow(target: EventTarget): void {
     const chosenRow: PlayerThreeInRow = <PlayerThreeInRow>this.temporaryThreeInRows.find(threeInRow => {

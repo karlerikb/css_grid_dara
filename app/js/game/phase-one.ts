@@ -28,15 +28,19 @@ export class PhaseOne extends Game {
     }
   }
 
-  removeOpponentPiece(target: EventTarget): void {
+  removeOpponentPiece(): void {
     throw new Error("Cannot remove opponent pieces in phase one!");
   }
 
-  initializeRowSelection(target: EventTarget): void {
+  initializeRowSelection(): void {
     throw new Error("Cannot initialize three-in-row selection in phase one!");
   }
 
-  finalizeRowSelection(target: EventTarget): void {
+  cancelRowSelection(): void {
+    throw new Error("Cannot cancel a three-in-row selection in phase one!");
+  }
+
+  finalizeRowSelection(): void {
     throw new Error("Cannot finalize three-in-row selection in phase one!");
   }
 

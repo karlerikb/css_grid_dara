@@ -18,6 +18,7 @@ export class Configuration {
     movementEnds: this.movementEnds.bind(this),
     removingOpponentPiece: this.removeOpponentPiece.bind(this),
     initializingRowSelection: this.initializeRowSelection.bind(this),
+    cancellingRowSelection: this.cancelRowSelection.bind(this),
     finalizingRowSelection: this.finalizeRowSelection.bind(this),
     openingMenu: this.openMenu.bind(this),
     closingMenu: this.closeMenu.bind(this),
@@ -105,18 +106,22 @@ export class Configuration {
   }
 
   private initializeRowSelection(e: any): void {
-    this.activePhase.initializeRowSelection(e.target);
+    this.activePhase.initializeRowSelection(e);
+  }
+
+  private cancelRowSelection(): void {
+    this.activePhase.cancelRowSelection();
   }
 
   private finalizeRowSelection(e: any): void {
     this.activePhase.finalizeRowSelection(e.target);
   }
 
-  private openMenu(e: any): void {
+  private openMenu(): void {
     Menu.instance.open();
   }
 
-  private closeMenu(e: any): void {
+  private closeMenu(): void {
     Menu.instance.close();
   }
 

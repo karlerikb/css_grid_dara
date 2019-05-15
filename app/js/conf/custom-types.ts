@@ -11,6 +11,7 @@ export type EventListenerCollection = {
   movementEnds: (e: any) => void,
   removingOpponentPiece: (e:any) => void,
   initializingRowSelection: (e: any) => void,
+  cancellingRowSelection: (e: any) => void,
   finalizingRowSelection: (e: any) => void,
   openingMenu: (e: any) => void,
   closingMenu: (e: any) => void,

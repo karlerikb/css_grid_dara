@@ -59,8 +59,12 @@ export class WaitingThreeInRowSelection implements State {
   }
 
   private configureIndicationElements(indicationElement: HTMLElement): void {
-    indicationElement.addEventListener("click", this.conf.eventListeners.initializingRowSelection);
+    indicationElement.addEventListener("mousedown", this.conf.eventListeners.initializingRowSelection);
+    indicationElement.addEventListener("touchstart", this.conf.eventListeners.initializingRowSelection);
+    indicationElement.addEventListener("mouseup", this.conf.eventListeners.cancellingRowSelection);
+    indicationElement.addEventListener("touchend", this.conf.eventListeners.cancellingRowSelection);
     indicationElement.addEventListener("dblclick", this.conf.eventListeners.finalizingRowSelection);
+    indicationElement.addEventListener("rowselected", this.conf.eventListeners.finalizingRowSelection);
   }
 
   private createHorizontalIndication(areas: string[]): void {
