@@ -14,6 +14,10 @@ export class Menu {
   }
 
   private init(): void {
+    OpenMenu.instance.active = true;
+    CloseMenu.instance.active = false;
+    OpenMenu.instance.element = null;
+    CloseMenu.instance.element = null;
     (<MenuButton>this.menuButtons.find(btn => btn.active)).create();
   }
 
@@ -37,6 +41,7 @@ export class Menu {
   }
 
   reset(): void {
+    Menu.instance.menuButtons = [];
     Menu._instance = null;
   }
 

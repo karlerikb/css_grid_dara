@@ -40,7 +40,7 @@ export class Hints {
     },
     noFourInRow: {
       active: false,
-      text: "Nupu liigutamisel <strong>ei tohi</strong> tekkida neljast rida"
+      text: "Nupu liigutamisel <strong>ei tohi</strong> tekkida neljast rida (kolmese rea nupp läheb arvesse...)"
     },
     piecesAmount: {
       active: false,
