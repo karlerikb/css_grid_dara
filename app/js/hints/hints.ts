@@ -13,6 +13,8 @@ export class Hints {
     movingPiece: "Nuppu liigutatakse...",
     waitingThreeInRowSelection: "Vali üks kolmestest ridadest...",
     removeOpponentPiece: "Tekitasid kolmese rea! Eemalda vastaselt üks mängunupp...",
+    winMessage: "<strong>Tubli!</strong> Võitsid mängu!",
+    loseMessage: "Proovi uuesti järgmises mängus..."
   };
 
   private additionalDetails = {
@@ -48,6 +50,18 @@ export class Hints {
 
 
   private constructor() {
+  }
+
+  setWinScenarioInHints(): void {
+    (<HTMLElement>document.querySelector(this.conf.selectors.gamePhase)).innerHTML = "<strong>Mäng on läbi!</strong>";
+    this.activePlayerTurnDescription.innerHTML = this.gameTurnDescriptions.winMessage;
+    this.inactivePlayerTurnDescription.textContent = this.gameTurnDescriptions.loseMessage;
+    if (this.conf.activePlayer.numberString === "one") {
+      this.activePlayerInHints.innerHTML = `<span class="trophy"><i class="fas fa-trophy"></i></span> ${this.conf.activePlayer.name}`;
+    }
+    if (this.conf.activePlayer.numberString === "two") {
+      this.activePlayerInHints.innerHTML = `${this.conf.activePlayer.name} <span class="trophy"><i class="fas fa-trophy"></i></span> `;
+    }
   }
 
   switchPhaseInHints(): void {

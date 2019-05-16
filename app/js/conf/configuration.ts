@@ -62,7 +62,9 @@ export class Configuration {
     removingFromThreeInRowNotAllowed: "removingFromThreeInRowNotAllowed",
     removingFromThreeInRowIsAllowed: "removingFromThreeInRowIsAllowed",
     noFourInRow: "noFourInRow",
-    waitingThreeInRowSelection: "waitingThreeInRowSelection"
+    waitingThreeInRowSelection: "waitingThreeInRowSelection",
+    afterWin: "afterWin",
+    winScenarioTitle: "winScenarioTitle"
   }
 
   readonly selectors: ElementSelectors = {
@@ -77,14 +79,16 @@ export class Configuration {
     playerTwoInHints: `.${this.classes.hintsContainer} .${this.classes.playerInHints}.${this.classes.playerTwo}`,
     playerOneTurnInHints: `.${this.classes.hintsContainer} .${this.classes.turnInHints}.${this.classes.playerOne}`,
     playerTwoTurnInHints: `.${this.classes.hintsContainer} .${this.classes.turnInHints}.${this.classes.playerTwo}`,
+    gamePhase: `.${this.classes.hintsContainer} .${this.classes.gamePhase}`,
     gamePhaseName: `.${this.classes.hintsContainer} .${this.classes.gamePhase} > .${this.classes.currentPhase}`,
     detailsInHints: `.${this.classes.hintsContainer} .${this.classes.additionalDetails}`
   }
 
   readonly menuItems: MenuListItem[] = [
-    { option: "resume", text: "Jätka mängu", eventListener: this.eventListeners.closingMenu },
-    { option: "settings", text: "Mängu seaded", eventListener: this.eventListeners.openingSettings },
-    { option: "exit", text: "Välju mängust", eventListener: this.eventListeners.closingApp }
+    { active: false, option: "restart", text: "Uus mäng", eventListener: () => { console.log("uus mäng"); } },
+    { active: true, option: "resume", text: "Jätka mängu", eventListener: this.eventListeners.closingMenu },
+    { active: true, option: "settings", text: "Mängu seaded", eventListener: this.eventListeners.openingSettings },
+    { active: true, option: "exit", text: "Välju mängust", eventListener: this.eventListeners.closingApp }
   ];
 
   private constructor() {

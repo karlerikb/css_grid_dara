@@ -55,7 +55,9 @@ export type ElementClasses = {
   removingFromThreeInRowNotAllowed: string,
   removingFromThreeInRowIsAllowed: string,
   noFourInRow: string,
-  waitingThreeInRowSelection: string
+  waitingThreeInRowSelection: string,
+  afterWin: string,
+  winScenarioTitle: string
 }
 
 export type ElementSelectors = {
@@ -70,6 +72,7 @@ export type ElementSelectors = {
   playerTwoInHints: string,
   playerOneTurnInHints: string,
   playerTwoTurnInHints: string,
+  gamePhase: string,
   gamePhaseName: string,
   detailsInHints: string
 }
@@ -80,6 +83,7 @@ export type PlayerThreeInRow = {
 }
 
 export type MenuListItem = {
+  active: boolean,
   option: string,
   text: string,
   eventListener: (e: any) => void

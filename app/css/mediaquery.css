@@ -107,4 +107,10 @@
   .gameMenuList > li {
     padding: 2vw 15vw;;
   }
+
+  /* Win Scenario Title */
+
+  .winScenarioTitle {
+    display: none;
+  }
 }

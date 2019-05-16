@@ -8,6 +8,7 @@ import { Helper } from "../conf/helper";
 import { ThreeInRow } from "./rows/three-in-row";
 import { FourInRow } from "./rows/four-in-row";
 import { Hints } from "../hints/hints";
+import { Menu } from "../menu/menu";
 
 export abstract class Game {
   protected settings: Settings = Settings.instance;
@@ -43,6 +44,7 @@ export abstract class Game {
   protected switchTurn(): void {
     this.switchPlayers();
     this.testPhase();
+    this.testWinCondition();
   }
 
   protected activatePlayer(): void {
@@ -99,6 +101,42 @@ export abstract class Game {
   private removeInactivePhase(): void {
     const inactivePhaseIndex: number = this.conf.phases.indexOf(<Phase>this.conf.inactivePhase);
     this.conf.phases.splice(inactivePhaseIndex, 1);
+  }
+
+  private testWinCondition(): void {
+    this.testPiecesAmountOnTable();
+    // this.testPieceMovementAvailabilityOnTable();
+  }
+
+  private testPiecesAmountOnTable(): void {
+    if (this.conf.activePlayer.pieces.length < 3) {
+      this.initiateWinScenario("piecesAmount");
+    }
+  }
+
+  private testPieceMovementAvailabilityOnTable(): void {
+    if (this.conf.activePlayer.pieces.length > 2 /* && no pieces has movement available */) {
+      // ...
+    }
+  }
+
+  private initiateWinScenario(scenario: string): void {
+    console.log(scenario);
+    this.switchPlayers();
+    this.configurePiecesAfterWin();
+    Hints.instance.setWinScenarioInHints();
+    Menu.instance.setWinScenarioInMenu();
+  }
+
+  private configurePiecesAfterWin(): void {
+    this.conf.allPlayerPieces.forEach(piece => {
+      piece.element.classList.remove(this.conf.classes.notAllowed, this.conf.classes.playerTurn);
+      piece.element.classList.add(this.conf.classes.afterWin);
+    });
+    this.conf.activePlayer.pieces.forEach(piece => {
+      piece.element.classList.add(this.conf.classes.dehighlighted);
+      piece.element.removeEventListener("click", this.conf.eventListeners.activatingPiece);
+    });
   }
 
 

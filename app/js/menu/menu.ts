@@ -3,6 +3,7 @@ import { Helper } from "../conf/helper";
 import { Configuration } from "../conf/configuration";
 
 export class Menu {
+  private gameOver: boolean = false;
   private element: HTMLElement | null = null;
   private menuButtons: MenuButton[] = [OpenMenu.instance, CloseMenu.instance];
   private conf: Configuration = Configuration.instance;
@@ -30,10 +31,20 @@ export class Menu {
     }
   }
 
+  setWinScenarioInMenu(): void {
+    this.gameOver = true;
+    this.open();
+  }
+
   private create(): void {
     this.createMenuElement();
     this.createPlayerTitles();
     this.createMenuList();
+    if (this.gameOver) {
+      this.configureWinningPlayer();
+      this.createWinScenarioTitle();
+      this.createWinScenarioMenu();
+    }
   }
 
   private removeMenuElement(): void {
@@ -64,12 +75,18 @@ export class Menu {
       type: "ul", class: this.conf.classes.menuList,
       parent: <HTMLElement>this.element
     });
+    this.createMenuListItems(menuList);
+  }
+
+  private createMenuListItems(menuList: HTMLElement): void {
     this.conf.menuItems.forEach(item => {
-      const listItem = Helper.create({
-        type: "li", class: item.option, text: item.text,
-        parent: menuList
-      });
-      listItem.addEventListener("click", item.eventListener);
+      if (item.active) {
+        const listItem = Helper.create({
+          type: "li", class: item.option, text: item.text,
+          parent: menuList
+        });
+        listItem.addEventListener("click", item.eventListener);
+      }
     });
   }
 
@@ -78,6 +95,37 @@ export class Menu {
     const inactiveBtn: MenuButton = <MenuButton>this.menuButtons.find(btn => !btn.active);
     activeBtn.active = false; activeBtn.remove();
     inactiveBtn.active = true; inactiveBtn.create();
+  }
+
+  private configureWinningPlayer(): void {
+    const winningPlayerTitle: HTMLElement = <HTMLElement>document.querySelector(
+      `.player${this.conf.activePlayer.numberStringUpperCase}Title`
+    );
+    winningPlayerTitle.innerHTML = `
+      <div>${this.conf.activePlayer.name}</div>
+      <div class="trophy"><i class="fas fa-trophy"></i></div>
+    `;
+  }
+
+  private createWinScenarioTitle(): void {
+    const winningText: string = `
+      <strong>Mäng on läbi!</strong> <span class="winningPlayer">${this.conf.activePlayer.name}</span> võitis!
+    `;
+    Helper.create({
+      type: "div", class: this.conf.classes.winScenarioTitle,
+      HTML: winningText,
+      parent: <HTMLElement>this.element
+    });
+  }
+
+  private createWinScenarioMenu(): void {
+    const menuList: HTMLElement = (<HTMLElement>document.querySelector(`.${this.conf.classes.menuList}`));
+    menuList.innerHTML = "";
+    this.conf.menuItems.forEach(item => {
+      if (item.option === "restart") item.active = true;
+      if (item.option === "resume") item.active = false;
+    });
+    this.createMenuListItems(menuList);
   }
 
   public static get instance(): Menu {
