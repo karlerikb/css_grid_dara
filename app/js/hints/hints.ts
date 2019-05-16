@@ -2,7 +2,7 @@ import { Configuration } from "../conf/configuration";
 import { Helper } from "../conf/helper";
 
 export class Hints {
-  private static _instance: Hints;
+  private static _instance: Hints | null;
   private conf: Configuration = Configuration.instance;
 
   private gameTurnDescriptions = {
@@ -58,6 +58,7 @@ export class Hints {
 
 
   private constructor() {
+    this.init();
   }
 
   setWinScenarioInHints(scenario: string): void {
@@ -82,6 +83,9 @@ export class Hints {
   }
 
   switchPhaseInHints(): void {
+    if (!this.gamePhaseInHints.innerHTML) {
+      this.gamePhaseInHints.innerHTML = `Käimas on mängu <strong class="currentPhase"></strong> faas`;
+    }
     this.phaseInHints.textContent = (this.conf.activePhase.name === "one") ? "esimene" : "teine";
   }
 
@@ -201,6 +205,35 @@ export class Hints {
     this.configureAdditionalDetails();
   }
 
+  reset(): void {
+    Hints._instance = null;
+  }
+
+  private init(): void {
+    this.createHintsContainerElements();
+  }
+
+  private createHintsContainerElements(): void {
+    const hintsContainer = <HTMLElement>document.querySelector(`.${this.conf.classes.hintsContainer}`);
+    const paragraphElements: string[][] = [
+      [this.conf.classes.playerInHints, this.conf.classes.playerOne],
+      [this.conf.classes.playerInHints, this.conf.classes.playerTwo],
+      [this.conf.classes.gamePhase],
+      [this.conf.classes.turnInHints, this.conf.classes.playerOne],
+      [this.conf.classes.turnInHints, this.conf.classes.playerTwo],
+    ];
+    paragraphElements.forEach(classes => {
+      Helper.create({
+        type: "p", class: classes.join(" "),
+        parent: hintsContainer
+      });
+    });
+    Helper.create({
+      type: "div", class: this.conf.classes.additionalDetails,
+      parent: hintsContainer
+    });
+  }
+
   private setNoPieceAvailableHints(): void {
     this.activePlayerTurnDescription.textContent = this.gameTurnDescriptions.noPositionAvailable;
     this.showAdditionalDetails();
@@ -276,9 +309,6 @@ export class Hints {
     this.createAdditionalDetails();
   }
 
-
-
-
   private setPlayerNamesInHints(): void {
     this.activePlayerName();
     this.inactivePlayerName();
@@ -313,8 +343,6 @@ export class Hints {
     this.inactivePlayerTurnDescription.classList.remove(this.conf.classes.activeContainer);
   }
 
-
-
   private get activePlayerTurnDescription(): HTMLElement {
     return <HTMLElement>document.querySelector(
       this.conf.selectors[`player${this.conf.activePlayer.numberStringUpperCase}TurnInHints`]
@@ -346,6 +374,9 @@ export class Hints {
   }
   private get phaseInHints(): HTMLElement {
     return <HTMLElement>document.querySelector(this.conf.selectors.gamePhaseName);
+  }
+  private get gamePhaseInHints(): HTMLElement {
+    return <HTMLElement>document.querySelector(this.conf.selectors.gamePhase);
   }
   public static get instance(): Hints {
     if (!Hints._instance) {

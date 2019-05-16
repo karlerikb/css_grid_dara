@@ -4,36 +4,68 @@ import { Player } from "./players/player";
 import { PhaseOne } from "./game/phase-one";
 import { PhaseTwo } from "./game/phase-two";
 import { Menu } from "./menu/menu";
+import { Hints } from "./hints/hints";
 
-class App {
+export class App {
   private static _instance: App;
-  private _settings: Settings;
-  private _conf: Configuration;
-  private menu: Menu = Menu.instance;
 
   private constructor() {
-    this._settings = Settings.instance;
-    this._conf = Configuration.instance;
     this.init();
   }
 
   private init(): void {
     this.createPlayers();
     this.initializePhases();
+    Menu.instance;
   }
 
   private createPlayers(): void {
     const playerOne = new Player("Mängija 1", 1, "one");
     const playerTwo = new Player("Mängija 2", 2, "two");
-    this.conf.players.push(playerOne, playerTwo);
+    Configuration.instance.players.push(playerOne, playerTwo);
     playerOne.active = true;
   }
 
   private initializePhases(): void {
     const phaseOne = new PhaseOne();
     const phaseTwo = new PhaseTwo();
-    this.conf.phases.push(phaseOne, phaseTwo);
+    Configuration.instance.phases.push(phaseOne, phaseTwo);
     phaseOne.init();
+  }
+
+  private resetElements(): void {
+    const playerOnePiecesContainer: HTMLElement = (<HTMLElement>document.querySelector(Configuration.instance.selectors.playerOnePiecesContainer));
+    const playerTwoPiecesContainer: HTMLElement = (<HTMLElement>document.querySelector(Configuration.instance.selectors.playerTwoPiecesContainer));
+    const gameboard: HTMLElement = (<HTMLElement>document.querySelector(Configuration.instance.selectors.gameboard));
+    const hintsContainer: HTMLElement = (<HTMLElement>document.querySelector(`.${Configuration.instance.classes.hintsContainer}`));
+    const menuButton: HTMLElement = (<HTMLElement>document.querySelector(`.${Configuration.instance.classes.menuButton}`));
+
+    playerOnePiecesContainer.classList.remove(Configuration.instance.classes.activeContainer);
+    playerTwoPiecesContainer.classList.remove(Configuration.instance.classes.activeContainer);
+    playerOnePiecesContainer.innerHTML = "";
+    playerTwoPiecesContainer.innerHTML = "";
+    gameboard.innerHTML = "";
+    hintsContainer.innerHTML = "";
+
+    if (document.querySelector(`.${Configuration.instance.classes.menu}`)) {
+      (<HTMLElement>document.querySelector(`.${Configuration.instance.classes.menu}`)).remove();
+    }
+    menuButton.remove();
+  }
+  private resetComponents(): void {
+    Hints.instance.reset();
+    Menu.instance.reset();
+    Settings.instance.reset();
+    Configuration.instance.players = [];
+    Configuration.instance.phases = [];
+    Configuration.instance.reset();
+  }
+
+  reset(): void {
+    console.log("resetting app...");
+    this.resetElements();
+    this.resetComponents();
+    this.init();
   }
 
   public static get instance(): App {
@@ -41,18 +73,6 @@ class App {
       App._instance = new App();
     }
     return App._instance;
-  }
-  public get settings() {
-    return this._settings;
-  }
-  public set settings(settings: Settings) {
-    this._settings = settings;
-  }
-  public get conf() {
-    return this._conf;
-  }
-  public set conf(configuration: Configuration) {
-    this._conf = configuration;
   }
 }
 App.instance;

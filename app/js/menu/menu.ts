@@ -7,7 +7,7 @@ export class Menu {
   private element: HTMLElement | null = null;
   private menuButtons: MenuButton[] = [OpenMenu.instance, CloseMenu.instance];
   private conf: Configuration = Configuration.instance;
-  private static _instance: Menu;
+  private static _instance: Menu | null;
 
   private constructor() {
     this.init();
@@ -34,6 +34,10 @@ export class Menu {
   setWinScenarioInMenu(): void {
     this.gameOver = true;
     this.open();
+  }
+
+  reset(): void {
+    Menu._instance = null;
   }
 
   private create(): void {

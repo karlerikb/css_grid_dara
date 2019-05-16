@@ -20,7 +20,7 @@ export abstract class MenuButton {
   protected createMenuButtonElement(): void {
     const gameContainer: HTMLElement = <HTMLElement>document.querySelector(this.conf.selectors.gameContainer);
     this.element = Helper.create({
-      type: "div", class: `${this.type}MenuButton`,
+      type: "div", class: `menuButton ${this.type}MenuButton`,
       parent: gameContainer
     });
   }

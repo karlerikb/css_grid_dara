@@ -3,14 +3,15 @@ import { Game } from "../game/game";
 import { Phase, EventListenerCollection, ElementClasses, ElementSelectors, MenuListItem } from "./custom-types";
 import { Piece } from "../players/piece";
 import { Menu } from "../menu/menu";
+import { App } from "../app";
 
 export class Configuration {
-  private static _instance: Configuration;
+  private static _instance: Configuration | null;
   private _acitvePiece: Piece | null = null;
   private _selectedPosition: EventTarget | null = null;
 
-  readonly players: Player[] = [];
-  readonly phases: Game[] = [];
+  players: Player[] = [];
+  phases: Game[] = [];
 
   readonly eventListeners: EventListenerCollection = {
     activatingPiece: this.activatePiece.bind(this),
@@ -23,7 +24,8 @@ export class Configuration {
     openingMenu: this.openMenu.bind(this),
     closingMenu: this.closeMenu.bind(this),
     openingSettings: this.openSettings.bind(this),
-    closingApp: this.closeApp.bind(this)
+    closingApp: this.closeApp.bind(this),
+    resettingApp: this.resetApp.bind(this)
   };
 
   readonly classes: ElementClasses = {
@@ -64,7 +66,8 @@ export class Configuration {
     noFourInRow: "noFourInRow",
     waitingThreeInRowSelection: "waitingThreeInRowSelection",
     afterWin: "afterWin",
-    winScenarioTitle: "winScenarioTitle"
+    winScenarioTitle: "winScenarioTitle",
+    menuButton: "menuButton"
   }
 
   readonly selectors: ElementSelectors = {
@@ -85,13 +88,17 @@ export class Configuration {
   }
 
   readonly menuItems: MenuListItem[] = [
-    { active: false, option: "restart", text: "Uus mäng", eventListener: () => { console.log("uus mäng"); } },
+    { active: false, option: "restart", text: "Uus mäng", eventListener: this.eventListeners.resettingApp },
     { active: true, option: "resume", text: "Jätka mängu", eventListener: this.eventListeners.closingMenu },
     { active: true, option: "settings", text: "Mängu seaded", eventListener: this.eventListeners.openingSettings },
     { active: true, option: "exit", text: "Välju mängust", eventListener: this.eventListeners.closingApp }
   ];
 
   private constructor() {
+  }
+
+  reset(): void {
+    Configuration._instance = null;
   }
 
   private activatePiece(e: any): void {
@@ -130,6 +137,10 @@ export class Configuration {
     Menu.instance.close();
   }
 
+  private resetApp(): void {
+    App.instance.reset();
+  }
+
   private openSettings(e: any): void {
     console.log("opening settings...");
   }
@@ -137,7 +148,6 @@ export class Configuration {
   private closeApp(e: any): void {
     console.log("closing app...");
   }
-
 
   public static get instance(): Configuration {
     if (!Configuration._instance) {

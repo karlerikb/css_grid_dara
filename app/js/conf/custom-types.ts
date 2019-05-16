@@ -16,7 +16,8 @@ export type EventListenerCollection = {
   openingMenu: (e: any) => void,
   closingMenu: (e: any) => void,
   openingSettings: (e: any) => void,
-  closingApp: (e: any) => void
+  closingApp: (e: any) => void,
+  resettingApp: (e: any) => void
 };
 
 export type ElementClasses = {
@@ -57,7 +58,8 @@ export type ElementClasses = {
   noFourInRow: string,
   waitingThreeInRowSelection: string,
   afterWin: string,
-  winScenarioTitle: string
+  winScenarioTitle: string,
+  menuButton: string
 }
 
 export type ElementSelectors = {

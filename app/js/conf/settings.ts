@@ -1,9 +1,13 @@
 export class Settings {
-  private static _instance: Settings;
+  private static _instance: Settings | null;
   private _piecesForEachPlayer: number = 3;
   private _animationTime: string = ".5s";
 
   private constructor() {
+  }
+
+  reset(): void {
+    Settings._instance = null;
   }
 
   public static get instance(): Settings {
@@ -12,7 +16,6 @@ export class Settings {
     }
     return Settings._instance;
   }
-
   public get piecesForEachPlayer(): number {
     return this._piecesForEachPlayer;
   }

@@ -104,14 +104,18 @@ export abstract class Game {
   }
 
   private testWinCondition(): void {
-    this.testPiecesAmountOnTable();
-    this.testPieceMovementAvailabilityOnTable();
+    const gameWon: boolean = this.testPiecesAmountOnTable();
+    if (!gameWon) {
+      this.testPieceMovementAvailabilityOnTable();
+    }
   }
 
-  private testPiecesAmountOnTable(): void {
+  private testPiecesAmountOnTable(): boolean {
     if (this.conf.activePlayer.pieces.length < 3) {
       this.initiateWinScenario("piecesAmount");
+      return true;
     }
+    return false;
   }
 
   private testPieceMovementAvailabilityOnTable(): void {
@@ -124,7 +128,6 @@ export abstract class Game {
   }
 
   private initiateWinScenario(scenario: string): void {
-    console.log(scenario);
     this.switchPlayers();
     this.configurePiecesAfterWin();
     Hints.instance.setWinScenarioInHints(scenario);
