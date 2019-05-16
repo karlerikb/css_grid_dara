@@ -44,6 +44,10 @@ export class PhaseOne extends Game {
     throw new Error("Cannot finalize three-in-row selection in phase one!");
   }
 
+  findPiecesWithSomeAvailablePositions(): void {
+    throw new Error("Cannot find pieces with available positions in phase one!");
+  }
+
   private createPositions(): void {
     const gameboard: HTMLElement = <HTMLElement>document.querySelector(this.conf.selectors.gameboard);
     const tempPositions: DocumentFragment = document.createDocumentFragment();

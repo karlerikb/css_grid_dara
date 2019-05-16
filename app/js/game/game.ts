@@ -105,7 +105,7 @@ export abstract class Game {
 
   private testWinCondition(): void {
     this.testPiecesAmountOnTable();
-    // this.testPieceMovementAvailabilityOnTable();
+    this.testPieceMovementAvailabilityOnTable();
   }
 
   private testPiecesAmountOnTable(): void {
@@ -115,8 +115,11 @@ export abstract class Game {
   }
 
   private testPieceMovementAvailabilityOnTable(): void {
-    if (this.conf.activePlayer.pieces.length > 2 /* && no pieces has movement available */) {
-      // ...
+    if (this.conf.activePhase.name === "two") {
+      const piecesWithSomeAvailablePositions: number = <number>this.conf.activePhase.findPiecesWithSomeAvailablePositions();
+      if (this.conf.activePlayer.pieces.length > 2 && piecesWithSomeAvailablePositions === 0) {
+        this.initiateWinScenario("noPieceCanMove");
+      }
     }
   }
 
@@ -124,7 +127,7 @@ export abstract class Game {
     console.log(scenario);
     this.switchPlayers();
     this.configurePiecesAfterWin();
-    Hints.instance.setWinScenarioInHints();
+    Hints.instance.setWinScenarioInHints(scenario);
     Menu.instance.setWinScenarioInMenu();
   }
 

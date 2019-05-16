@@ -1,16 +1,30 @@
 import { Configuration } from "../../conf/configuration";
 import { GameboardAreas } from "../../conf/custom-types";
+import { Piece } from "../../players/piece";
 
 export class FourInRow {
   private conf: Configuration = Configuration.instance;
   private area: string = "";
+  private winConditionCheck: boolean = false;
+  private winCheckPiece: Piece | null = null;
 
   constructor() {
   }
 
-  exists(area: string): boolean {
-    this.area = area;
-    return this.fourInRowExists();
+  exists(area: string | null, winConditionCheck?: boolean, piece?: Piece): boolean {
+    if (winConditionCheck) {
+      this.winConditionCheck = winConditionCheck;
+      this.winCheckPiece = <Piece>piece;
+    } else {
+      this.winConditionCheck = false;
+    }
+    if (area) {
+      this.area = area;
+      return this.fourInRowExists();
+    }
+    else {
+      return false;
+    }
   }
 
   private fourInRowExists(): boolean {
@@ -67,11 +81,18 @@ export class FourInRow {
     const areas: string[] = this.conf.activePlayer.gameboardPieceAreas;
     const reachValidation: number[] = reach.map(area => {
       if (!area) return 0; // if area is null
-      if (area === this.conf.activePiece!.area) return 0; // piece area before movement, needs to be 0 because after movement the area will be empty
+      if (this.winConditionCheck) {
+        if (area === this.winCheckPiece!.area) return 0;
+      } else {
+        if (this.conf.activePiece && area === this.conf.activePiece!.area) return 0; // piece area before movement, needs to be 0 because after movement the area will be empty
+      }
       if (area === this.area) return 1; // area that the piece is moved to, needs to be 1, because after movement a player piece will be there
       if (areas.includes(area)) return 1; // if the area is occupied by a player piece
       return 0;
     });
+    if (this.winCheckPiece) {
+      this.winCheckPiece = null;
+    }
     return reachValidation;
   }
 

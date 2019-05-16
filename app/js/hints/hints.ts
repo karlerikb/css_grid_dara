@@ -41,6 +41,14 @@ export class Hints {
     noFourInRow: {
       active: false,
       text: "Nupu liigutamisel <strong>ei tohi</strong> tekkida neljast rida"
+    },
+    piecesAmount: {
+      active: false,
+      text: "Vastasel on vähem kui kolm mängunuppu, ehk vastane enam kolmest rida moodustada ei saa"
+    },
+    noPieceCanMove: {
+      active: false,
+      text: "Vastane ei saa ühegi nupuga liikuda, ehk vastane kolmest rida moodustada ei saa"
     }
   }
 
@@ -52,7 +60,7 @@ export class Hints {
   private constructor() {
   }
 
-  setWinScenarioInHints(): void {
+  setWinScenarioInHints(scenario: string): void {
     (<HTMLElement>document.querySelector(this.conf.selectors.gamePhase)).innerHTML = "<strong>Mäng on läbi!</strong>";
     this.activePlayerTurnDescription.innerHTML = this.gameTurnDescriptions.winMessage;
     this.inactivePlayerTurnDescription.textContent = this.gameTurnDescriptions.loseMessage;
@@ -61,6 +69,15 @@ export class Hints {
     }
     if (this.conf.activePlayer.numberString === "two") {
       this.activePlayerInHints.innerHTML = `${this.conf.activePlayer.name} <span class="trophy"><i class="fas fa-trophy"></i></span> `;
+    }
+    this.resetAdditionalDetails();
+    this.showAdditionalDetails();
+    if (scenario === "piecesAmount") {
+      this.additionalDetails.piecesAmount.active = true;
+      this.configureAdditionalDetails();
+    } else {
+      this.additionalDetails.noPieceCanMove.active = true;
+      this.configureAdditionalDetails();
     }
   }
 

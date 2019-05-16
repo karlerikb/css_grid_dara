@@ -65,6 +65,21 @@ export class PhaseTwo extends Game {
     this.threeInRow.existsAfterSelection();
   }
 
+  findPiecesWithSomeAvailablePositions(): number {
+    let piecesWithSomeAvailablePositions: number = 0;
+    this.conf.activePlayer.pieces.forEach(piece => {
+      const surroundingAreas: GameboardAreas = this.getSurroundingAreas(piece.area);
+      let pieceHasPositions: boolean = false;
+      surroundingAreas.forEach(area => {
+        if ((area && !this.conf.activePlayer.prohibitedAreas.includes(area) && !this.fourInRow.exists(area) && this.conf.activePlayer.lastMove(area))) {
+          pieceHasPositions = true;
+        }
+      });
+      if (pieceHasPositions) piecesWithSomeAvailablePositions++;
+    });
+    return piecesWithSomeAvailablePositions;
+  }
+
   private removeOpponentThreeInRow(piece: Piece): void {
     piece.player.threeInRows.forEach((threeInRow, index) => {
       if (threeInRow.areas.includes(piece.area)) {
@@ -204,6 +219,15 @@ export class PhaseTwo extends Game {
       const piece: Piece = <Piece>this.conf.inactivePlayer.pieces.find(piece => piece.area === area);
       piece.partOfThreeInRow = false;
     });
+  }
+
+  private getSurroundingAreas(area: string): GameboardAreas {
+    const row = +area[1], column = +area[2];
+    const topArea = (row > 1) ? `a${row - 1}${column}` : null;
+    const bottomArea = (row < 5) ? `a${row + 1}${column}` : null;
+    const leftArea = (column > 1) ? `a${row}${column - 1}` : null;
+    const rightArea = (column < 6) ? `a${row}${column + 1}` : null;
+    return [topArea, leftArea, bottomArea, rightArea];
   }
 
   private get surroundingAreas(): GameboardAreas {
