@@ -1,6 +1,6 @@
 export class Settings {
   private static _instance: Settings | null;
-  private _piecesForEachPlayer: number = 3;
+  private _piecesForEachPlayer: number = 5;
   private _animationTime: string = ".5s";
 
   private constructor() {

@@ -63,7 +63,6 @@ export class WaitingThreeInRowSelection implements State {
     indicationElement.addEventListener("touchstart", this.conf.eventListeners.initializingRowSelection);
     indicationElement.addEventListener("mouseup", this.conf.eventListeners.cancellingRowSelection);
     indicationElement.addEventListener("touchend", this.conf.eventListeners.cancellingRowSelection);
-    indicationElement.addEventListener("dblclick", this.conf.eventListeners.finalizingRowSelection);
     indicationElement.addEventListener("rowselected", this.conf.eventListeners.finalizingRowSelection);
   }
 
