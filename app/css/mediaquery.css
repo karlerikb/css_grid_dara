@@ -104,8 +104,11 @@
     align-self: center;
   }
 
-  .gameMenuList > li {
-    padding: 2vw 15vw;;
+  .gameMenuList > li:not(:last-child) {
+    padding: 2vw 15vw;
+  }
+  .gameMenuList > li > a {
+    padding: 2vw 15vw;
   }
 
   /* Win Scenario Title */
