@@ -113,4 +113,17 @@
   .winScenarioTitle {
     display: none;
   }
+
+  /* Settings */
+
+  .menu .settingsMenu {
+    padding-top: 0.5vw;
+    width: 50vw;
+    font-size: calc(1rem / 1.4 + .5vw);
+    align-self: center;
+  }
+
+  .confirmText {
+    font-size: calc(1rem / 2 + .5vw);
+  }
 }
