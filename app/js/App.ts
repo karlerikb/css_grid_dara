@@ -14,6 +14,7 @@ export class App {
   }
 
   private init(): void {
+    Settings.instance;
     this.createPlayers();
     this.initializePhases();
     Menu.instance;
@@ -55,14 +56,13 @@ export class App {
   private resetComponents(): void {
     Hints.instance.reset();
     Menu.instance.reset();
-    Settings.instance.reset();
     Configuration.instance.players = [];
     Configuration.instance.phases = [];
     Configuration.instance.reset();
+    Settings.instance.resetSettingsMenu();
   }
 
   reset(): void {
-    console.log("resetting app...");
     this.resetElements();
     this.resetComponents();
     this.init();

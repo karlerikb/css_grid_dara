@@ -1,6 +1,7 @@
 import { MenuButton, OpenMenu, CloseMenu } from "./menu-button";
 import { Helper } from "../conf/helper";
 import { Configuration } from "../conf/configuration";
+import { Settings } from "../conf/settings";
 
 export class Menu {
   private gameOver: boolean = false;
@@ -32,6 +33,7 @@ export class Menu {
     if (this.element) {
       this.toggleMenuButton();
       this.removeMenuElement();
+      Settings.instance.resetSettingsMenu();
     }
   }
 

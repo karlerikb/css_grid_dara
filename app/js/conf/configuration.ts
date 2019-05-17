@@ -4,6 +4,7 @@ import { Phase, EventListenerCollection, ElementClasses, ElementSelectors, MenuL
 import { Piece } from "../players/piece";
 import { Menu } from "../menu/menu";
 import { App } from "../app";
+import { Settings } from "./settings";
 
 export class Configuration {
   private static _instance: Configuration | null;
@@ -67,7 +68,10 @@ export class Configuration {
     waitingThreeInRowSelection: "waitingThreeInRowSelection",
     afterWin: "afterWin",
     winScenarioTitle: "winScenarioTitle",
-    menuButton: "menuButton"
+    menuButton: "menuButton",
+    removed: "removed",
+    settingsMenu: "settingsMenu",
+    settingItem: "settingItem"
   }
 
   readonly selectors: ElementSelectors = {
@@ -88,8 +92,8 @@ export class Configuration {
   }
 
   readonly menuItems: MenuListItem[] = [
-    { active: false, option: "restart", text: "Uus mäng", eventListener: this.eventListeners.resettingApp },
     { active: true, option: "resume", text: "Jätka mängu", eventListener: this.eventListeners.closingMenu },
+    { active: true, option: "restart", text: "Uus mäng", eventListener: this.eventListeners.resettingApp },
     { active: true, option: "settings", text: "Mängu seaded", eventListener: this.eventListeners.openingSettings },
     { active: true, option: "exit", text: "Välju mängust", eventListener: this.eventListeners.closingApp }
   ];
@@ -141,11 +145,11 @@ export class Configuration {
     App.instance.reset();
   }
 
-  private openSettings(e: any): void {
-    console.log("opening settings...");
+  private openSettings(): void {
+    Settings.instance.open();
   }
 
-  private closeApp(e: any): void {
+  private closeApp(): void {
     console.log("closing app...");
   }
 

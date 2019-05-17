@@ -59,7 +59,10 @@ export type ElementClasses = {
   waitingThreeInRowSelection: string,
   afterWin: string,
   winScenarioTitle: string,
-  menuButton: string
+  menuButton: string,
+  removed: string,
+  settingsMenu: string,
+  settingItem: string
 }
 
 export type ElementSelectors = {

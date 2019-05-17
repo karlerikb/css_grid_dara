@@ -343,12 +343,12 @@ body {
 /* Player Titles, Menu List */
 
 .playerOneTitle, .playerTwoTitle,
-.gameMenuList, .winScenarioTitle {
+.gameMenuList, .winScenarioTitle, .settingsMenu {
   box-shadow: 0 0 3px 1px #444;
   border: 1px solid #222;
   border-radius: 3px;
   padding: 1vw;
-  color: whitesmoke;
+  color: #f5f5f5;
   background: #333;
   text-align: center;
   cursor: default;
@@ -373,14 +373,15 @@ body {
 .gameMenuList > li {
   border-radius: 2px;
   margin: 0;
-  padding: 1.5vw 10vw;;
+  padding: 1.5vw 10vw;
+  transition: all .1s;
   list-style: none;
 }
 
 .menu .gameMenuList > li:hover {
   color: #333;
   box-shadow: 0 0 1px 1px #ccc;
-  background: whitesmoke;
+  background-color: #f5f5f5;
   cursor: pointer;
 }
 
@@ -409,6 +410,93 @@ body {
   margin-top: 1vw;
   font-size: 4rem;
 }
+
+
+/* Settings Menu */
+
+.menu .settingsMenu {
+  padding-top: 0.5vw;
+  width: 30vw;
+  font-size: calc(1rem / 1.8 + .5vw);
+  grid-area: gameMenuList;
+  align-self: start;
+}
+
+.settingsMenu > .settingItem {
+  border-top: 1px solid #444;
+  padding: 1vw;
+}
+
+.settingItem input {
+  width: 80%;
+}
+
+.settingsControlsTop {
+  padding-bottom: .5vw;
+  text-align: right;
+}
+
+.closeSettings {
+  transition: color .2s;
+}
+
+.closeSettings:hover {
+  color: #c54c4c;
+  cursor: pointer;
+}
+
+.settingsControlsBottom {
+  padding-top: 1.2vw;
+  padding-bottom: .2vw;
+  border-top: 1px solid #444;
+  display: grid;
+  grid-template-areas: "settingsText settingsConfirm";
+  grid-template-columns: 1fr min-content;
+}
+
+.confirmSettings {
+  margin-left: 1.5vw;
+  border-radius: 2px;
+  box-shadow: 0 0 2px 1px #333;
+  background-color: #444;
+  padding: .3vw 1.1vw;
+  font-size: calc(1rem / 1.5 + .5vw);
+  grid-area: settingsConfirm;
+  align-self: center;
+  justify-self: right;
+  transition: box-shadow .1s, background-color .1s;
+}
+.confirmSettings:hover {
+  box-shadow: 0 0 2px 1px #2f6d2f;
+  background-color: #5bb15b;
+  text-shadow: 0 0 2px #4ce44c;
+  cursor: pointer;
+}
+
+.confirmText {
+  color: #999;
+  font-size: calc(1rem / 3 + .5vw);
+  grid-area: settingsText;
+  align-self: center;
+  justify-self: right;
+}
+
+.settingsMenu .closeSettings,
+.settingsMenu .confirmSettings {
+  font-size: 1.5rem;
+  display: inline-block;
+}
+
+.settingText {
+  color: #999;
+}
+
+.settingValue, .detailsForValue {
+  margin-left: .5vw;
+  color: #f5f5f5;
+  font-weight: 700;
+}
+
 
 
 /* Remove Element Class */
