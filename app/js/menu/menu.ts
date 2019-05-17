@@ -92,11 +92,19 @@ export class Menu {
   private createMenuListItems(menuList: HTMLElement): void {
     this.conf.menuItems.forEach(item => {
       if (item.active) {
-        const listItem = Helper.create({
-          type: "li", class: item.option, text: item.text,
-          parent: menuList
-        });
-        listItem.addEventListener("click", item.eventListener);
+        if (item.link) {
+          Helper.create({
+            type: "li", class: item.option,
+            HTML: `<a href="app/pages/exit-game.html">${item.text}</a>`,
+            parent: menuList
+          });
+        } else {
+          const listItem = Helper.create({
+            type: "li", class: item.option, text: item.text,
+            parent: menuList
+          });
+          listItem.addEventListener("click", item.eventListener);
+        }
       }
     });
   }

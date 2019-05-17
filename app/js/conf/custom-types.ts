@@ -90,6 +90,7 @@ export type PlayerThreeInRow = {
 export type MenuListItem = {
   active: boolean,
   option: string,
+  link: boolean,
   text: string,
   eventListener: (e: any) => void
 }

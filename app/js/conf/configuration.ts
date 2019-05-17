@@ -92,10 +92,10 @@ export class Configuration {
   }
 
   readonly menuItems: MenuListItem[] = [
-    { active: true, option: "resume", text: "Jätka mängu", eventListener: this.eventListeners.closingMenu },
-    { active: true, option: "restart", text: "Uus mäng", eventListener: this.eventListeners.resettingApp },
-    { active: true, option: "settings", text: "Mängu seaded", eventListener: this.eventListeners.openingSettings },
-    { active: true, option: "exit", text: "Välju mängust", eventListener: this.eventListeners.closingApp }
+    { active: true, option: "resume", link: false, text: "Jätka mängu", eventListener: this.eventListeners.closingMenu },
+    { active: true, option: "restart", link: false, text: "Uus mäng", eventListener: this.eventListeners.resettingApp },
+    { active: true, option: "settings", link: false, text: "Mängu seaded", eventListener: this.eventListeners.openingSettings },
+    { active: true, option: "exit", link: true, text: "Välju mängust", eventListener: this.eventListeners.closingApp }
   ];
 
   private constructor() {

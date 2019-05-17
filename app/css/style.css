@@ -370,15 +370,29 @@ body {
   align-self: start;
 }
 
-.gameMenuList > li {
-  border-radius: 2px;
-  margin: 0;
+.gameMenuList > li > a {
+  color: #7a7a7a;
   padding: 1.5vw 10vw;
+  display: inline-block;
+}
+
+a:link, a:visited {
+  text-decoration: none;
+}
+
+.gameMenuList > li {
+  margin: 0;
+  border-radius: 2px;
   transition: all .1s;
   list-style: none;
 }
 
-.menu .gameMenuList > li:hover {
+.gameMenuList > li:not(:last-child) {
+  padding: 1.5vw 10vw;
+}
+
+.menu .gameMenuList > li:hover,
+.menu .gameMenuList > li > a:hover {
   color: #333;
   box-shadow: 0 0 1px 1px #ccc;
   background-color: #f5f5f5;
