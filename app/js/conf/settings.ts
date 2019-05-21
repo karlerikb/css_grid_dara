@@ -25,6 +25,15 @@ export class Settings {
   ];
 
   private constructor() {
+    this.createWelcomeMessage();
+  }
+
+  resetSettingsMenu(): void {
+    if (this.element) {
+      this.element.remove();
+    }
+    this.element = null;
+    this.showMenuList();
   }
 
   reset(): void {
@@ -34,6 +43,128 @@ export class Settings {
   open(): void {
     this.hidingMenuList();
     this.createSettingsElements();
+  }
+
+  private createWelcomeMessage(): void {
+    const welcomeMsg = Helper.create({
+      type: "div", class: "welcomeMsg",
+      parent: <HTMLElement>document.querySelector(this.conf.selectors.gameContainer)
+    });
+    this.createWelcomeMessageTitle(welcomeMsg);
+    this.createPhaseOneRules(welcomeMsg);
+    this.createMainRules(welcomeMsg);
+    this.createPhaseTwoRules(welcomeMsg);
+    this.createStartGameBtn(welcomeMsg);
+  }
+
+  private createWelcomeMessageTitle(welcomeMsg: HTMLElement): void {
+    const welcomeHeading: HTMLElement = Helper.create({
+      type: "div", class: "welcomeHeading",
+      parent: welcomeMsg
+    });
+    Helper.create({
+      type: "h1", class: "mainTitle", text: "Dara",
+      parent: welcomeHeading
+    });
+    Helper.create({
+      type: "p", class: "subTitle", text: "Kolm ritta tüüpi mäng",
+      parent: welcomeHeading
+    });
+  }
+
+  private createPhaseOneRules(welcomeMsg: HTMLElement): void {
+    const phaseOneRuleTexts: string[] = [
+      "Strateegiline mänguosa enne mängu põhifaasi",
+      "Nuppe paigutatakse lauale",
+      "Ühel mängulaua positsioonil tohib olla vaid üks mängunupp",
+      "Oma nuppudega kolmest rida selles faasis tekkida ei tohi"
+    ];
+    const phaseOneRules: HTMLElement = Helper.create({
+      type: "div", class: "phaseRules phaseOneRules",
+      parent: welcomeMsg
+    });
+    Helper.create({
+      type: "h2", text: "Esimene faas",
+      parent: phaseOneRules
+    });
+    const rules: HTMLElement = Helper.create({
+      type: "ul", class: "rules",
+      parent: phaseOneRules
+    });
+    phaseOneRuleTexts.forEach(rule => {
+      Helper.create({
+        type: "li", text: rule,
+        parent: rules
+      });
+    });
+  }
+
+  private createPhaseTwoRules(welcomeMsg: HTMLElement): void {
+    const phaseTwoRuleTexts: string[] = [
+      "Nuppe liigutatakse laual ühe positsiooni võrra horisontaalselt või vertikaalselt",
+      "Eesmärk on tekitada oma nuppudega kolmene rida ja eemaldada vastase mängunupp",
+      "Vastase nuppu ei saa eemaldada kolmesest reast",
+      "Tekkida võib ainult üks kolmene rida korraga",
+      "Oma nuppudega neljast rida tekkida ei tohi"
+    ];
+    const phaseTwoRules: HTMLElement = Helper.create({
+      type: "div", class: "phaseRules phaseTwoRules",
+      parent: welcomeMsg
+    });
+    Helper.create({
+      type: "h2", text: "Teine faas",
+      parent: phaseTwoRules
+    });
+    const rules: HTMLElement = Helper.create({
+      type: "ul", class: "rules",
+      parent: phaseTwoRules
+    });
+    phaseTwoRuleTexts.forEach(rule => {
+      Helper.create({
+        type: "li", text: rule,
+        parent: rules
+      });
+    });
+  }
+
+  private createMainRules(welcomeMsg: HTMLElement): void {
+    const mainRuleTexts: string[] = [
+      "Mäng käib kahes faasis: <strong>nuppude paigutamise</strong> ja <strong>nuppude liigutamise</strong> faasis",
+      "Eesmärgiks on tekitada kolmene rida ning selle tekkimisel eemaldada üks vastase mängunupp",
+      "Võidab mängija kelle vastane ei saa enam tekitada kolmest rida"
+    ];
+    const mainRules: HTMLElement = Helper.create({
+      type: "div", class: "mainRules",
+      parent: welcomeMsg
+    });
+    const rules: HTMLElement = Helper.create({
+      type: "ul", class: "rules",
+      parent: mainRules
+    });
+    mainRuleTexts.forEach(rule => {
+      Helper.create({
+        type: "li", HTML: rule,
+        parent: rules
+      });
+    });
+  }
+
+  private createStartGameBtn(welcomeMsg: HTMLElement): void {
+    const createGameBtn: HTMLElement = Helper.create({
+      type: "div", class: "startGameBtn", text: "Alusta mängu!",
+      parent: welcomeMsg
+    });
+    createGameBtn.addEventListener("click", () => {
+      App.instance.create();
+      this.resetWelcomeMessage();
+    });
+  }
+
+  private resetWelcomeMessage(): void {
+    const welcomeMsg: HTMLElement = <HTMLElement>document.querySelector(".welcomeMsg");
+    if (welcomeMsg) {
+      welcomeMsg.remove();
+    }
   }
 
   private createSettingsElements(): void {
@@ -143,14 +274,6 @@ export class Settings {
     if (menuList) {
       menuList.classList.remove(this.conf.classes.removed);
     }
-  }
-
-  resetSettingsMenu(): void {
-    if (this.element) {
-      this.element.remove();
-    }
-    this.element = null;
-    this.showMenuList();
   }
 
   public static get instance(): Settings {

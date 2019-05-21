@@ -15,6 +15,9 @@ export class App {
 
   private init(): void {
     Settings.instance;
+  }
+
+  create(): void {
     this.createPlayers();
     this.initializePhases();
     Menu.instance;
@@ -65,7 +68,7 @@ export class App {
   reset(): void {
     this.resetElements();
     this.resetComponents();
-    this.init();
+    this.create();
   }
 
   public static get instance(): App {

@@ -14,8 +14,8 @@ body {
 /* Game Container Element */
 
 .gameContainer {
-  grid-template-columns: [menu-start] 2fr 5fr 2fr [menu-end];
-  grid-template-rows: auto [menu-start] auto auto [menu-end];
+  grid-template-columns: [menu-start welcomeMsg-start] 2fr 5fr 2fr [menu-end welcomeMsg-end];
+  grid-template-rows: [welcomeMsg-start] auto [menu-start] auto auto [menu-end welcomeMsg-end];
   grid-template-areas:
     "...............   menuButton       ..............."
     "playerOnePieces   gameboard        playerTwoPieces"
@@ -512,6 +512,126 @@ a:link, a:visited {
   font-weight: 700;
 }
 
+
+/* Welcome Message */
+.welcomeMsg {
+  border: 1px solid #222;
+  border-radius: 2px;
+  box-shadow: 0 0 3px 1px #444;
+  padding: 1vw 4vw 4vw 4vw;
+  height: max-content;
+  background-color: #333;
+  font-size: calc(1rem / 1.8 + .5vw);
+  color: #ddd;
+  grid-area: welcomeMsg;
+  grid-template-columns: 3fr 5fr 3fr;
+  grid-template-rows: min-content  min-content  auto;
+  grid-template-areas:
+    ".............     mainHeading    ............."
+    "phaseOneRules     mainRules      phaseTwoRules"
+    "phaseOneRules     startGameBtn   phaseTwoRules"
+  ;
+  gap: 2vw 4vw;
+  justify-items: center;
+  align-items: start;
+  z-index: 4;
+  cursor: default;
+  display: grid;
+}
+
+.welcomeMsg .welcomeHeading { grid-area: mainHeading; }
+
+.welcomeMsg .rules {
+  width: 100%;
+  height: max-content;
+  text-align: center;
+}
+
+.startGameBtn {
+  margin-left: 1.5vw;
+  border-radius: 2px;
+  box-shadow: 0 0 2px 1px #666;
+  background-color: #459745;
+  padding: 1vw 2vw;
+  width: 8vw;
+  text-align: center;
+  color: #e6e6e6;
+  grid-area: startGameBtn;
+  transition: box-shadow .1s, background-color .1s;
+}
+
+.startGameBtn:hover {
+  box-shadow: 0 0 2px 1px #4ce44c;
+  background-color: #5bb15b;
+  color: #f5f5f5;
+  cursor: pointer;
+}
+
+h1, h2, .subTitle {
+  text-align: center;
+}
+
+.phaseRules {
+  width: 100%;
+}
+
+.phaseRules .rules {
+  color: #ddd;
+}
+
+.phaseOneRules { grid-area: phaseOneRules; }
+.phaseTwoRules { grid-area: phaseTwoRules; }
+.mainRules { grid-area: mainRules; }
+
+.mainRules .rules {
+  border: 1px solid #4b4b4b;
+  box-shadow: 0 0 2px 2px #3f3f3f;
+  border-radius: 3px;
+  background-color: #3f3f3f;
+  color: #ccc;
+}
+
+.rules {
+  border: 1px solid #444;
+  box-shadow: 0 0 2px 1px #3a3a3a;
+  border-radius: 3px;
+  height: 100%;
+  background-color: #444;
+  color: #ddd;
+}
+
+ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+ul.rules > li {
+  border-top: 1px solid #4b4b4b;
+  background-color: #3a3a3a;
+  margin: .5vw 0;
+  padding: 1vw;
+}
+
+ul.rules > li:first-child {
+  margin-top: 0;
+}
+ul.rules > li:last-child {
+  margin-bottom: 0;
+}
+
+.mainRules .rules > li {
+  border-top: 1px solid #555;
+  background-color: #474747;
+}
+
+.phaseRules .rules {
+  color: #afafaf;
+}
+
+.rules strong {
+  padding: 0 .2vw;
+}
 
 
 /* Remove Element Class */
