@@ -7,12 +7,10 @@
 
 @keyframes animateMovement {
   0% {
-    top: 0;
-    left: 0;
+    transform: translate(0, 0);
   }
   100% {
-    top: var(--targetPositionTop);
-    left: var(--targetPositionLeft);
+    transform: translate(var(--targetPositionLeft), var(--targetPositionTop));
   }
 }
 
@@ -24,16 +22,16 @@
 
 @keyframes pieceActivation {
   0% {
-    box-shadow: 0 0 0 0 #333;
+    box-shadow: 0 0 0 0 #535353;
   }
   50% {
-    box-shadow: 0 0 8px 2px #333;
+    box-shadow: 0 0 6px 1px #535353;
   }
   100% {
-    box-shadow: 0 0 0 0 #333;
+    box-shadow: 0 0 0 0 #535353;
   }
 }
 
-.pieceActivation {
-  animation: pieceActivation 1s;
+.pieceActivated {
+  animation: pieceActivation .3s;
 }

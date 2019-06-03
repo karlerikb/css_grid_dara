@@ -4,25 +4,54 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
-  <!-- FontAwesome icons -->
+  
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato:400,700">
   <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
   
   <link rel="stylesheet" href="app/css/style.css">
   <link rel="stylesheet" href="app/css/mediaquery.css">
   <link rel="stylesheet" href="app/css/animation.css">
-  <title>Game</title>
+  <title>Dara</title>
 </head>
 <body>
   <div class="gameContainer">
     <div class="playerOne piecesContainer"></div>
     <div class="playerTwo piecesContainer"></div>
-    <div class="gameboard">
-    </div>
-    <div class="hintsContainer">
-      <p><span class="gamePhase"></span> <span class="playerTurn"></span></p>
-      <p><span class="turnDescription"></span></p>
-      <p><span class="additionDescription">Mängu mängitakse kordamööda, klõpsates valitud mängunupule ning seejärel mängulaua positsioonile. Kui positsiooni mängulauale ei kuvata, siis sinna reeglite järgi käia ei saa. Kui kolmene rida moodustatakse, tuleb vajutada vastase nupule, et see eemaldada. Kui moodustatakse kaks kolmest rida korraga, tuleb üks neist valida topeltklõpsuga.</span></p>
-    </div>
+    <div class="gameboard"></div>
+    <div class="hintsContainer"></div>
+    <!-- <div class="welcomeMsg">
+      <div class="welcomeHeading">
+        <h1 class="mainTitle">Dara</h1>
+        <p class="subTitle">Kolm ritta tüüpi mäng</p>
+      </div>
+      <div class="phaseRules phaseOneRules">
+        <h2>Esimene faas</h2>
+        <ul class="rules">
+          <li>Strateegiline mänguosa enne mängu põhifaasi</li>
+          <li>Nuppe paigutatakse lauale</li>
+          <li>Ühel mängulaua positsioonil tohib olla vaid üks mängunupp</li>
+          <li>Oma nuppudega kolmest rida selles faasis tekkida ei tohi</li>
+        </ul>
+      </div>
+      <div class="mainRules">
+        <ul class="rules">
+          <li>Mäng käib kahes faasis: <strong>nuppude paigutamise</strong> ja <strong>nuppude liigutamise</strong> faasis</li>
+          <li>Eesmärgiks on tekitada kolmene rida ning selle tekkimisel eemaldada üks vastase mängunupp</li>
+          <li>Võidab mängija kelle vastane ei saa enam tekitada kolmest rida</li>
+        </ul>
+      </div>
+      <div class="phaseRules phaseTwoRules">
+        <h2>Teine faas</h2>
+        <ul class="rules">
+          <li>Nuppe liigutatakse laual ühe positsiooni võrra horisontaalselt või vertikaalselt</li>
+          <li>Eesmärk on tekitada oma nuppudega kolmene rida ja eemaldada vastase mängunupp</li>
+          <li>Vastase nuppu ei saa eemaldada kolmesest reast</li>
+          <li>Tekkida võib ainult üks kolmene rida korraga</li>
+          <li>Oma nuppudega neljast rida tekkida ei tohi</li>
+        </ul>
+      </div>
+      <div class="startGameBtn">Alusta mängu!</div>
+    </div> -->
   </div>
   <script src="dist/bundle.js"></script>
 </body>

@@ -1,10 +1,12 @@
 @media screen and (orientation: portrait) {
-
+  body {
+    font-size: 0.9rem;
+  }
   /* Game Container Element */
 
   .gameContainer {
-    grid-template-columns: 4rem [menu-start] 1fr [menu-end];
-    grid-template-rows: [menu-start] 2fr 5fr 2fr [menu-end];
+    grid-template-columns: [welcomeMsg-start] 4rem [menu-start] 1fr [menu-end welcomeMsg-end];
+    grid-template-rows: [menu-start welcomeMsg-start] 2fr 5fr 2fr [menu-end welcomeMsg-end];
     grid-template-areas:
       "..........  playerTwoPieces"
       "menuButton  gameboard"
@@ -80,9 +82,9 @@
     grid-template-columns: 1fr;
     grid-template-rows: 2fr 5fr 2fr;
     grid-template-areas:
-      "playerOneTitle"
-      "gameMenuList"
       "playerTwoTitle"
+      "gameMenuList"
+      "playerOneTitle"
     ;
     justify-items: center;
     align-items: center;
@@ -102,7 +104,56 @@
     align-self: center;
   }
 
-  .gameMenuList > li {
-    padding: 2vw 15vw;;
+  .gameMenuList > li:not(:last-child) {
+    padding: 2vw 15vw;
+  }
+  .gameMenuList > li > a {
+    padding: 2vw 15vw;
+  }
+
+  /* Win Scenario Title */
+
+  .winScenarioTitle {
+    display: none;
+  }
+
+  /* Settings */
+
+  .menu .settingsMenu {
+    padding-top: 0.5vw;
+    width: 50vw;
+    font-size: calc(1rem / 1.4 + .5vw);
+    align-self: center;
+  }
+
+  .confirmText {
+    font-size: calc(1rem / 2 + .5vw);
+  }
+
+  /* Welcome Message */
+
+  .welcomeMsg {
+    height: 100%;
+    width: 100%;
+    grid-template-columns: 1fr;
+    grid-template-rows: repeat(5, min-content);
+    grid-template-areas:
+      "mainHeading"
+      "mainRules"
+      "phaseOneRules"
+      "phaseTwoRules"
+      "startGameBtn"
+    ;
+    align-self: start;
+  }
+
+  .phaseRules, .mainRules {
+    width: 80%;
+  }
+
+  .startGameBtn {
+    padding: 3vw 5vw;
+    width: 20%;
+    margin-top: 5vw;
   }
 }

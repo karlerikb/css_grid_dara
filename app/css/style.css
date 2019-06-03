@@ -1,7 +1,12 @@
+body {
+  color: #333;
+  font-family: "Lato", "sans-serif";
+}
 
 /* Defining Grid Elements */
 
-.gameContainer, .piecesContainer, .gameboard, .menu {
+.gameContainer, .piecesContainer, .hintsContainer,
+.additionalDetails, .gameboard, .menu {
   display: grid;
 }
 
@@ -9,8 +14,8 @@
 /* Game Container Element */
 
 .gameContainer {
-  grid-template-columns: [menu-start] 2fr 5fr 2fr [menu-end];
-  grid-template-rows: auto [menu-start] auto auto [menu-end];
+  grid-template-columns: [menu-start welcomeMsg-start] 2fr 5fr 2fr [menu-end welcomeMsg-end];
+  grid-template-rows: [welcomeMsg-start] auto [menu-start] auto auto [menu-end welcomeMsg-end];
   grid-template-areas:
     "...............   menuButton       ..............."
     "playerOnePieces   gameboard        playerTwoPieces"
@@ -28,7 +33,6 @@
   padding: .5vw;
   grid-template-columns: repeat(2, auto);
   grid-template-rows: repeat(6, auto);
-  /* gap: .5vw; */
 }
 
 .piecesContainer.playerOne {
@@ -58,18 +62,30 @@
 .piecesContainer.playerOne.active { background: #afc1f1; }
 .piecesContainer.playerTwo.active { background: #eeb1b1; }
 
-.piecesContainer.active { border: 1px solid black; }
+.piecesContainer.active {
+  box-shadow: 0 0 1px 1px #575757;
+}
+
+.piece {
+  box-shadow: 0 0 4px 0px #333;
+  transition: box-shadow .2s;
+}
 
 .piecesContainer .piece {
   margin: .25vw;
   z-index: 3;
 }
 
+.piecesContainer.active .piece:hover,
+.gameboard .piece.playerTurn:hover {
+  box-shadow: 0 0 6px 2px #333;
+}
+
 /* Gameboard Element */
 
 .gameboard {
   margin: 1vw 0;
-  border: 1px solid black;
+  box-shadow: 0 0 2px 1px #575757;
   border-radius: 2px;
   padding: 1vw;
   grid-area: gameboard;
@@ -83,25 +99,28 @@
     "a41 a42 a43 a44 a45 a46"
     "a51 a52 a53 a54 a55 a56"
   ;
-  background: yellow;
+  background: #fffc4a;
   justify-items: center;
   align-items: center;
 }
 
-.gameboard .playerOne.piece { background: royalblue; }
-.gameboard .playerTwo.piece { background: brown; }
+.gameboard .playerOne.piece { background: #617ed4; }
+.gameboard .playerTwo.piece { background: #c54c4c; }
 
 .gameboard .playerOne.piece.toBeRemoved:hover {
   background: #1d3a92;
-  cursor: pointer;
 }
 .gameboard .playerTwo.piece.toBeRemoved:hover {
   background: #791414;
+}
+
+.gameboard .piece.toBeRemoved:hover {
   cursor: pointer;
+  box-shadow: 0 0 4px 1px #333;
 }
 
 .gameboard > .threeInRow {
-  border: 2px dashed black;
+  border: 2px dashed #333;
   border-radius: 2px;
   width: 100%;
   height: 100%;
@@ -113,33 +132,146 @@
 .playerOne.threeInRow { background: lightblue; }
 .playerTwo.threeInRow { background: lightsalmon; }
 
-.threeInRow.doubleRowIndication {
-  box-shadow: 0 0 4px 1px #303030 !important;
-  background: whitesmoke !important;
-  opacity: .9;
+.threeInRow.selectableIndication {
+  --opacity-value: .9;
+  box-shadow: 0 0 4px 1px #333;
+  background: whitesmoke;
   z-index: 3;
   cursor: pointer;
+  transition: opacity;
+  opacity: var(--opacity-value);
 }
 
-.threeInRow.doubleRowIndication:hover {
+.threeInRow.selectableIndication:hover {
+  box-shadow: 0 0 4px 1px #333;
+  border-color: #333;
+  background: whitesmoke;
   z-index: 4;
+}
+
+.threeInRow.unselectedIndication {
+  border-color: #777;
+  box-shadow: none;
+  background: #ddd;
+  z-index: 2;
 }
 
 
 /* Hints Container Element */
 
 .hintsContainer {
+  margin: 3vw 0;
   border-radius: 2px;
+  box-shadow: 0 0 2px 1px #575757;
   padding: 1vw;
+  width: 100%;
+  background: #eee;
+  font-size: calc(1rem / 2 + .5vw);
   text-align: center;
+  grid-template-columns: 1fr 2fr 1fr;
+  grid-template-areas:
+    "playerOneTurn           gamePhase              playerTwoTurn        "
+    "playerTurnDescription   playerTurnDescription  playerTurnDescription"
+    "additionalDetails       additionalDetails      additionalDetails    "
+  ;
   grid-area: hintsContainer
 }
+
+.playerInHints, .turnInHints,
+.gamePhase, .additionalDetails {
+  margin: .5vw;
+  border-radius: 2px;
+  box-shadow: 0 0 2px 1px #bbb;
+  padding: .75vw 1vw;
+  background: #ddd;
+  color: #999;
+  cursor: default;
+}
+
+.gamePhase {
+  background: #f9f9f9;
+  box-shadow: 0 0 2px 1px #777;
+  color: #333;
+}
+
+.playerInHints.active {
+  font-weight: 700;
+}
+
+.playerInHints.playerOne { grid-area: playerOneTurn; }
+.playerInHints.playerTwo { grid-area: playerTwoTurn; }
+
+.turnInHints.playerOne { grid-area: playerTurnDescription; }
+.turnInHints.playerTwo { grid-area: playerTurnDescription; }
+
+.playerInHints.playerOne,
+.turnInHints.playerOne,
+.additionalDetails.playerOne { justify-self: left; }
+.playerInHints.playerTwo,
+.turnInHints.playerTwo,
+.additionalDetails.playerTwo { justify-self: right; }
+
+.playerInHints.playerOne.active { background: #617ed4; }
+.playerInHints.playerTwo.active { background: #c54c4c; }
+
+.playerInHints.active {
+  box-shadow: 0 0 2px 1px #202020;
+  color: #f7f7f7;
+  text-shadow: 0 0 1px #555;
+}
+
+.turnInHints.active,
+.additionalDetails.playerOne,
+.additionalDetails.playerTwo {
+  box-shadow: 0 0 2px 1px #777;
+  color: #333;
+}
+
+
+.gamePhase {
+  grid-area: gamePhase;
+}
+.additionalDetails {
+  grid-area: additionalDetails;
+  grid-template-columns: 1fr;
+}
+
+.additionalDetails > .detail:first-child {
+  margin-top: 0;
+  margin-bottom: .25vw;
+}
+.additionalDetails > .detail {
+  margin: .25vw 0;
+}
+.additionalDetails > .detail:last-child {
+  margin-top: .25vw;
+  margin-bottom: 0;
+}
+.additionalDetails.playerOne { justify-items: left; }
+.additionalDetails.playerTwo { justify-items: right; }
+
+.additionalDetails.playerOne,
+.turnInHints.playerOne.active {
+  background: #afc1f1;
+}
+.additionalDetails.playerTwo,
+.turnInHints.playerTwo.active {
+  background: #eeb1b1;
+}
+
+.hintsContainer strong {
+  padding: 0 .25vw;
+  font-weight: 700;
+}
+
+
+
 
 
 /* Game Piece Elements */
 
-.piecesContainer.playerOne > .piece { background: royalblue; }
-.piecesContainer.playerTwo > .piece { background: brown; }
+.piecesContainer.playerOne > .piece { background: #617ed4; }
+.piecesContainer.playerTwo > .piece { background: #c54c4c; }
 
 .piecesContainer .piece {
   text-align: center;
@@ -148,46 +280,51 @@
 
 .piecesContainer.active > .piece,
 .piece.active,
-.piece.inactive { cursor: pointer; }
+.piece.inactive,
+.piece.playerTurn { cursor: pointer; }
 
-.piece.active { box-shadow: 0 0 4px 1px #303030 !important; }
-.piece.inactive { opacity: .5 !important; }
+.piece.active { box-shadow: 0 0 4px 1px #333 !important; }
+.piece.inactive { opacity: .55 !important; }
+
+.piece.afterWin {
+  cursor: default;
+}
 
 
 .piece, .temporaryPosition {
-  border: 1px solid black;
+  border: 1px solid #222;
   border-radius: 2px;
   width: 6vw;
   height: 6vw;
   z-index: 2;
-  /* position: relative; */
 }
 
 .gameboard .temporaryPosition {
-  border: 1px dashed #303030;
+  border: 1px dashed #333;
   z-index: 1;
 }
 
 .gameboard .temporaryPosition:hover {
   cursor: pointer;
-  background: lightgreen;
+  background: #9eeb9e;
 }
 
 
 /* Game Menu Element */
 
 .menu {
-  border-radius: 5px;
+  border-radius: 2px;
+  border: 1px solid #555;
+  box-shadow: 0 0 2px 1px #555;
   width: 100%;
   height: 100%;
-  background: #3f4142;
-  opacity: .95;
+  background: rgba(37, 37, 37, .5);
   grid-area: menu;
   grid-template-columns: 2fr 5fr 2fr;
   grid-template-rows: 1fr 4fr;
   grid-template-areas:
-    "playerOneTitle  ............  playerTwoTitle"
-    "..............  gameMenuList  .............."
+    "playerOneTitle   winScenarioTitle   playerTwoTitle"
+    "..............   gameMenuList       .............."
   ;
   justify-items: center;
   align-items: center;
@@ -205,14 +342,20 @@
 
 /* Player Titles, Menu List */
 
-.playerOneTitle, .playerTwoTitle, .gameMenuList {
-  border: 2px solid whitesmoke;
-  border-radius: 5px;
+.playerOneTitle, .playerTwoTitle,
+.gameMenuList, .winScenarioTitle, .settingsMenu {
+  box-shadow: 0 0 3px 1px #444;
+  border: 1px solid #222;
+  border-radius: 3px;
   padding: 1vw;
-  color: whitesmoke;
-  background: #202020;
-  opacity: 1;
+  color: #f5f5f5;
+  background: #333;
   text-align: center;
+  cursor: default;
+}
+
+.playerOneTitle, .playerTwoTitle {
+  margin-top: 1vw;
 }
 
 /* Player Title */
@@ -227,20 +370,273 @@
   align-self: start;
 }
 
-.gameMenuList > li {
+.gameMenuList > li > a {
+  color: #7a7a7a;
+  padding: 1.5vw 10vw;
+  display: inline-block;
+}
+
+a:link, a:visited {
+  text-decoration: none;
+}
+
+.gameMenuList > li,
+.gameMenuList > li > a {
   margin: 0;
-  padding: 1.5vw 10vw;;
+  border-radius: 2px;
+  transition: all .1s;
   list-style: none;
 }
 
-.gameMenuList > li:hover {
-  color: #202020;
-  background: whitesmoke;
+.gameMenuList > li:not(:last-child) {
+  padding: 1.5vw 10vw;
+}
+
+.menu .gameMenuList > li:hover,
+.menu .gameMenuList > li > a:hover {
+  color: #333;
+  box-shadow: 0 0 1px 1px #ccc;
+  background-color: #f5f5f5;
   cursor: pointer;
 }
+
+/* Win Scenario Title */
+
+.winScenarioTitle {
+  padding: 1vw 2vw;
+  grid-area: winScenarioTitle;
+}
+.winScenarioTitle > .winningPlayer {
+  margin: 0 .5vw;
+  color: #fc3;
+}
+
+
+/* Misc */
+
+.trophy {
+  text-shadow: 0 0 1px #555;
+  color: #fc3;
+}
+.playerOne .trophy { margin-right: .5vw; }
+.playerTwo .trophy { margin-left: .5vw; }
+
+.menu .trophy {
+  margin-top: 1vw;
+  font-size: 4rem;
+}
+
+
+/* Settings Menu */
+
+.menu .settingsMenu {
+  padding-top: 0.5vw;
+  width: 30vw;
+  font-size: calc(1rem / 1.8 + .5vw);
+  grid-area: gameMenuList;
+  align-self: start;
+}
+
+.settingsMenu > .settingItem {
+  border-top: 1px solid #444;
+  padding: 1vw;
+}
+
+.settingItem input {
+  width: 80%;
+}
+
+.settingsControlsTop {
+  padding-bottom: .5vw;
+  text-align: right;
+}
+
+.closeSettings {
+  transition: color .2s;
+}
+
+.closeSettings:hover {
+  color: #c54c4c;
+  cursor: pointer;
+}
+
+.settingsControlsBottom {
+  padding-top: 1.2vw;
+  padding-bottom: .2vw;
+  border-top: 1px solid #444;
+  display: grid;
+  grid-template-areas: "settingsText settingsConfirm";
+  grid-template-columns: 1fr min-content;
+}
+
+.confirmSettings {
+  margin-left: 1.5vw;
+  border-radius: 2px;
+  box-shadow: 0 0 2px 1px #333;
+  background-color: #444;
+  padding: .3vw 1.1vw;
+  font-size: calc(1rem / 1.5 + .5vw);
+  grid-area: settingsConfirm;
+  align-self: center;
+  justify-self: right;
+  transition: box-shadow .1s, background-color .1s;
+}
+.confirmSettings:hover {
+  box-shadow: 0 0 2px 1px #2f6d2f;
+  background-color: #5bb15b;
+  text-shadow: 0 0 2px #4ce44c;
+  cursor: pointer;
+}
+
+.confirmText {
+  color: #999;
+  font-size: calc(1rem / 3 + .5vw);
+  grid-area: settingsText;
+  align-self: center;
+  justify-self: right;
+}
+
+.settingsMenu .closeSettings,
+.settingsMenu .confirmSettings {
+  font-size: 1.5rem;
+  display: inline-block;
+}
+
+.settingText {
+  color: #999;
+}
+
+.settingValue, .detailsForValue {
+  margin-left: .5vw;
+  color: #f5f5f5;
+  font-weight: 700;
+}
+
+
+/* Welcome Message */
+.welcomeMsg {
+  border: 1px solid #222;
+  border-radius: 2px;
+  box-shadow: 0 0 3px 1px #444;
+  padding: 1vw 4vw 4vw 4vw;
+  height: max-content;
+  background-color: #333;
+  font-size: calc(1rem / 1.8 + .5vw);
+  color: #ddd;
+  grid-area: welcomeMsg;
+  grid-template-columns: 3fr 5fr 3fr;
+  grid-template-rows: min-content  min-content  auto;
+  grid-template-areas:
+    ".............     mainHeading    ............."
+    "phaseOneRules     mainRules      phaseTwoRules"
+    "phaseOneRules     startGameBtn   phaseTwoRules"
+  ;
+  gap: 2vw 4vw;
+  justify-items: center;
+  align-items: start;
+  z-index: 4;
+  cursor: default;
+  display: grid;
+}
+
+.welcomeMsg .welcomeHeading { grid-area: mainHeading; }
+
+.welcomeMsg .rules {
+  width: 100%;
+  height: max-content;
+  text-align: center;
+}
+
+.startGameBtn {
+  margin-left: 1.5vw;
+  border-radius: 2px;
+  box-shadow: 0 0 2px 1px #666;
+  background-color: #459745;
+  padding: 1vw 2vw;
+  width: 8vw;
+  text-align: center;
+  color: #e6e6e6;
+  grid-area: startGameBtn;
+  transition: box-shadow .1s, background-color .1s;
+}
+
+.startGameBtn:hover {
+  box-shadow: 0 0 2px 1px #4ce44c;
+  background-color: #5bb15b;
+  color: #f5f5f5;
+  cursor: pointer;
+}
+
+h1, h2, .subTitle {
+  text-align: center;
+}
+
+.phaseRules {
+  width: 100%;
+}
+
+.phaseRules .rules {
+  color: #ddd;
+}
+
+.phaseOneRules { grid-area: phaseOneRules; }
+.phaseTwoRules { grid-area: phaseTwoRules; }
+.mainRules { grid-area: mainRules; }
+
+.mainRules .rules {
+  border: 1px solid #4b4b4b;
+  box-shadow: 0 0 2px 2px #3f3f3f;
+  border-radius: 3px;
+  background-color: #3f3f3f;
+  color: #ccc;
+}
+
+.rules {
+  border: 1px solid #444;
+  box-shadow: 0 0 2px 1px #3a3a3a;
+  border-radius: 3px;
+  height: 100%;
+  background-color: #444;
+  color: #ddd;
+}
+
+ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+ul.rules > li {
+  border-top: 1px solid #4b4b4b;
+  background-color: #3a3a3a;
+  margin: .5vw 0;
+  padding: 1vw;
+}
+
+ul.rules > li:first-child {
+  margin-top: 0;
+}
+ul.rules > li:last-child {
+  margin-bottom: 0;
+}
+
+.mainRules .rules > li {
+  border-top: 1px solid #555;
+  background-color: #474747;
+}
+
+.phaseRules .rules {
+  color: #afafaf;
+}
+
+.rules strong {
+  padding: 0 .2vw;
+}
+
 
 /* Remove Element Class */
 
 .removed { display: none !important; }
 .notAllowed { cursor: not-allowed !important; }
 .selectable { cursor: pointer !important; }
+.hidden { visibility: hidden !important; }

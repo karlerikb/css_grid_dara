@@ -1,72 +1,81 @@
-import Settings from "./app/settings/Settings";
-import Player from "./App/Player/Player";
-import PhaseOne from "./App/Game/PhaseOne/PhaseOne";
-import PhaseTwo from "./App/Game/PhaseTwo/PhaseTwo";
-import Menu from "./App/Menu/Menu";
+import { Settings } from "./conf/settings";
+import { Configuration } from "./conf/configuration";
+import { Player } from "./players/player";
+import { PhaseOne } from "./game/phase-one";
+import { PhaseTwo } from "./game/phase-two";
+import { Menu } from "./menu/menu";
+import { Hints } from "./hints/hints";
 
-// ...
-class App {
+export class App {
   private static _instance: App;
 
-  private _settings: Settings = <Settings>{};
-  private _menu: Menu = <Menu>{};
-
   private constructor() {
+    this.init();
   }
 
   private init(): void {
-    console.log("App created!");
-    this.initializeSettings();
-    this.initializePlayers();
+    Settings.instance;
+  }
+
+  create(): void {
+    this.createPlayers();
     this.initializePhases();
-    this.initializeMenu();
+    Menu.instance;
   }
 
-  private initializeSettings(): void {
-    this.settings = Settings.instance;
-  }
-
-  private initializePlayers(): void {
-    console.log("Creating players...");
-    const playerOne = new Player("Mängija 1", 1, "one", this.settings);
-    const playerTwo = new Player("Mängija 2", 2, "two", this.settings);
-    this.settings!.players.push(playerOne, playerTwo);
+  private createPlayers(): void {
+    const playerOne = new Player("Mängija 1", 1, "one");
+    const playerTwo = new Player("Mängija 2", 2, "two");
+    Configuration.instance.players.push(playerOne, playerTwo);
     playerOne.active = true;
   }
 
   private initializePhases(): void {
-    console.log("Initializing game phases...");
-    const phaseOne = new PhaseOne(this.settings);
-    const phaseTwo = new PhaseTwo(this.settings);
-    this.settings!.phases.push(phaseOne, phaseTwo);
+    const phaseOne = new PhaseOne();
+    const phaseTwo = new PhaseTwo();
+    Configuration.instance.phases.push(phaseOne, phaseTwo);
     phaseOne.init();
   }
 
-  private initializeMenu(): void {
-    this.menu = Menu.instance;
-    this.menu.init(<Settings>this.settings);
+  private resetElements(): void {
+    const playerOnePiecesContainer: HTMLElement = (<HTMLElement>document.querySelector(Configuration.instance.selectors.playerOnePiecesContainer));
+    const playerTwoPiecesContainer: HTMLElement = (<HTMLElement>document.querySelector(Configuration.instance.selectors.playerTwoPiecesContainer));
+    const gameboard: HTMLElement = (<HTMLElement>document.querySelector(Configuration.instance.selectors.gameboard));
+    const hintsContainer: HTMLElement = (<HTMLElement>document.querySelector(`.${Configuration.instance.classes.hintsContainer}`));
+    const menuButton: HTMLElement = (<HTMLElement>document.querySelector(`.${Configuration.instance.classes.menuButton}`));
+
+    playerOnePiecesContainer.classList.remove(Configuration.instance.classes.activeContainer);
+    playerTwoPiecesContainer.classList.remove(Configuration.instance.classes.activeContainer);
+    playerOnePiecesContainer.innerHTML = "";
+    playerTwoPiecesContainer.innerHTML = "";
+    gameboard.innerHTML = "";
+    hintsContainer.innerHTML = "";
+
+    if (document.querySelector(`.${Configuration.instance.classes.menu}`)) {
+      (<HTMLElement>document.querySelector(`.${Configuration.instance.classes.menu}`)).remove();
+    }
+    menuButton.remove();
+  }
+  private resetComponents(): void {
+    Hints.instance.reset();
+    Menu.instance.reset();
+    Configuration.instance.players = [];
+    Configuration.instance.phases = [];
+    Configuration.instance.reset();
+    Settings.instance.resetSettingsMenu();
+  }
+
+  reset(): void {
+    this.resetElements();
+    this.resetComponents();
+    this.create();
   }
 
   public static get instance(): App {
     if (!App._instance) {
       App._instance = new App();
-      App._instance.init();
     }
     return App._instance;
   }
-  private get settings(): Settings {
-    return this._settings;
-  }
-  private get menu(): Menu {
-    return this._menu;
-  }
-
-  private set settings(value: Settings) {
-    this._settings = value;
-  }
-  private set menu(value: Menu) {
-    this._menu = value;
-  }  
 }
 App.instance;
-
